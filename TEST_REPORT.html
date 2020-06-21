@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+
+<head> <link rel="stylesheet" type="text/css" href="hmm_report.css">
+
+</head>
+
+<body>
+    <h2>TEST REPORT</h2>
+    <div class="table-wrapper">
+        <table class="fl-table">
+            <thead>
+                <tr>
+                    <th>PathNumber</th>
+                    <th style="width: 800px">Test path</th>
+                    <th>Test Data</th>
+                </tr>
+            </thead>
+            <tbody><tr><td>0</td><td>( int maxx = 5;) <font>3</font>( float e;) <font>3</font>( int x=0;) <font>3</font>!( a < maxx) <font>2</font>( e = 1/x;) <font>3</font>return e;</td><td>a=5;</td></tr><tr><td>1</td><td>( int maxx = 5;) <font>3</font>( float e;) <font>3</font>( int x=0;) <font>3</font> (a < maxx) <font>2</font>( x = 1;) <font>2</font>!( a == maxx) <font>2</font>( e = 1/x;) <font>3</font>return e;</td><td>a=0;</td></tr><tr><td>2</td><td>( int maxx = 5;) <font>3</font>( float e;) <font>3</font>( int x=0;) <font>3</font> (a < maxx) <font>2</font>( x = 1;) <font>2</font> (a == maxx) <font>1</font><font class = "redColor">( x = 2;)</font> <font>1</font>( e = 1/x;) <font>3</font>return e;</td><td></td></tr>   <tbody>
+        </table></div>
+<div class="conlusion">
+<pre>float maxx(int a){
+			int maxx = 5;
+			float e;
+			int x=0;
+			 if (a < maxx){
+				x = 1;
+				if (a == maxx){
+					x = 2;
+				}
+			}
+			e = 1/x;
+			return e;
+}</pre>        <div>Time For C2 :1.156s</div>
+        <div>C2 Coverage 0.8888889</div></div>
+</body></html>
