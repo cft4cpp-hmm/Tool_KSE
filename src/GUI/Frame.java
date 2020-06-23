@@ -1,32 +1,16 @@
 package GUI;
 
-import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JTextPane;
-
-import com.thoughtworks.xstream.core.util.FastField;
-
 import Khamd.CFT4CPP;
 import Khamd.FullBoundedTestGen;
 import Khamd.Main;
 import console.Console;
 
-import java.awt.Font;
-import javax.swing.JRadioButton;
-import javax.swing.ButtonGroup;
-import javax.swing.JRadioButtonMenuItem;
-import java.awt.event.ActionListener;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
-import javax.swing.JTextField;
-import javax.swing.JButton;
-import javax.swing.JPanel;
-import java.awt.Color;
-import java.awt.SystemColor;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import javax.swing.JComboBox;
 
 public class Frame {
 

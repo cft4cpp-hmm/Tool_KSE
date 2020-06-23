@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/Bai10.iml" filepath="$PROJECT_DIR$/.idea/Bai10.iml" />
+      <module fileurl="file://$PROJECT_DIR$/src/Khamd/HybridAutoTestGen.iml" filepath="$PROJECT_DIR$/src/Khamd/HybridAutoTestGen.iml" />
     </modules>
   </component>
 </project>
