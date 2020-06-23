@@ -1,36 +1,10 @@
-package Khamd;
-
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.ObjectInputStream.GetField;
-import java.lang.System.Logger;
-import java.sql.Date;
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import javax.print.attribute.HashAttributeSet;
-import javax.swing.plaf.basic.BasicScrollPaneUI.VSBChangeListener;
-
-import org.apache.poi.ss.usermodel.DataConsolidateFunction;
-import org.apache.xmlbeans.impl.regex.REUtil;
-import org.eclipse.cdt.core.parser.util.IUnaryPredicate;
-import org.eclipse.cdt.core.settings.model.COutputEntry;
-
-import com.alee.log.Log;
-import com.ibm.icu.text.UFieldPosition;
+package HybridAutoTestGen;
 
 import HMM.HMMGraph;
 import HMM.Node;
 import cfg.ICFG;
 import cfg.object.AbstractConditionLoopCfgNode;
-import cfg.object.BranchInCFG;
 import cfg.object.ICfgNode;
-import cfg.testpath.FullTestpath;
-import cfg.testpath.FullTestpaths;
 import cfg.testpath.IFullTestpath;
 import cfg.testpath.ITestpathInCFG;
 import config.AbstractSetting;
@@ -38,12 +12,18 @@ import testdata.object.TestpathString_Marker;
 import testdatagen.coverage.CFGUpdater_Mark;
 import testdatagen.se.ISymbolicExecution;
 import testdatagen.se.Parameter;
-import testdatagen.se.PathConstraint;
-import testdatagen.se.PathConstraints;
 import testdatagen.se.SymbolicExecution;
 import tree.object.FunctionNode;
 import tree.object.IFunctionNode;
 import tree.object.INode;
+
+import java.io.FileWriter;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class Graph {
 	

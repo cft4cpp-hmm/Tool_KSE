@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="org.eclipse.cdt_9.0.0.201607151550">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/cdt/org.eclipse.cdt_9.0.0.201607151550.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+    <jarDirectory url="jar://$PROJECT_DIR$/lib/cdt/org.eclipse.cdt_9.0.0.201607151550.jar!/" recursive="false" />
+  </library>
+</component>

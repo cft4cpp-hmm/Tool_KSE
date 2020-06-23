@@ -1,0 +1,37 @@
+<component name="libraryTable">
+  <library name="org.eclipse.cdt.core.aix.source_5.4.0.201607151550">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/cdt/org.eclipse.cdt.core.aix_5.4.0.201607151550.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/cdt/org.eclipse.cdt.core.linux.ppc64_5.2.0.201607151550.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/cdt/org.eclipse.cdt.core.linux.ppc64le_1.0.0.201607151550.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/cdt/org.eclipse.cdt.core.linux.x86_5.3.0.201607151550.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/cdt/org.eclipse.cdt.core.linux.x86_64_5.3.0.201607151550.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/cdt/org.eclipse.cdt.core.linux_5.3.0.201607151550.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/cdt/org.eclipse.cdt.core.lrparser.xlc_5.1.0.201607151550.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/cdt/org.eclipse.cdt.core.lrparser_5.2.0.201607151550.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/cdt/org.eclipse.cdt.core.macosx_5.3.0.201607151550.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/cdt/org.eclipse.cdt.core.native_5.9.0.201607151550.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/cdt/org.eclipse.cdt.core.parser.upc_5.1.0.201607151550.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/cdt/org.eclipse.cdt.core.win32.x86_5.4.1.201607151550.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/cdt/org.eclipse.cdt.core.win32.x86_64_5.4.1.201607151550.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/cdt/org.eclipse.cdt.core.win32_5.4.1.201607151550.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/cdt/org.eclipse.cdt.core_6.0.0.201607151550.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/cdt/org.eclipse.core.resources.win32.x86_64_3.5.0.v20121203-0906.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/cdt/org.eclipse.core.resources_3.8.100.v20130521-2026.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/cdt/org.eclipse.equinox.common_3.7.0.v20150402-1709.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/cdt/org.eclipse.osgi_3.9.1.v20130814-1242.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/lib/cdt/org.eclipse.cdt.core.aix.source_5.4.0.201607151550.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/cdt/org.eclipse.cdt.core.linux.source_5.3.0.201607151550.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/cdt/org.eclipse.cdt.core.lrparser.source_5.2.0.201607151550.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/cdt/org.eclipse.cdt.core.lrparser.xlc.source_5.1.0.201607151550.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/cdt/org.eclipse.cdt.core.macosx.source_5.3.0.201607151550.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/cdt/org.eclipse.cdt.core.native.source_5.9.0.201607151550.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/cdt/org.eclipse.cdt.core.parser.upc.source_5.1.0.201607151550.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/cdt/org.eclipse.cdt.core.source_6.0.0.201607151550.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/cdt/org.eclipse.cdt.core.win32.source_5.4.1.201607151550.jar!/" />
+    </SOURCES>
+  </library>
+</component>

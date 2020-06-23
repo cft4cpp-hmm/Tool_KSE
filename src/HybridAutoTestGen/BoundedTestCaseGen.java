@@ -1,4 +1,4 @@
-package Khamd;
+package HybridAutoTestGen;
 
 import static org.junit.Assert.assertNotNull;
 

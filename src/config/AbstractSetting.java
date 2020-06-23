@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.StringTokenizer;
 
-import Khamd.Main;
+import HybridAutoTestGen.Main;
 import utils.SpecialCharacter;
 import utils.Utils;
 

@@ -1,14 +1,9 @@
-package Khamd;
+package HybridAutoTestGen;
 
-import java.util.List;
-
-import org.eclipse.cdt.internal.core.dom.parser.c.GNUCASTGotoStatement;
-import org.eclipse.cdt.internal.core.dom.parser.upc.ast.UPCASTCompositeTypeSpecifier;
-import org.fife.ui.rsyntaxtextarea.modes.GroovyTokenMaker;
-
-import config.Paths;
 import testdata.object.TestpathString_Marker;
 import testdatagen.coverage.CFGUpdater_Mark;
+
+import java.util.List;
 
 public class Coverage {
 //	public static ProbFunctionExection functionExection;

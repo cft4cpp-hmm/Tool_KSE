@@ -1,22 +1,5 @@
 package tree.object;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
-
-import org.apache.log4j.Logger;
-import org.eclipse.cdt.core.dom.ast.IASTFileLocation;
-import org.eclipse.cdt.core.dom.ast.IASTFunctionDefinition;
-import org.eclipse.cdt.core.dom.ast.IASTNode;
-import org.eclipse.cdt.core.dom.ast.IASTParameterDeclaration;
-import org.eclipse.cdt.core.dom.ast.cpp.ICPPASTTemplateDeclaration;
-import org.eclipse.cdt.internal.core.dom.parser.cpp.CPPASTFunctionDeclarator;
-import org.eclipse.cdt.internal.core.dom.parser.cpp.CPPASTPointer;
-
 import cfg.CFGGenerationforBranchvsStatementCoverage;
 import cfg.CFGGenerationforSubConditionCoverage;
 import cfg.ICFG;
@@ -26,14 +9,15 @@ import config.IFunctionConfig;
 import config.ISettingv2;
 import externalvariable.ExternalVariableDetecter;
 import externalvariable.ReducedExternalVariableDetecter;
-import normalizer.ArgumentTypeNormalizer;
-import normalizer.ConditionCovertNormalizer;
-import normalizer.FunctionNameNormalizer;
-import normalizer.FunctionNormalizer;
-import normalizer.MacroNormalizer2;
-import normalizer.SetterandGetterFunctionNormalizer;
-import normalizer.SwitchCaseNormalizer;
-import normalizer.TernaryConvertNormalizer;
+import normalizer.*;
+import org.apache.log4j.Logger;
+import org.eclipse.cdt.core.dom.ast.IASTFileLocation;
+import org.eclipse.cdt.core.dom.ast.IASTFunctionDefinition;
+import org.eclipse.cdt.core.dom.ast.IASTNode;
+import org.eclipse.cdt.core.dom.ast.IASTParameterDeclaration;
+import org.eclipse.cdt.core.dom.ast.cpp.ICPPASTTemplateDeclaration;
+import org.eclipse.cdt.internal.core.dom.parser.cpp.CPPASTFunctionDeclarator;
+import org.eclipse.cdt.internal.core.dom.parser.cpp.CPPASTPointer;
 import testdatagen.AbstractJUnitTest;
 import testdatagen.module.DataTreeGeneration;
 import testdatagen.module.IDataTreeGeneration;
@@ -43,6 +27,12 @@ import tree.dependency.GetterDependency;
 import tree.dependency.SetterDependency;
 import utils.SpecialCharacter;
 import utils.Utils;
+
+import javax.swing.*;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public abstract class AbstractFunctionNode extends CustomASTNode<IASTFunctionDefinition> implements IFunctionNode {
 	final static Logger logger = Logger.getLogger(AbstractFunctionNode.class);

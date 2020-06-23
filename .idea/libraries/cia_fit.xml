@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="cia.fit">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/cia.fit.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

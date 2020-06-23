@@ -1,40 +1,18 @@
-package Khamd;
-
-import java.io.File;
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.log4j.Logger;
-import org.eclipse.cdt.core.settings.model.COutputEntry;
+package HybridAutoTestGen;
 
 import HMM.HMMGraph;
 import HMM.Node;
-import cfg.CFGGenerationforBranchvsStatementCoverage;
-import cfg.CFGGenerationforSubConditionCoverage;
 import cfg.ICFG;
 import cfg.object.AbstractConditionLoopCfgNode;
 import cfg.object.ConditionCfgNode;
 import cfg.object.EndFlagCfgNode;
 import cfg.object.ICfgNode;
-import cfg.testpath.FullTestpath;
-import cfg.testpath.FullTestpaths;
-import cfg.testpath.IPartialTestpath;
-import cfg.testpath.IStaticSolutionGeneration;
-import cfg.testpath.ITestpathGeneration;
-import cfg.testpath.ITestpathInCFG;
-import cfg.testpath.PartialTestpath;
-import config.FunctionConfig;
-import config.ISettingv2;
-import config.ParameterBound;
-import config.Paths;
-import config.Settingv2;
+import cfg.testpath.*;
+import config.*;
 import constraints.checker.RelatedConstraintsChecker;
 import normalizer.FunctionNormalizer;
+import org.apache.log4j.Logger;
 import parser.projectparser.ProjectParser;
-import testdata.object.TestpathString_Marker;
-import testdatagen.coverage.CFGUpdater_Mark;
 import testdatagen.se.ISymbolicExecution;
 import testdatagen.se.Parameter;
 import testdatagen.se.PathConstraint;
@@ -45,11 +23,15 @@ import testdatagen.se.solver.SmtLibGeneration;
 import testdatagen.se.solver.Z3SolutionParser;
 import tree.object.IFunctionNode;
 import tree.object.IVariableNode;
-import utils.ASTUtils;
 import utils.SpecialCharacter;
 import utils.Utils;
 import utils.search.FunctionNodeCondition;
 import utils.search.Search;
+
+import java.io.File;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Generate all possible test paths

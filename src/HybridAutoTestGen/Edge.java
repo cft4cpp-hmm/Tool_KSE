@@ -1,4 +1,4 @@
-package Khamd;
+package HybridAutoTestGen;
 
 import cfg.object.ICfgNode;
 

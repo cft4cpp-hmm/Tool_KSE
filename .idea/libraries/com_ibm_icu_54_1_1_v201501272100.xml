@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="com.ibm.icu_54.1.1.v201501272100">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/cdt/com.ibm.icu_54.1.1.v201501272100.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

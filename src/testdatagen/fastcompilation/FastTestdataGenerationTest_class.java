@@ -1,14 +1,13 @@
 package testdatagen.fastcompilation;
 
-import javax.sound.sampled.LineUnavailableException;
-
+import config.IFunctionConfig;
+import config.Paths;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
-
-import config.IFunctionConfig;
-import config.Paths;
 import testdatagen.AbstractJUnitTest;
+
+import javax.sound.sampled.LineUnavailableException;
 
 /**
  * Vnu_Basic_Test

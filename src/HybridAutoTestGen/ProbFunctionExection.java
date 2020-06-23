@@ -1,4 +1,4 @@
-package Khamd;
+package HybridAutoTestGen;
 
 import java.io.File;
 import java.io.IOException;

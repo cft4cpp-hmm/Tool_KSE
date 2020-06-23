@@ -1,4 +1,4 @@
-package Khamd;
+package HybridAutoTestGen;
 
 import HMM.HMMGraph;
 import HMM.Node;

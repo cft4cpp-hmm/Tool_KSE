@@ -1,8 +1,8 @@
 package GUI;
 
-import Khamd.CFT4CPP;
-import Khamd.FullBoundedTestGen;
-import Khamd.Main;
+import HybridAutoTestGen.CFT4CPP;
+import HybridAutoTestGen.FullBoundedTestGen;
+import HybridAutoTestGen.Main;
 import console.Console;
 
 import javax.swing.*;

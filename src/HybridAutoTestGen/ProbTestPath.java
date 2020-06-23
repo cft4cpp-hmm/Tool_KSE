@@ -1,4 +1,4 @@
-package Khamd;
+package HybridAutoTestGen;
 
 import java.util.ArrayList;
 import java.util.List;
