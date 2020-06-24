@@ -36,5 +36,6 @@
     <orderEntry type="library" name="rsyntaxtextarea-2.6.0-SNAPSHOT" level="project" />
     <orderEntry type="library" name="weblaf-complete-1.28" level="project" />
     <orderEntry type="library" name="org.eclipse.cdt_9.0.0.201607151550" level="project" />
+    <orderEntry type="library" name="lib" level="project" />
   </component>
 </module>
