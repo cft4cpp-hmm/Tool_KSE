@@ -63,7 +63,6 @@ public class CFT4CPP
 
             function = (IFunctionNode) Search.searchNodes(parser.getRootTree(), new FunctionNodeCondition(), functionName).get(0);
             FunctionNormalizer fnNorm = ((IFunctionNode) function).normalizedAST();
-//			ICFG cfg;
 
 
             FunctionConfig config = new FunctionConfig();
