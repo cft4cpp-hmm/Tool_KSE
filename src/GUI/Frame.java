@@ -3,6 +3,7 @@ package GUI;
 import HybridAutoTestGen.CFT4CPP;
 import HybridAutoTestGen.FullBoundedTestGen;
 import HybridAutoTestGen.Main;
+import config.Paths;
 import console.Console;
 
 import javax.swing.*;
@@ -191,7 +192,7 @@ public class Frame {
 				try {
 					int iterations = (int) comboBox.getSelectedItem();
 					String functionName = funcName.getText();
-					CFT4CPP cft4cpp = new CFT4CPP(null,iterations, functionName);
+					CFT4CPP cft4cpp = new CFT4CPP(null,iterations, Paths.TSDV_R1_2, functionName);
 					Main main = new Main(functionName, iterations);
 					FullBoundedTestGen bGen = new FullBoundedTestGen(null, iterations, functionName);
 					if(STCFG.isSelected()) {

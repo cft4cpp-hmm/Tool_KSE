@@ -8,7 +8,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class VNUKSE extends Application
+public class VNUDSE extends Application
 {
 
     public static void main(String[] args)

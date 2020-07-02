@@ -53,12 +53,13 @@ public class CFT4CPP
     public IFunctionNode function;
 
 
-    public CFT4CPP(ICFG cfg1, int maxloop, String functionName) throws Exception
+    public CFT4CPP(ICFG cfg1, int maxloop, String projectPath, String functionName) throws Exception
     {
         this.cfg = cfg1;
         if (cfg1 == null)
         {
-            ProjectParser parser = new ProjectParser(new File(Paths.TSDV_R1_2));
+            //ProjectParser parser = new ProjectParser(new File(Paths.TSDV_R1_2));
+            ProjectParser parser = new ProjectParser(new File(projectPath));
             IFunctionNode function;
 
             function = (IFunctionNode) Search.searchNodes(parser.getRootTree(), new FunctionNodeCondition(), functionName).get(0);
@@ -112,7 +113,7 @@ public class CFT4CPP
 
     public static void main(String[] args) throws Exception
     {
-        CFT4CPP tpGen = new CFT4CPP(null, 1, "sum(int,int)");
+        CFT4CPP tpGen = new CFT4CPP(null, 1, Paths.TSDV_R1_2, "sum(int,int)");
         tpGen.run();
 
     }
