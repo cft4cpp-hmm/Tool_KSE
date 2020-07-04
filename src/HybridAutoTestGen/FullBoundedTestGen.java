@@ -1,23 +1,5 @@
 package HybridAutoTestGen;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.ObjectInputStream.GetField;
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
-
-import org.apache.log4j.Logger;
-import org.apache.poi.ss.formula.ptg.Deleted3DPxg;
-
-import com.ibm.icu.util.BytesTrie.Result;
-
 import cfg.CFG;
 import cfg.CFGGenerationforSubConditionCoverage;
 import cfg.ICFG;
@@ -25,21 +7,11 @@ import cfg.object.AbstractConditionLoopCfgNode;
 import cfg.object.ConditionCfgNode;
 import cfg.object.EndFlagCfgNode;
 import cfg.object.ICfgNode;
-import cfg.testpath.FullTestpath;
-import cfg.testpath.FullTestpaths;
-import cfg.testpath.IPartialTestpath;
-import cfg.testpath.IStaticSolutionGeneration;
-import cfg.testpath.ITestpathGeneration;
-import cfg.testpath.ITestpathInCFG;
-import cfg.testpath.PartialTestpath;
-import cfg.testpath.PossibleTestpathGeneration;
-import config.AbstractSetting;
-import config.FunctionConfig;
-import config.ISettingv2;
-import config.Paths;
-import config.Settingv2;
+import cfg.testpath.*;
+import config.*;
 import constraints.checker.RelatedConstraintsChecker;
 import normalizer.FunctionNormalizer;
+import org.apache.log4j.Logger;
 import parser.projectparser.ProjectParser;
 import testdatagen.se.ISymbolicExecution;
 import testdatagen.se.Parameter;
@@ -56,6 +28,12 @@ import utils.SpecialCharacter;
 import utils.Utils;
 import utils.search.FunctionNodeCondition;
 import utils.search.Search;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.*;
 
 public class FullBoundedTestGen {
 	public static final String CONSTRAINTS_FILE = Settingv2.getValue(ISettingv2.SMT_LIB_FILE_PATH);
@@ -115,26 +93,6 @@ public class FullBoundedTestGen {
 	
 
 	public static void main(String[] args) throws Exception {
-//		CFG cfg;
-//		ProjectParser parser = new ProjectParser(new File(Paths.TSDV_R1_2));
-//		IFunctionNode function;
-//		String functionName = "PDF(int,int,int)";
-//		function = (IFunctionNode) Search
-//				.searchNodes(parser.getRootTree(), new FunctionNodeCondition(), functionName)
-//				.get(0);
-////		function.getAST().toString().replaceAll("<", "==");
-//		FunctionConfig functionConfig = new FunctionConfig();
-//		functionConfig.setSolvingStrategy(ISettingv2.SUPPORT_SOLVING_STRATEGIES[0]);
-//		((IFunctionNode ) function).setFunctionConfig(functionConfig);
-//		FunctionNormalizer fnNorm = ((IFunctionNode) function).normalizedAST();
-//		String normalizedCoverage = fnNorm.getNormalizedSourcecode();
-//		((IFunctionNode ) function).setAST(fnNorm.getNormalizedAST());
-//		IFunctionNode clone = (IFunctionNode) function.clone();
-//		clone.setAST(Utils.getFunctionsinAST(normalizedCoverage.toCharArray()).get(0));
-//		CFGGenerationforSubConditionCoverage cfgGen = new CFGGenerationforSubConditionCoverage(clone);
-//		
-//		cfg = (CFG) cfgGen.generateCFG();
-//		cfg.setFunctionNode(clone);
 		FullBoundedTestGen tpGen = new FullBoundedTestGen(null,1, "PDF(int,int,int)");
 
 		tpGen.toHtml();

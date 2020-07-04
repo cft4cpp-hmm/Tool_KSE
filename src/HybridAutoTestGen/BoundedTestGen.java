@@ -1,51 +1,21 @@
 package HybridAutoTestGen;
 
-import static org.junit.Assert.assertNotNull;
-
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
-
-import javax.xml.transform.Source;
-
-import org.eclipse.cdt.core.dom.ast.IVariable;
-import org.eclipse.cdt.internal.core.dom.parser.cpp.semantics.CPPInheritance.FinalOverriderMap;
-
-import HMM.Node;
 import cfg.CFG;
 import cfg.CFGGenerationforSubConditionCoverage;
 import cfg.ICFG;
-import cfg.object.CfgNode;
 import cfg.object.ICfgNode;
-import cfg.object.NormalCfgNode;
-import cfg.testpath.FullTestpath;
-import cfg.testpath.IFullTestpath;
 import cfg.testpath.INormalizedTestpath;
-import cfg.testpath.ITestpathInCFG;
 import cfg.testpath.NormalizedTestpath;
-import cfg.testpath.PartialTestpaths;
-import cfg.testpath.PossibleTestpathGeneration;
 import config.FunctionConfig;
 import config.ISettingv2;
-import config.ParameterBound;
 import config.Paths;
 import normalizer.FunctionNormalizer;
+import org.apache.log4j.Logger;
 import parser.projectparser.ProjectParser;
 import testdatagen.se.ISymbolicExecution;
 import testdatagen.se.Parameter;
 import testdatagen.se.PathConstraint;
 import testdatagen.se.SymbolicExecution;
-import testdatagen.se.expander.DenominatorExpander;
-import testdatagen.se.normalstatementparser.NewBinaryAssignmentParser;
 import testdatagen.se.solver.RunZ3OnCMD;
 import testdatagen.se.solver.SmtLibGeneration;
 import testdatagen.se.solver.Z3SolutionParser;
@@ -56,14 +26,18 @@ import tree.object.IVariableNode;
 import utils.Utils;
 import utils.search.FunctionNodeCondition;
 import utils.search.Search;
-import org.apache.log4j.Logger;
-import org.apache.xmlbeans.impl.common.IdentityConstraint.ConstraintState;
 
-public class BoundedTestCaseGen {
-	final static Logger logger = Logger.getLogger(BoundedTestCaseGen.class);
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.util.*;
+
+public class BoundedTestGen
+{
+	final static Logger logger = Logger.getLogger(BoundedTestGen.class);
 	private IFunctionNode function;
 	private ICFG cfg;
-	public BoundedTestCaseGen(int maxloop, String functionName) throws Exception {
+	public BoundedTestGen(int maxloop, String functionName) throws Exception {
 		CFG cfg = null;
 		ProjectParser parser = new ProjectParser(new File(Paths.TSDV_R1_2));
 		IFunctionNode function;
@@ -108,7 +82,7 @@ public class BoundedTestCaseGen {
 //		cfg.setFunctionNode(clone);
 		//
 		
-		BoundedTestCaseGen gen = new BoundedTestCaseGen(1, "maxx(int)");
+		BoundedTestGen gen = new BoundedTestGen(1, "maxx(int)");
 		gen.analyze();
 //		ICfgNode a = null;
 //		for(ICfgNode bCfgNode : cfg.getAllNodes()) {
@@ -320,7 +294,9 @@ public class BoundedTestCaseGen {
 //		testpath
 		if(!rightSide.matches("[-+]?[0-9]*\\.?[0-9]+")) {
 			for(ICfgNode node: cfg.getAllNodes()) {
-				if(node.toString().contains(rightSide.replaceAll(" ", "")) && !node.toString().contains("<=") && !node.toString().contains("<") && !node.toString().contains(">=")&& !node.toString().contains(">") ) {
+				if(node.toString().contains(rightSide.replaceAll(" ", "")) &&
+						!node.toString().contains("<=") && !node.toString().contains("<") &&
+						!node.toString().contains(">=")&& !node.toString().contains(">") ) {
 					testpath.getAllCfgNodes().add(node);
 					
 				}
