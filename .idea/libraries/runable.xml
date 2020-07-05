@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="runable">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/runable.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

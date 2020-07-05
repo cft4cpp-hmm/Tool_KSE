@@ -60,62 +60,8 @@ public class BoundedTestGen
 		
 	}
 	public static void main(String[] args) throws Exception {
-//		CFG cfg;
-//		ProjectParser parser = new ProjectParser(new File(Paths.TSDV_R1_2));
-//		IFunctionNode function;
-//		String functionName = "maxx(int)";
-//		function = (IFunctionNode) Search
-//				.searchNodes(parser.getRootTree(), new FunctionNodeCondition(), functionName)
-//				.get(0);
-////		function.getAST().toString().replaceAll("<", "==");
-//		FunctionConfig functionConfig = new FunctionConfig();
-//		functionConfig.setSolvingStrategy(ISettingv2.SUPPORT_SOLVING_STRATEGIES[0]);
-//		((IFunctionNode ) function).setFunctionConfig(functionConfig);
-//		FunctionNormalizer fnNorm = ((IFunctionNode) function).normalizedAST();
-//		String normalizedCoverage = fnNorm.getNormalizedSourcecode();
-//		((IFunctionNode ) function).setAST(fnNorm.getNormalizedAST());
-//		IFunctionNode clone = (IFunctionNode) function.clone();
-//		clone.setAST(Utils.getFunctionsinAST(normalizedCoverage.toCharArray()).get(0));
-//		CFGGenerationforSubConditionCoverage cfgGen = new CFGGenerationforSubConditionCoverage(clone);
-//		
-//		cfg = (CFG) cfgGen.generateCFG();
-//		cfg.setFunctionNode(clone);
-		//
-		
 		BoundedTestGen gen = new BoundedTestGen(1, "maxx(int)");
 		gen.analyze();
-//		ICfgNode a = null;
-//		for(ICfgNode bCfgNode : cfg.getAllNodes()) {
-//			if(bCfgNode.toString().contains("a")) {
-//				a = bCfgNode;
-//				break;
-//			}
-//		}
-		
-//		Parameter paramaters = new Parameter();
-//		for (INode n : ((FunctionNode) function).getArguments())
-//			paramaters.add(n);
-//		
-//		for (INode n : ((FunctionNode) function).getReducedExternalVariables())
-//			paramaters.add(n);
-//		INormalizedTestpath testpath = new NormalizedTestpath();
-////		testpath
-//		testpath.getAllCfgNodes().add(a);
-//		ISymbolicExecution se = new SymbolicExecution(testpath, paramaters, function);
-//		List<PathConstraint> constraints = (List<PathConstraint>) se.getConstraints();
-//		
-//		SmtLibGeneration smt = new SmtLibGeneration();
-//		smt.setTestcases(function.getArguments());
-//		smt.setConstraints(constraints);
-//		smt.generate();
-//		
-//		BufferedWriter writer = new BufferedWriter(new FileWriter("myConstraint.smt2", false));
-//		writer.write(smt.getSmtLibContent());
-//		writer.close();
-//		RunZ3OnCMD run = new RunZ3OnCMD(Main.pathToZ3, Main.pathToConstraint);
-//		run.execute();
-//		System.out.println(new Z3SolutionParser().getSolution(run.getSolution()));
-//		
 				
 	}
 	public void analyze() throws Exception {
@@ -126,12 +72,14 @@ public class BoundedTestGen
 		}
 		
 		for(IVariableNode variable:arguments) {
-			if(variable.getFullType().equals("int") || variable.getFullType().equals("float") || variable.getFullType().equals("double")) {
+			if(variable.getFullType().equals("int") || variable.getFullType().equals("float") ||
+					variable.getFullType().equals("double")) {
 				for(ICfgNode node: cfg.getAllNodes()) {
 					if(node.toString().contains(variable.toString()) && 
-					(node.toString().contains(">")||node.toString().contains(">=")||node.toString().contains("<")||node.toString().contains("<=")||node.toString().contains("==")||node.toString().contains("!="))) {
+					(node.toString().contains(">")||node.toString().contains(">=")||
+							node.toString().contains("<")||node.toString().contains("<=")||
+							node.toString().contains("==")||node.toString().contains("!="))) {
 						this.analyzeNode(node, dict.get(variable),variable, cfg, this.function, dict);
-//						this.solveTestPath(cfg, node, dict, functionNode);
 					}
 					
 				}
@@ -143,9 +91,6 @@ public class BoundedTestGen
 		for(IVariableNode variable : dict.keySet()) {
 			logger.debug(variable.toString() + dict.get(variable).toString());
 		}
-		
-		
-//		Hashtable<IVariableNode, HashSet<Number>> dict1=(Hashtable<IVariableNode, HashSet<Number>>) dict.clone();
 		int maxSize=0;
 		for(IVariableNode variableNode:dict.keySet()) {
 			if(dict.get(variableNode).size()>maxSize) {
@@ -153,28 +98,7 @@ public class BoundedTestGen
 			}
 		}
 		Random random = new Random();
-		
-//		for(int i=0;i<maxSize;i++) {
-//			
-//			for(IVariableNode variableNode: dict1.keySet()) {
-//				
-//				if(dict1.get(variableNode).size()==0) {
-//					if(dict.get(variableNode).size()==0) {
-//						testCase+=variableNode.toString()+"="+random.nextInt(100)+";";
-//					}
-//					else {
-//						int randomPosition = random.nextInt(dict.get(variableNode).size());
-//						testCase+=variableNode.toString()+"="+dict.get(variableNode).toArray()[randomPosition]+";";
-//					}
-//					
-//				}
-//				else {
-//					testCase+=variableNode.toString()+"="+dict1.get(variableNode).toArray()[0]+";";
-//					dict1.get(variableNode).remove(dict1.get(variableNode).toArray()[0]);
-//				}
-//			}
-//			testCase+="\n";
-//		}
+
 		List<String> testCasees = new ArrayList<String>();
 		Hashtable<IVariableNode, String> dict2 = new Hashtable<IVariableNode, String>();
 		String replace = "nosolution";

@@ -120,140 +120,7 @@ public class Main {
 			graph.computeBranchCover();
 			graph.computeStatementCov();
 			Graph graphForLoop;
-			
-//			if(coverage==0) {
-//				graphForLoop = graph;
-//			}
-//			else {
-//				graphForLoop = Prob.createGraph(Paths.TSDV_R1_2, func_name ,maxIterations,0);
-//			}
-//			
-//			
-//			Random random = new Random();
-//			String loopSolution=IStaticSolutionGeneration.NO_SOLUTION;
-//			PossibleTestpathGenerationForLoop tpForLoop = null;
-//			int k =2 ;
-//			int loopCover = 2;
-//			boolean resultForCondition = false;
-//			List<AbstractConditionLoopCfgNode> listCondition = new ArrayList<AbstractConditionLoopCfgNode>();
-//			boolean hasSolution = false;
-//			int temp=-1;
-//			AbstractConditionLoopCfgNode tempConditionLoopCfgNode = null;
-//			AbstractConditionLoopCfgNode tempCondition = null;
-//			boolean usedNumbericCon = false;
-//			boolean breakLoop = false;
-//			System.out.println("done");
-//			while(loopCover!=4&&!breakLoop) {
-//				if(usedNumbericCon) {
-//					break;
-//				}
-//				int count = 0;
-//				AbstractConditionLoopCfgNode condition = graphForLoop.getLastConditionNode(listCondition);
-//				
-//				
-//				if(!isNumbericCondition(condition).equals(IStaticSolutionGeneration.NO_SOLUTION) && !isNumbericCondition(condition).equals("-1")) {
-//					temp=Integer.parseInt(isNumbericCondition(condition));
-//					tempCondition = condition;
-//					listCondition.add(condition);
-//					continue;
-//					
-//				}
-//				
-//				if(condition==null&&temp==-1) {
-//					break;
-//				}
-//				else if(condition==null){
-//					condition = tempCondition;
-//					usedNumbericCon=true;
-//				}
-//				
-//				listCondition.add(condition);
-//				if(condition instanceof ConditionDoCfgNode) {
-//					PossibleTestpathGenerationForLoop.isDoWhileLoop = true;
-//				}
-//				
-//				if(graph.get_2LoopSolution()==null&&usedNumbericCon==false) {
-//					k=2;
-//				}
-//				else if (graph.getLoopSolution()==null) {
-//					if(usedNumbericCon==true) {
-//						k = temp;
-//					}
-//					else k = random.nextInt((max - min)+1)+min;
-//				}
-//				else break;
-//				
-//			do{
-//				
-//				try {
-//					tpForLoop = new PossibleTestpathGenerationForLoop(graphForLoop.getCfg(), condition);
-//					tpForLoop.setMaximumIterationsForOtherLoops(k);
-//					tpForLoop.setIterationForUnboundedTestingLoop(k);
-//					tpForLoop.setAddTheEndTestingCondition(true);
-//					tpForLoop.generateTestpaths();
-//				}catch (OutOfMemoryError e) {
-//					// TODO: handle exception
-//					breakLoop=true;
-//					break;
-//				}
-//				
-//				int i = 0;
-//				loopSolution = solveTestpath(graphForLoop.getCfg(), tpForLoop.getPossibleTestpaths().get(i));
-//					if(!loopSolution.contentEquals(IStaticSolutionGeneration.NO_SOLUTION)) {
-//						i = (tpForLoop.getPossibleTestpaths().size())/2;
-//						loopSolution = solveTestpath(graphForLoop.getCfg(), tpForLoop.getPossibleTestpaths().get(i));
-//						if(!loopSolution.contentEquals(IStaticSolutionGeneration.NO_SOLUTION) && tpForLoop.getPossibleTestpaths().size()>1) {
-//							i = (tpForLoop.getPossibleTestpaths().size())-1;
-//							loopSolution = solveTestpath(graphForLoop.getCfg(), tpForLoop.getPossibleTestpaths().get(i));
-//							
-//						}
-//					}
-//					
-//					if(k==2) {
-//						graph.setPathFor2Loop(tpForLoop.getPossibleTestpaths().get(i));
-//					}
-//					else {
-//						graph.setPathForKLoop(tpForLoop.getPossibleTestpaths().get(i));
-//						graph.setK(k);
-//					}
-//					
-//					if(!loopSolution.contentEquals(IStaticSolutionGeneration.NO_SOLUTION)) {
-//						if(k==2) {
-//							graph.set_2LoopSolution(loopSolution);
-//							graph.setRealFor2loop(tpForLoop.getRealMaximumIterationForTestingLoop());
-//							graph.setPathFor2Loop(tpForLoop.getPossibleTestpaths().get(i));
-//							k = random.nextInt((max - min)+1)+min;
-//							loopSolution = IStaticSolutionGeneration.NO_SOLUTION;
-//							loopCover +=1;
-//						}
-//						
-//						else {
-//							
-//							hasSolution = true;
-//							graph.setK(k);
-//							graph.setLoopSolution(loopSolution);
-//							graph.setRealLoppiterations(tpForLoop.getRealMaximumIterationForTestingLoop());
-//							graph.setPathForKLoop(tpForLoop.getPossibleTestpaths().get(i));
-//							loopCover+=1;
-//							break;
-//							
-//						}
-//					
-//					}
-//
-//				count ++;
-//				
-//				if(k==2) {
-//					k = random.nextInt((max - min)+1)+min;
-//				}
-//				else k++;
-//			}while(!hasSolution && count < maxLoopInGenerateTestcaseForLoopFunction);
-//			
-//		}
-			
-//			graph.setK(k);
-		
-			
+
 			graph.createProbabilityForTestPath(hmmGraph);
 
 			Duration duration = Duration.between(afterGenForC,LocalDateTime.now());
@@ -261,7 +128,6 @@ public class Main {
 			float diff = (float)duration.toSeconds();
 			
 			hmmGraph.recomputeProbability();
-//			graph.setLoopCover(loopCover);
 			graph.toHtml(afterGenForC,coverage,(float)duration.toMillis()/1000, "WCFT4Cpp");
 			timesList.add(graph.getDuration());
 			
