@@ -1,13 +1,13 @@
 package utils.search;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
 import tree.object.FunctionNode;
 import tree.object.IFunctionNode;
 import tree.object.INode;
 import utils.Utils;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Search implements ISearch {
 
@@ -67,6 +67,12 @@ public class Search implements ISearch {
 				output.remove(n);
 		}
 		return output;
+	}
+
+	public synchronized  static List<INode> getAllNodes(INode root, ISearchCondition condition)
+	{
+		List<INode> output = Search.searchNodes(root, condition);
+		return  output;
 	}
 
 }
