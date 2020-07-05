@@ -137,7 +137,7 @@ public class HybridTestGen extends Component
     @FXML
     protected void btnGenerateTestData_Clicked(ActionEvent event) throws Exception
     {
-        System.out.println("btnTest_Clicked started");
+        System.out.println("btnGenerateTestData_Clicked started");
         int maxloop = 1;
         try
         {
@@ -158,12 +158,6 @@ public class HybridTestGen extends Component
         function = (IFunctionNode) Search.searchNodes(projectNode, new FunctionNodeCondition(), functionName).get(0);
         FunctionNormalizer fnNorm = ((IFunctionNode) function).normalizedAST();
 
-        int ij = 0;
-        if (ij == 0)
-        {
-            return;
-        }
-
         FunctionConfig funcConfig = new FunctionConfig();
         funcConfig.setCharacterBound(new ParameterBound(32, 100));
         funcConfig.setIntegerBound(new ParameterBound(0, 100));
@@ -172,11 +166,7 @@ public class HybridTestGen extends Component
 
         ICFG cfg = ((IFunctionNode) function).generateCFG();
 
-//			CFGGenerationforSubConditionCoverage cfgGen = new CFGGenerationforSubConditionCoverage(function);
-
-//			CFGGenerationforBranchvsStatementCoverage cfgGen = new CFGGenerationforBranchvsStatementCoverage(function);
         int maxIterations = 0;
-//			ICFG cfg = cfgGen.generateCFG();
         cfg.setFunctionNode(function);
         cfg.setIdforAllNodes();
         cfg.resetVisitedStateOfNodes();
@@ -190,9 +180,6 @@ public class HybridTestGen extends Component
 
         LocalDateTime before = LocalDateTime.now();
         this.generateTestpaths(this.function);
-//		LocalDateTime after = LocalDateTime.now();
-//		Duration duration = Duration.between(before,after);
-
 
         Graph graph = new Graph(before, cfg, this.getPossibleTestpaths(), this.function, sourceFolder, 1);
         HMMGraph hmmGraph = new HMMGraph(1);
@@ -200,7 +187,9 @@ public class HybridTestGen extends Component
         Node nextNode;
         String solution;
 
-        for (ProbTestPath testPath : graph.getFullProbTestPaths())
+        List<ProbTestPath> allProbTestPaths = graph.getFullProbTestPaths();
+
+        for (ProbTestPath testPath : allProbTestPaths)
         {
             for (Edge edge : testPath.getEdge())
             {
@@ -478,33 +467,5 @@ public class HybridTestGen extends Component
     public List<String> getTestCases()
     {
         return this.testCases;
-    }
-}
-
-class FunctionComboItem
-{
-    private String key;
-    private String value;
-
-    public FunctionComboItem(String key, String value)
-    {
-        this.key = key;
-        this.value = value;
-    }
-
-    @Override
-    public String toString()
-    {
-        return key;
-    }
-
-    public String getKey()
-    {
-        return key;
-    }
-
-    public String getValue()
-    {
-        return value;
     }
 }

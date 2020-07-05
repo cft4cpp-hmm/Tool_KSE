@@ -16,12 +16,20 @@
                     <th>Test Data</th>
                 </tr>
             </thead>
-            <tbody><tr><td>0</td><td><td>0</td><td></td><td> </td></tr>   <tbody>
+            <tbody><tr><td>0</td><td><td>0</td><td></td><td>n=1;;</td></tr><tr><td>1</td><td><td>1</td><td></td><td>n=2;;</td></tr>   <tbody>
         </table></div>
 <div class="conlusion">
-<pre>int sum(int a, int b){
-	int summ = a+b;
-	return summ;
-}</pre>        <div>Time For C2 :243.061s</div>
+<pre>int fibonaci(int n) //huong
+{
+    int a[100];
+    if(n>=2)
+    {
+    a[0]=a[1]=1;
+    for (int i=2;i<=n;i++)
+        a[i]=a[i-1]+a[i-2];
+    return a[n];
+    }
+    return 0;
+}</pre>        <div>Time For C2 :514.854s</div>
         <div>C2 Coverage 1.0</div></div>
 </body></html>

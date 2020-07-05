@@ -1,4 +1,6 @@
 (set-option :timeout 5000)
-(declare-fun tvw_a () Int)
-(assert (not  (<  tvw_a   5 ) ) )
+(declare-fun tvw_n () Int)
+(assert (>=  tvw_n   2 ) )
+(assert (<=  2   tvw_n ) )
+(assert (not  (<=  3   tvw_n ) ) )
 (check-sat)(get-model)
