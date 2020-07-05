@@ -139,7 +139,8 @@ public class Graph
             {
                 for (Edge edge1 : testPath1.getEdge())
                 {
-                    if (testPath1 != testPath && edge.getNode() == edge1.getNode() && edge.getNextNode() == edge1.getNextNode())
+                    if (testPath1 != testPath && edge.getNode() == edge1.getNode() &&
+                            edge.getNextNode() == edge1.getNextNode())
                     {
                         edge1.setIsVisited();
                     }

@@ -1,12 +1,7 @@
 package GUI;
 
 import Common.DSEConstants;
-import HMM.HMMGraph;
-import HMM.Node;
-import HybridAutoTestGen.CFT4CPP;
-import HybridAutoTestGen.Edge;
-import HybridAutoTestGen.Graph;
-import HybridAutoTestGen.ProbTestPath;
+import HybridAutoTestGen.*;
 import cfg.ICFG;
 import cfg.object.AbstractConditionLoopCfgNode;
 import cfg.object.ConditionCfgNode;
@@ -182,9 +177,9 @@ public class HybridTestGen extends Component
         this.generateTestpaths(this.function);
 
         Graph graph = new Graph(before, cfg, this.getPossibleTestpaths(), this.function, sourceFolder, 1);
-        HMMGraph hmmGraph = new HMMGraph(1);
-        Node node;
-        Node nextNode;
+        AlgorithmGraph algorithmGraph = new AlgorithmGraph();
+        AlgNode node;
+        AlgNode nextNode;
         String solution;
 
         List<ProbTestPath> allProbTestPaths = graph.getFullProbTestPaths();
@@ -193,9 +188,9 @@ public class HybridTestGen extends Component
         {
             for (Edge edge : testPath.getEdge())
             {
-                node = new Node(edge.getNode());
-                nextNode = new Node(edge.getNextNode());
-                hmmGraph.addNode(node, nextNode, (float) edge.getWeight());
+                node = new AlgNode(edge.getNode());
+                nextNode = new AlgNode(edge.getNextNode());
+                algorithmGraph.addNode(node);
             }
         }
 
@@ -204,7 +199,7 @@ public class HybridTestGen extends Component
             FullTestpath testpath = (FullTestpath) this.getPossibleTestpaths().get(i);
             if (!testpath.getTestCase().equals(IStaticSolutionGeneration.NO_SOLUTION))
             {
-                graph.updateGraph(i, 1, hmmGraph, 1);
+                //graph.updateGraph(i, 1, algorithmGraph, 1);
                 graph.getFullProbTestPaths().get(i).setTestCase(testpath.getTestCase());
             }
         }
@@ -235,17 +230,6 @@ public class HybridTestGen extends Component
         }
 
         possibleTestpaths = testpaths_;
-
-        // Calculate the running time
-        // Date end = Calendar.getInstance().getTime();
-        // totalRunningTime = end.getTime() - startTime.getTime();
-        // logger.debug("Total running time: " + totalRunningTime + " ms");
-        // logger.debug("Solving time: " + solvingTime + " ms");
-        // logger.debug("Number of solving calls: " + numberOfSolvingCalls + "
-        // ms");
-        // logger.debug(
-        // "Number of solving calls that does not have solution: " +
-        // numberOfSolvingCallsThatNoSolution + " ms");
     }
 
     private void traverseCFG(ICfgNode stm, FullTestpath tp, FullTestpaths testpaths, IFunctionNode function) throws Exception
@@ -254,8 +238,6 @@ public class HybridTestGen extends Component
         tp.add(stm);
         FullTestpath tp1 = (FullTestpath) tp.clone();
         FullTestpath tp2 = (FullTestpath) tp.clone();
-//		System.out.println(this.haveSolution(tp, finalConditionType)+tp.getFullPath());
-//		System.out.println(stm.toString());
         if (stm instanceof EndFlagCfgNode)
         {
             FullTestpath tpclone = (FullTestpath) tp.clone();
