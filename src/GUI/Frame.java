@@ -2,7 +2,7 @@ package GUI;
 
 import HybridAutoTestGen.CFT4CPP;
 import HybridAutoTestGen.FullBoundedTestGen;
-import HybridAutoTestGen.Main;
+import HybridAutoTestGen.WeightedCFGTestGEn;
 import config.Paths;
 import console.Console;
 
@@ -193,16 +193,16 @@ public class Frame {
 					int iterations = (int) comboBox.getSelectedItem();
 					String functionName = funcName.getText();
 					CFT4CPP cft4cpp = new CFT4CPP(null,iterations, Paths.TSDV_R1_2, functionName);
-					Main main = new Main(functionName, iterations);
+					WeightedCFGTestGEn weightedCFGTestGEn = new WeightedCFGTestGEn(functionName, iterations);
 					FullBoundedTestGen bGen = new FullBoundedTestGen(null, iterations, functionName);
 					if(STCFG.isSelected()) {
 						cft4cpp.run();
 					}
 					else if(WCFT4Cpp.isSelected()) {
-						main.run();
+						weightedCFGTestGEn.run();
 					}
 					else if(BCFT4Cpp.isSelected()) {
-						bGen.toHtml();
+						bGen.boundaryValueTestGen();
 					}
 					else if(CTCFG.isSelected()) {
 						Console console = new Console(functionName);

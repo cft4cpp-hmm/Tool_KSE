@@ -1,27 +1,18 @@
 package testdatagen;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
-import org.eclipse.cdt.core.dom.ast.cpp.ICPPASTFunctionDefinition;
 
-import HybridAutoTestGen.Main;
-import cfg.CFGGenerationforBranchvsStatementCoverage;
+import HybridAutoTestGen.WeightedCFGTestGEn;
 import cfg.CFGGenerationforSubConditionCoverage;
 import cfg.ICFG;
-import cfg.object.BranchInCFG;
-import cfg.object.CfgNode;
 import cfg.object.ICfgNode;
 import cfg.testpath.ITestpathInCFG;
-import cfg.testpath.PossibleTestpathGeneration;
 import config.AbstractSetting;
 import config.FunctionConfig;
 import config.ISettingv2;
@@ -35,7 +26,6 @@ import normalizer.PrivateToPublicNormalizer;
 import parser.projectparser.ProjectLoader;
 import parser.projectparser.ProjectParser;
 import testdata.object.TestpathString_Marker;
-import testdatagen.coverage.CFGUpdater_Mark;
 import testdatagen.module.DataTreeGeneration;
 import testdatagen.module.IDataTreeGeneration;
 import testdatagen.structuregen.ChangedTokens;
@@ -148,11 +138,11 @@ public class FunctionExecution implements ITestdataExecution {
 	public FunctionExecution() {
 		
 //		Settingv2.create();
-		AbstractSetting.setValue(ISettingv2.SOLVER_Z3_PATH, Main.pathToZ3);
+		AbstractSetting.setValue(ISettingv2.SOLVER_Z3_PATH, WeightedCFGTestGEn.pathToZ3);
 		AbstractSetting.setValue(ISettingv2.GNU_MAKE_PATH,
-				Main.pathToMingw32);
-		AbstractSetting.setValue(ISettingv2.GNU_GCC_PATH, Main.pathToGCC);
-		AbstractSetting.setValue(ISettingv2.GNU_GPlusPlus_PATH, Main.pathToGPlus);
+				WeightedCFGTestGEn.pathToMingw32);
+		AbstractSetting.setValue(ISettingv2.GNU_GCC_PATH, WeightedCFGTestGEn.pathToGCC);
+		AbstractSetting.setValue(ISettingv2.GNU_GPlusPlus_PATH, WeightedCFGTestGEn.pathToGPlus);
 	}
 	public FunctionExecution(String pathToZ3, String pathToMingw32, String pathToGCC, String pathToGPlus) {
 		Settingv2.create();

@@ -95,10 +95,10 @@ public class FullBoundedTestGen {
 	public static void main(String[] args) throws Exception {
 		FullBoundedTestGen tpGen = new FullBoundedTestGen(null,1, "PDF(int,int,int)");
 
-		tpGen.toHtml();
+		tpGen.boundaryValueTestGen();
 		
 	}
-	public void toHtml() throws IOException {
+	public void boundaryValueTestGen() throws IOException {
 		List<IVariableNode> arguments = this.getFunctionNode().getArguments();
 		Set<String> testCases = new HashSet<String>();
 		Random rand = new Random();

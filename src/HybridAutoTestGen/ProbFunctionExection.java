@@ -2,18 +2,12 @@ package HybridAutoTestGen;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 
 import cfg.ICFG;
-import cfg.object.ICfgNode;
-import config.FunctionConfig;
-import config.ParameterBound;
 import config.Paths;
-import parser.makefile.object.GPlusPlusExeCondition;
 import parser.projectparser.ProjectParser;
 import testdata.object.TestpathString_Marker;
 import testdatagen.FunctionExecution;
-import tree.object.FunctionNode;
 import tree.object.IFunctionNode;
 import tree.object.INode;
 import utils.Utils;
@@ -45,7 +39,7 @@ public class ProbFunctionExection extends FunctionExecution{
 		this.setCFG(this.graph.getCfg());
 	}
 	public ProbFunctionExection(String PathToFile, String functionName, ICFG cfg) throws IOException {
-		super(Main.pathToZ3, Main.pathToMingw32, Main.pathToGCC, Main.pathToGPlus);
+		super(WeightedCFGTestGEn.pathToZ3, WeightedCFGTestGEn.pathToMingw32, WeightedCFGTestGEn.pathToGCC, WeightedCFGTestGEn.pathToGPlus);
 		String testedProject = PathToFile;
 		clone = Utils.copy(testedProject);
 		Paths.CURRENT_PROJECT.CLONE_PROJECT_PATH = clone.getAbsolutePath();

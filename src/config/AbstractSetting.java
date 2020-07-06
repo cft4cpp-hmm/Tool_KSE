@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.StringTokenizer;
 
-import HybridAutoTestGen.Main;
+import HybridAutoTestGen.WeightedCFGTestGEn;
 import utils.SpecialCharacter;
 import utils.Utils;
 
@@ -68,20 +68,20 @@ public abstract class AbstractSetting implements ISettingv2 {
 					continue;
 				else if (element.length == 2) {
 					if(keyItem.equals("GNU_MAKE_PATH")) {
-						valueItem= Main.pathToMingw32;
+						valueItem= WeightedCFGTestGEn.pathToMingw32;
 					}
 					else if(keyItem.equals("Z3_SOLVER_PATH")) {
-						valueItem = Main.pathToZ3;
+						valueItem = WeightedCFGTestGEn.pathToZ3;
 						
 					}
 					else if(keyItem.equals("SMT_LIB_FILE_PATH")) {
-						valueItem = Paths.CURRENT_PROJECT.LOCAL_FOLDER + File.separator+Main.pathToConstraint;
+						valueItem = Paths.CURRENT_PROJECT.LOCAL_FOLDER + File.separator+ WeightedCFGTestGEn.pathToConstraint;
 					}
 					else if(keyItem.equals("GNU_GCC_PATH")) {
-						valueItem = Main.pathToGCC;
+						valueItem = WeightedCFGTestGEn.pathToGCC;
 					}
 					else if(keyItem.equals("GNU_GPlusPlus_PATH")) {
-						valueItem = Main.pathToGPlus;
+						valueItem = WeightedCFGTestGEn.pathToGPlus;
 					}
 					else if(keyItem.equals("TESTDATA_STRATEGY")){
 						valueItem = "2";

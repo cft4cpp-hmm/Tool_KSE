@@ -31,7 +31,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Main {
+public class WeightedCFGTestGEn
+{
 	public static String pathToZ3 ="..\\cft4cpp-core\\local\\z3\\bin\\z3.exe";
 	public static String pathToMingw32 = "..\\cft4cpp-core\\bin\\mingw32-make.exe";
 	public static String pathToGCC = "..\\cft4cpp-core\\bin\\gcc.exe";
@@ -52,10 +53,10 @@ public class Main {
 	private String functionName;
 	private int interations;
 //	public Main(String pathToZ3)
-	public Main() {
+	public WeightedCFGTestGEn() {
 		
 	}
-	public Main(String funcName, int iterations) {
+	public WeightedCFGTestGEn(String funcName, int iterations) {
 		this.functionName = funcName;
 		this.interations = iterations;
 	}
@@ -67,7 +68,7 @@ public class Main {
 		int j = 0;
 		List<Float> timesList = new ArrayList<Float>();
 		while(j< times) {
-		Main Prob = new Main();
+		WeightedCFGTestGEn Prob = new WeightedCFGTestGEn();
 		int epoch = 1;
 		List<String> listSolution = new ArrayList<String>();
 		try {
@@ -150,7 +151,7 @@ public class Main {
 		int j = 0;
 		List<Float> timesList = new ArrayList<Float>();
 		while(j< times) {
-		Main Prob = new Main();
+		WeightedCFGTestGEn Prob = new WeightedCFGTestGEn();
 		int epoch = 1;
 		List<String> listSolution = new ArrayList<String>();
 		try {

@@ -178,17 +178,6 @@ public class CFT4CPP
         }
 
         possibleTestpaths = testpaths_;
-
-        // Calculate the running time
-        // Date end = Calendar.getInstance().getTime();
-        // totalRunningTime = end.getTime() - startTime.getTime();
-        // logger.debug("Total running time: " + totalRunningTime + " ms");
-        // logger.debug("Solving time: " + solvingTime + " ms");
-        // logger.debug("Number of solving calls: " + numberOfSolvingCalls + "
-        // ms");
-        // logger.debug(
-        // "Number of solving calls that does not have solution: " +
-        // numberOfSolvingCallsThatNoSolution + " ms");
     }
 
     private void traverseCFG(ICfgNode stm, FullTestpath tp, FullTestpaths testpaths, IFunctionNode function) throws Exception

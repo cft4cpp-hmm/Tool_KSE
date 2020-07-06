@@ -5,9 +5,7 @@ import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
-import org.eclipse.cdt.core.settings.model.COutputEntry;
 
-import HybridAutoTestGen.Main;
 import config.AbstractSetting;
 import config.ISettingv2;
 import config.Paths;

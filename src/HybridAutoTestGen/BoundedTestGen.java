@@ -269,7 +269,7 @@ public class BoundedTestGen
 			BufferedWriter writer = new BufferedWriter(new FileWriter("myConstraint.smt2", false));
 			writer.write(smt.getSmtLibContent());
 			writer.close();
-			RunZ3OnCMD run = new RunZ3OnCMD(Main.pathToZ3, Main.pathToConstraint);
+			RunZ3OnCMD run = new RunZ3OnCMD(WeightedCFGTestGEn.pathToZ3, WeightedCFGTestGEn.pathToConstraint);
 			run.execute();
 			String result = new Z3SolutionParser().getSolution(run.getSolution());
 			String[] listResult = result.split(";");

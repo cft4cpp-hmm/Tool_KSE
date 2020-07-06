@@ -12,6 +12,7 @@ import config.FunctionConfig;
 import config.ISettingv2;
 import config.ParameterBound;
 import config.Settingv2;
+import console.Console;
 import constraints.checker.RelatedConstraintsChecker;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -54,6 +55,9 @@ public class HybridTestGen extends Component
     final static Logger logger = Logger.getLogger(CFT4CPP.class);
     public ComboBox cboSelectedFunction;
     public Button btnGetFunctionList;
+    public Button btnBVTG;
+    public Button btnSTCFG;
+    public Button btnWCFT;
     /**
      * Represent control flow graph
      */
@@ -97,8 +101,11 @@ public class HybridTestGen extends Component
     protected void btnViewReport_Clicked(ActionEvent event) throws Exception
     {
         System.out.println("btnViewReport_Clicked started");
-//        CFT4CPP tpGen = new CFT4CPP(null, 1, "sum(int,int)");
-//        tpGen.run();
+        Path currentRelativePath = Paths.get("");
+        String path = currentRelativePath.toAbsolutePath().toString() + "\\TEST_REPORT.html";
+
+        File htmlFile = new File(path);
+        Desktop.getDesktop().browse(htmlFile.toURI());
     }
 
     @FXML
@@ -120,6 +127,152 @@ public class HybridTestGen extends Component
         }
     }
 
+    @FXML
+    protected void btnWCFT_Clicked(ActionEvent event) throws Exception
+    {
+        try
+        {
+            int maxloop = 1;
+            try
+            {
+                maxloop = Integer.parseInt(txtMaxLoop.getText());
+            }
+            catch (Exception ex)
+            {
+                JOptionPane.showMessageDialog(null, "Maxloop is invalid",
+                        DSEConstants.PRODUCT_NAME, JOptionPane.ERROR_MESSAGE);
+            }
+            String value = "";
+
+            if (cboSelectedFunction.getValue() == null)
+            {
+                JOptionPane.showMessageDialog(null, "Please click on [Get function list] button, then choose a function to generate test data", DSEConstants.PRODUCT_NAME, JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            value = cboSelectedFunction.getValue().toString();
+
+            WeightedCFGTestGEn weightedCFGTestGEn = new WeightedCFGTestGEn(value, maxloop);
+            weightedCFGTestGEn.run();
+
+            JOptionPane.showMessageDialog(null, "Finish generating data. Click on [View report] " +
+                    "for the result.", DSEConstants.PRODUCT_NAME, JOptionPane.INFORMATION_MESSAGE);
+        }
+        catch (Exception e1)
+        {
+            e1.printStackTrace();
+        }
+    }
+
+    @FXML
+    protected void btnSTCFG_Clicked(ActionEvent event) throws Exception
+    {
+        try
+        {
+            int maxloop = 1;
+            try
+            {
+                maxloop = Integer.parseInt(txtMaxLoop.getText());
+            }
+            catch (Exception ex)
+            {
+                JOptionPane.showMessageDialog(null, "Maxloop is invalid",
+                        DSEConstants.PRODUCT_NAME, JOptionPane.ERROR_MESSAGE);
+            }
+            String value = "";
+
+            if (cboSelectedFunction.getValue() == null)
+            {
+                JOptionPane.showMessageDialog(null, "Please click on [Get function list] button, then choose a function to generate test data", DSEConstants.PRODUCT_NAME, JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            value = cboSelectedFunction.getValue().toString();
+
+            CFT4CPP cft4cpp = new CFT4CPP(null, maxloop, config.Paths.TSDV_R1_2, value);
+
+            cft4cpp.run();
+
+            JOptionPane.showMessageDialog(null, "Finish generating data. Click on [View report] " +
+                    "for the result.", DSEConstants.PRODUCT_NAME, JOptionPane.INFORMATION_MESSAGE);
+        }
+        catch (Exception e1)
+        {
+            e1.printStackTrace();
+        }
+    }
+
+    @FXML
+    protected void btnBVTG_Clicked(ActionEvent event) throws Exception
+    {
+        try
+        {
+            int maxloop = 1;
+            try
+            {
+                maxloop = Integer.parseInt(txtMaxLoop.getText());
+            }
+            catch (Exception ex)
+            {
+                JOptionPane.showMessageDialog(null, "Maxloop is invalid",
+                        DSEConstants.PRODUCT_NAME, JOptionPane.ERROR_MESSAGE);
+            }
+            String value = "";
+
+            if (cboSelectedFunction.getValue() == null)
+            {
+                JOptionPane.showMessageDialog(null, "Please click on [Get function list] button, then choose a function to generate test data", DSEConstants.PRODUCT_NAME, JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            value = cboSelectedFunction.getValue().toString();
+
+            FullBoundedTestGen bGen = new FullBoundedTestGen(null, maxloop, value);
+
+            bGen.boundaryValueTestGen();
+
+            JOptionPane.showMessageDialog(null, "Finish generating data. Click on [View report] " +
+                    "for the result.", DSEConstants.PRODUCT_NAME, JOptionPane.INFORMATION_MESSAGE);
+        }
+        catch (Exception e1)
+        {
+            e1.printStackTrace();
+        }
+    }
+
+    @FXML
+    protected void btnConcolic_Clicked(ActionEvent event) throws Exception
+    {
+        try
+        {
+            int maxloop = 1;
+            try
+            {
+                maxloop = Integer.parseInt(txtMaxLoop.getText());
+            }
+            catch (Exception ex)
+            {
+                JOptionPane.showMessageDialog(null, "Maxloop is invalid",
+                        DSEConstants.PRODUCT_NAME, JOptionPane.ERROR_MESSAGE);
+            }
+            String value = "";
+
+            if (cboSelectedFunction.getValue() == null)
+            {
+                JOptionPane.showMessageDialog(null, "Please click on [Get function list] button, then choose a function to generate test data", DSEConstants.PRODUCT_NAME, JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            value = cboSelectedFunction.getValue().toString();
+
+            Console console = new Console(value);
+
+            JOptionPane.showMessageDialog(null, "Finish generating data. Click on [View report] " +
+                    "for the result.", DSEConstants.PRODUCT_NAME, JOptionPane.INFORMATION_MESSAGE);
+        }
+        catch (Exception e1)
+        {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+        }
+    }
+
     public void initialize()
     {
         // initialization code here...
@@ -130,7 +283,7 @@ public class HybridTestGen extends Component
     }
 
     @FXML
-    protected void btnGenerateTestData_Clicked(ActionEvent event) throws Exception
+    protected void btnHybrid_Clicked(ActionEvent event) throws Exception
     {
         System.out.println("btnGenerateTestData_Clicked started");
         int maxloop = 1;
@@ -140,12 +293,22 @@ public class HybridTestGen extends Component
         }
         catch (Exception ex)
         {
-            JOptionPane.showMessageDialog(null, "Maxloop is invalid", DSEConstants.PRODUCT_NAME, JOptionPane.ERROR);
+            JOptionPane.showMessageDialog(null, "Maxloop is invalid", DSEConstants.PRODUCT_NAME,
+                    JOptionPane.ERROR_MESSAGE);
         }
-        Object item = cboSelectedFunction.getSelectionModel();
-        String value = cboSelectedFunction.getValue().toString();
+        String value = "";
+
+        if (cboSelectedFunction.getValue() == null)
+        {
+            JOptionPane.showMessageDialog(null, "Please click on [Get function list] button, then choose a function to generate test data", DSEConstants.PRODUCT_NAME, JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        value = cboSelectedFunction.getValue().toString();
 
         generateTestData(maxloop, value, txtSourceFolder.getText());
+
+        JOptionPane.showMessageDialog(null, "Finish generating data. Click on [View report] " +
+                "for the result.", DSEConstants.PRODUCT_NAME, JOptionPane.INFORMATION_MESSAGE);
     }
 
     public void generateTestData(int maxloop, String functionName, String sourceFolder) throws Exception

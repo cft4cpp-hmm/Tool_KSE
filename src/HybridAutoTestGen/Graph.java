@@ -199,7 +199,7 @@ public class Graph
             testDatas.add(path.getTestCase());
         }
 //		CFGUpdater_Mark updater = 
-        ProbFunctionExection probFunction = new ProbFunctionExection(this, Main.pathToZ3, Main.pathToMingw32, Main.pathToGCC, Main.pathToGPlus);
+        ProbFunctionExection probFunction = new ProbFunctionExection(this, WeightedCFGTestGEn.pathToZ3, WeightedCFGTestGEn.pathToMingw32, WeightedCFGTestGEn.pathToGCC, WeightedCFGTestGEn.pathToGPlus);
         TestpathString_Marker testpath;
         for (String testData : testDatas)
         {
