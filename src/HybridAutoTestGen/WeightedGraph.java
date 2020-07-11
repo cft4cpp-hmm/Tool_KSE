@@ -1,22 +1,20 @@
 package HybridAutoTestGen;
 
-
 import cfg.object.ICfgNode;
 
 import java.util.ArrayList;
-import java.util.List;
 
-public class AlgorithmGraph
+public class WeightedGraph extends AlgorithmGraph
 {
-    protected List<AlgNode> nodes;
-    public AlgorithmGraph() {
+    public WeightedGraph() {
         nodes = new ArrayList<AlgNode>();
     }
-    public void addNode(AlgNode node) {
+    public void addNode(AlgNode node, AlgNode nextNode, float weight) {
         for(AlgNode node1: nodes) {
             if(node1.getCfgNode() == node.getCfgNode()) {
                 return ;
             }
+
         }
         nodes.add(node);
 

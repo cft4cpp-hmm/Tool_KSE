@@ -435,7 +435,6 @@ public class HybridTestGen extends Component
                             traverseCFG(trueNode, tp, testpaths, function);
                         }
 
-//						traverseCFG(trueNode, tp, testpaths,function);
                     }
                     else
                     {
