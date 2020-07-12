@@ -83,7 +83,6 @@ public class WeightedCFGTestGEn
 			Node node;
 			Node nextNode;
 			String solution ;
-//			ProbFunctionExection functionExection = new ProbFunctionExection(graph,pathToZ3,pathToMingw32,pathToGCC,pathToGPlus);
 			int pathNumber = graph.getNewPath();
 			
 			for(ProbTestPath testPath: graph.getFullProbTestPaths()) {

@@ -339,21 +339,21 @@ public class HybridTestGen extends Component
         LocalDateTime before = LocalDateTime.now();
         this.generateTestpaths(this.function);
 
-        Graph graph = new Graph(before, cfg, this.getPossibleTestpaths(), this.function, sourceFolder, 1);
-        AlgorithmGraph algorithmGraph = new AlgorithmGraph();
+        WeightedGraph graph = new WeightedGraph(before, cfg, cfg.getPossibleTestpaths().getPossibleTestpaths(), this.function, sourceFolder);
+        //eightedGraph algorithmGraph = new WeightedGraph();
         AlgNode node;
         AlgNode nextNode;
         String solution;
 
-        List<ProbTestPath> allProbTestPaths = graph.getFullProbTestPaths();
+        List<WeightedTestPath> allProbTestPaths = graph.getFullWeightedTestPaths();
 
-        for (ProbTestPath testPath : allProbTestPaths)
+        for (WeightedTestPath testPath : allProbTestPaths)
         {
-            for (Edge edge : testPath.getEdge())
+            for (WeightedEdge edge : testPath.getEdge())
             {
                 node = new AlgNode(edge.getNode());
                 nextNode = new AlgNode(edge.getNextNode());
-                algorithmGraph.addNode(node);
+                graph.addNode(node);
             }
         }
 
@@ -363,7 +363,7 @@ public class HybridTestGen extends Component
             if (!testpath.getTestCase().equals(IStaticSolutionGeneration.NO_SOLUTION))
             {
                 //graph.updateGraph(i, 1, algorithmGraph, 1);
-                graph.getFullProbTestPaths().get(i).setTestCase(testpath.getTestCase());
+                graph.getFullWeightedTestPaths().get(i).setTestCase(testpath.getTestCase());
             }
         }
         graph.toHtml(LocalDateTime.now(), 0, 1, "CFT4Cpp");

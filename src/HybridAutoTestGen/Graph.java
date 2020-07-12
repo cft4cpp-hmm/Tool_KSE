@@ -487,7 +487,6 @@ public class Graph
     {
         return this.fullProbTestPaths;
     }
-
     public int getEpoches()
     {
         return epoches;
