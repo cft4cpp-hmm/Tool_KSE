@@ -8,12 +8,12 @@ import java.util.List;
 
 public class AlgorithmGraph
 {
-    protected List<AlgNode> nodes;
+    protected List<WeightedNode> nodes;
     public AlgorithmGraph() {
-        nodes = new ArrayList<AlgNode>();
+        nodes = new ArrayList<WeightedNode>();
     }
-    public void addNode(AlgNode node) {
-        for(AlgNode node1: nodes) {
+    public void addNode(WeightedNode node) {
+        for(WeightedNode node1: nodes) {
             if(node1.getCfgNode() == node.getCfgNode()) {
                 return ;
             }
@@ -22,8 +22,8 @@ public class AlgorithmGraph
 
     }
 
-    public AlgNode getNode(ICfgNode iCfgNode) {
-        for(AlgNode node: nodes) {
+    public WeightedNode getNode(ICfgNode iCfgNode) {
+        for(WeightedNode node: nodes) {
             if(node.getCfgNode()==iCfgNode) {
                 return node;
             }

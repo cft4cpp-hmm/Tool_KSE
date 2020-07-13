@@ -2,15 +2,15 @@ package HybridAutoTestGen;
 
 import cfg.object.ICfgNode;
 
-public class AlgNode
+public class WeightedNode
 {
     private ICfgNode cfgNode;
 
-    public AlgNode() {
+    public WeightedNode() {
 
     }
 
-    public AlgNode(ICfgNode node) {
+    public WeightedNode(ICfgNode node) {
         this.cfgNode = node;
     }
     public ICfgNode getCfgNode() {

@@ -1,7 +1,10 @@
 package GUI;
 
 import Common.DSEConstants;
-import HybridAutoTestGen.*;
+import HybridAutoTestGen.CFT4CPP;
+import HybridAutoTestGen.FullBoundedTestGen;
+import HybridAutoTestGen.WeightedCFGTestGEn;
+import HybridAutoTestGen.WeightedGraph;
 import cfg.ICFG;
 import cfg.object.AbstractConditionLoopCfgNode;
 import cfg.object.ConditionCfgNode;
@@ -339,40 +342,29 @@ public class HybridTestGen extends Component
         LocalDateTime before = LocalDateTime.now();
         this.generateTestpaths(this.function);
 
-        WeightedGraph graph = new WeightedGraph(before, cfg, cfg.getPossibleTestpaths().getPossibleTestpaths(), this.function, sourceFolder);
-        //eightedGraph algorithmGraph = new WeightedGraph();
-        AlgNode node;
-        AlgNode nextNode;
-        String solution;
+        WeightedGraph graph = new WeightedGraph(before, cfg, this.getPossibleTestpaths(),
+                this.function, sourceFolder);
 
-        List<WeightedTestPath> allProbTestPaths = graph.getFullWeightedTestPaths();
-
-        for (WeightedTestPath testPath : allProbTestPaths)
-        {
-            for (WeightedEdge edge : testPath.getEdge())
-            {
-                node = new AlgNode(edge.getNode());
-                nextNode = new AlgNode(edge.getNextNode());
-                graph.addNode(node);
-            }
-        }
-
+        //Generate test data
         for (int i = 0; i < this.getPossibleTestpaths().size(); i++)
         {
             FullTestpath testpath = (FullTestpath) this.getPossibleTestpaths().get(i);
-            if (!testpath.getTestCase().equals(IStaticSolutionGeneration.NO_SOLUTION))
+            FullTestpath tpclone = (FullTestpath) testpath.clone();
+            tpclone.setTestCase(this.solveTestpath(function, testpath));
+            testCases.add(tpclone.getTestCase());
+
+            if (!tpclone.getTestCase().equals(IStaticSolutionGeneration.NO_SOLUTION))
             {
-                //graph.updateGraph(i, 1, algorithmGraph, 1);
-                graph.getFullWeightedTestPaths().get(i).setTestCase(testpath.getTestCase());
+                graph.updateWeightForPath(i, 1);
+                graph.getFullWeightedTestPaths().get(i).setTestCase(tpclone.getTestCase());
             }
         }
-        graph.toHtml(LocalDateTime.now(), 0, 1, "CFT4Cpp");
+        graph.exportReport(LocalDateTime.now(), 0, 1, "CFT4Cpp");
 
     }
 
     public void generateTestpaths(IFunctionNode function)
     {
-        // Date startTime = Calendar.getInstance().getTime();
         FullTestpaths testpaths_ = new FullTestpaths();
 
         ICfgNode beginNode = cfg.getBeginNode();

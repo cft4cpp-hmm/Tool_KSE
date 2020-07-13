@@ -24,10 +24,10 @@ import java.util.Set;
 public class WeightedGraph extends SourceGraph
 {
     private List<WeightedTestPath> fullWeightedTestPaths;
-    protected List<AlgNode> nodes;
+    protected List<WeightedNode> nodes;
 
-    public void addNode(AlgNode node) {
-        for(AlgNode node1: nodes) {
+    public void addNode(WeightedNode node) {
+        for(WeightedNode node1: nodes) {
             if(node1.getCfgNode() == node.getCfgNode()) {
                 return ;
             }
@@ -36,8 +36,8 @@ public class WeightedGraph extends SourceGraph
 
     }
 
-    public AlgNode getNode(ICfgNode iCfgNode) {
-        for(AlgNode node: nodes) {
+    public WeightedNode getNode(ICfgNode iCfgNode) {
+        for(WeightedNode node: nodes) {
             if(node.getCfgNode()==iCfgNode) {
                 return node;
             }
@@ -47,7 +47,7 @@ public class WeightedGraph extends SourceGraph
 
     public WeightedGraph(LocalDateTime createdDate, ICFG cfg, List<IFullTestpath> fullPossibleIFullTestpaths, IFunctionNode functionNode, String pathtoFile) {
         super(createdDate, cfg, fullPossibleIFullTestpaths, functionNode, pathtoFile);
-        nodes = new ArrayList<AlgNode>();
+        nodes = new ArrayList<WeightedNode>();
 
         this.fullWeightedTestPaths = new ArrayList<WeightedTestPath>();
 
@@ -69,7 +69,7 @@ public class WeightedGraph extends SourceGraph
         }
     }
 
-    public void updateGraph(int pathNumber, int weight)
+    public void updateWeightForPath(int pathNumber, int weight)
     {
         WeightedTestPath testPath = this.fullWeightedTestPaths.get(pathNumber);
         testPath.setGenerated(true);
@@ -170,14 +170,14 @@ public class WeightedGraph extends SourceGraph
 
     public void computeProbabilityForAllPath(int version)
     {
-        AlgNode node;
-        AlgNode nextNode;
+        WeightedNode node;
+        WeightedNode nextNode;
         for (WeightedTestPath probTestPath : this.fullWeightedTestPaths)
         {
             for (WeightedEdge edge : probTestPath.getEdge())
             {
-                node = new AlgNode(edge.getNode());
-                nextNode = new AlgNode(edge.getNextNode());
+                node = new WeightedNode(edge.getNode());
+                nextNode = new WeightedNode(edge.getNextNode());
             }
         }
     }
@@ -229,11 +229,9 @@ public class WeightedGraph extends SourceGraph
         return index;
     }
 
-    public void toHtml(LocalDateTime diff1, int coverage, float timeForLoop, String toolName) throws Exception
+    public void exportReport(LocalDateTime diff1, int coverage, float timeForLoop, String toolName) throws Exception
     {
-
         Duration duration = Duration.between(this.createdDate, diff1);
-
 
         float diff = Math.abs((float) duration.toMillis() / 1000);
         this.duration = diff;
@@ -271,7 +269,6 @@ public class WeightedGraph extends SourceGraph
         }
 
         String loopString = "";
-
 
         valueString += loopString;
         float stateCov = this.getCfg().computeStatementCoverage();
