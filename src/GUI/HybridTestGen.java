@@ -327,15 +327,15 @@ public class HybridTestGen extends Component
 
         ICFG cfg = ((IFunctionNode) function).generateCFG();
 
-        int maxIterations = 0;
-        cfg.setFunctionNode(function);
-        cfg.setIdforAllNodes();
-        cfg.resetVisitedStateOfNodes();
-        cfg.generateAllPossibleTestpaths(maxIterations);
+//        int maxIterations = 0;
+//        cfg.setFunctionNode(function);
+//        cfg.setIdforAllNodes();
+//        cfg.resetVisitedStateOfNodes();
+        //cfg.generateAllPossibleTestpaths(maxIterations);
         this.cfg = cfg;
         this.function = function;
-        this.cfg.resetVisitedStateOfNodes();
-        this.cfg.setIdforAllNodes();
+//        this.cfg.resetVisitedStateOfNodes();
+//        this.cfg.setIdforAllNodes();
         this.testCases = new ArrayList<String>();
         this.maxIterationsforEachLoop = maxloop;
 

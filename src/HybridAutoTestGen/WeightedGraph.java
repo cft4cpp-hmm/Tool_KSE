@@ -278,7 +278,9 @@ public class WeightedGraph extends SourceGraph
         try
         {
             coverInfo =
-                    "        <div>C2 Coverage " + this.computeStatementCov() + "</div></div>\r\n";
+                    "        <div>C2 Coverage " + this.computeStatementCov() + "</div></div>\r\n"+
+            "        <div>stateCov " + stateCov + "</div></div>\r\n"+
+            "        <div>branchCov " + branchCov + "</div></div>\r\n";
         }
         catch (Exception e)
         {
@@ -286,6 +288,7 @@ public class WeightedGraph extends SourceGraph
             e.printStackTrace();
         }
 
+        valueString += coverInfo;
         valueString += "   <tbody>\r\n" +
                 "        </table></div>\r\n" +
                 "<div class=\"conlusion\">\n" +
@@ -294,8 +297,8 @@ public class WeightedGraph extends SourceGraph
                 "</pre>" +
 
                 "        <div>Time For " + (coverage == 0 ? "C2 :" : "C3: ") + diff + "s</div>\r\n" +
-
-                coverInfo +
+//
+//                coverInfo +
                 "</body></html>";
         csvWriter.append(valueString);
         csvWriter.close();
