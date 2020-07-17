@@ -327,20 +327,16 @@ public class HybridTestGen extends Component
 
         ICFG cfg = ((IFunctionNode) function).generateCFG();
 
-//        int maxIterations = 0;
-//        cfg.setFunctionNode(function);
-//        cfg.setIdforAllNodes();
-//        cfg.resetVisitedStateOfNodes();
-        //cfg.generateAllPossibleTestpaths(maxIterations);
+        cfg.setFunctionNode(function);
         this.cfg = cfg;
         this.function = function;
-//        this.cfg.resetVisitedStateOfNodes();
-//        this.cfg.setIdforAllNodes();
+        this.cfg.resetVisitedStateOfNodes();
+        this.cfg.setIdforAllNodes();
         this.testCases = new ArrayList<String>();
         this.maxIterationsforEachLoop = maxloop;
 
         LocalDateTime before = LocalDateTime.now();
-        this.generateTestpaths(this.function);
+        this.generateTestpaths();
 
         WeightedGraph graph = new WeightedGraph(before, cfg, this.getPossibleTestpaths(),
                 this.function, sourceFolder);
@@ -363,7 +359,7 @@ public class HybridTestGen extends Component
 
     }
 
-    public void generateTestpaths(IFunctionNode function)
+    public void generateTestpaths()
     {
         FullTestpaths testpaths_ = new FullTestpaths();
 
@@ -372,7 +368,7 @@ public class HybridTestGen extends Component
         initialTestpath.setFunctionNode(cfg.getFunctionNode());
         try
         {
-            traverseCFG(beginNode, initialTestpath, testpaths_, function);
+            traverseCFG(beginNode, initialTestpath, testpaths_);
         }
         catch (Exception e)
         {
@@ -387,7 +383,7 @@ public class HybridTestGen extends Component
         possibleTestpaths = testpaths_;
     }
 
-    private void traverseCFG(ICfgNode stm, FullTestpath tp, FullTestpaths testpaths, IFunctionNode function) throws Exception
+    private void traverseCFG(ICfgNode stm, FullTestpath tp, FullTestpaths testpaths) throws Exception
     {
 
         tp.add(stm);
@@ -395,11 +391,12 @@ public class HybridTestGen extends Component
         FullTestpath tp2 = (FullTestpath) tp.clone();
         if (stm instanceof EndFlagCfgNode)
         {
-            FullTestpath tpclone = (FullTestpath) tp.clone();
-            tpclone.setTestCase(this.solveTestpath(function, tp));
-            testpaths.add(tpclone);
-            testCases.add(tpclone.getTestCase());
+//            FullTestpath tpclone = (FullTestpath) tp.clone();
+//            tpclone.setTestCase(this.solveTestpath(function, tp));
+            //testpaths.add(tpclone);
+            //testCases.add(tpclone.getTestCase());
 
+            testpaths.add((FullTestpath) tp.clone());
             tp.remove(tp.size() - 1);
         }
         else
@@ -412,28 +409,26 @@ public class HybridTestGen extends Component
 
                 if (stm instanceof AbstractConditionLoopCfgNode)
                 {
-
                     int currentIterations = tp.count(trueNode);
                     if (currentIterations < maxIterationsforEachLoop)
                     {
                         tp1.add(falseNode);
                         if (this.haveSolution(tp1, false))
                         {
-                            traverseCFG(falseNode, tp, testpaths, function);
+                            traverseCFG(falseNode, tp, testpaths);
                         }
                         tp2.add(trueNode);
                         if (this.haveSolution(tp2, true))
                         {
-                            traverseCFG(trueNode, tp, testpaths, function);
+                            traverseCFG(trueNode, tp, testpaths);
                         }
-
                     }
                     else
                     {
                         tp1.add(falseNode);
                         if (this.haveSolution(tp1, false))
                         {
-                            traverseCFG(falseNode, tp, testpaths, function);
+                            traverseCFG(falseNode, tp, testpaths);
                         }
 
                     }
@@ -444,19 +439,19 @@ public class HybridTestGen extends Component
 
                     if (this.haveSolution(tp1, false))
                     {
-                        traverseCFG(falseNode, tp, testpaths, function);
+                        traverseCFG(falseNode, tp, testpaths);
                     }
 
                     tp2.add(trueNode);
                     if (this.haveSolution(tp2, true))
                     {
-                        traverseCFG(trueNode, tp, testpaths, function);
+                        traverseCFG(trueNode, tp, testpaths);
                     }
                 }
             }
             else
             {
-                traverseCFG(trueNode, tp, testpaths, function);
+                traverseCFG(trueNode, tp, testpaths);
             }
 
             tp.remove(tp.size() - 1);
