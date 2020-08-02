@@ -16,7 +16,13 @@
                     <th>Test Data</th>
                 </tr>
             </thead>
-            <tbody><tr><td>0</td><td>( int a[100];) <font> => </font>return 0;</td><td>n=1;;</td></tr><tr><td>1</td><td>( int a[100];) <font> => </font>( a[0]=a[1]=1;) <font> => </font>( int i=2;) <font> => </font>( a[i]=a[i-1]+a[i-2];) <font> => </font>( i++) <font> => </font>return a[n];</td><td>n=2;;</td></tr>        <div>C2 Coverage 1.0</div></div>
+            <tbody><tr><td>0</td><td>( int a[100];) <font> => </font>return 0;</td><td>n=1;;</td></tr><tr><td>1</td><td>( int a[100];) <font> => </font>( a[0]=a[1]=1;) <font> => </font>( int i=2;) <font> => </font>( a[i]=a[i-1]+a[i-2];) <font> => </font>( i++) <font> => </font>return a[n];</td><td>n=2;;</td></tr>            </tbody></table> </div><br/><div  class="table-wrapper">        <table class="fl-table">
+            <thead>
+                <tr>
+                    <th>Test data</th>
+                </tr>
+            </thead>
+            <tbody><tr><td>n=1;</td></tr><tr><td>n=2;</td></tr><tr><td>n=3;</td></tr>            </tbody>            </table></div> <br/>        <div>C2 Coverage 1.0</div>
         <div>stateCov 1.0</div></div>
         <div>branchCov 0.0</div></div>
    <tbody>
@@ -33,5 +39,5 @@
     return a[n];
     }
     return 0;
-}</pre>        <div>Time For C2 :2.216s</div>
+}</pre>        <div>Time For C2 :2.55s</div>
 </body></html>

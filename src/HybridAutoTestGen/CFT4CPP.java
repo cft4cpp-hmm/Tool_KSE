@@ -113,7 +113,9 @@ public class CFT4CPP
 
     public static void main(String[] args) throws Exception
     {
-        CFT4CPP tpGen = new CFT4CPP(null, 1, Paths.TSDV_R1_2, "sum(int,int)");
+        CFT4CPP tpGen = new CFT4CPP(null, 1, Paths.TSDV_R1_2, "foo(int,int,int,int)");
+        //foo(int,int,int,int)
+        //sum(int,int)
         tpGen.run();
 
     }

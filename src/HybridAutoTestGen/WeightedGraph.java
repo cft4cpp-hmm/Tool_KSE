@@ -229,7 +229,7 @@ public class WeightedGraph extends SourceGraph
         return index;
     }
 
-    public void exportReport(LocalDateTime diff1, int coverage, float timeForLoop, String toolName) throws Exception
+    public void exportReport(LocalDateTime diff1, int coverage, float timeForLoop, String toolName, List<String> testCases) throws Exception
     {
         Duration duration = Duration.between(this.createdDate, diff1);
 
@@ -267,6 +267,24 @@ public class WeightedGraph extends SourceGraph
                 valueString += testPath.toStringForCFT4Cpp();
             }
         }
+        valueString += "            </tbody></table> </div><br/>";
+        valueString += "<div  class=\"table-wrapper\">"+
+        "        <table class=\"fl-table\">\r\n" +
+                "            <thead>\r\n" +
+                "                <tr>\r\n" +
+                "                    <th>Test data</th>\r\n" +
+//                "                    <th style=\"width: 800px\">Test path</th>\r\n" +
+//                "                    <th>Test Data</th>\r\n" +
+                "                </tr>\r\n" +
+                "            </thead>\r\n" +
+                "            <tbody>";
+        for (String testcase : testCases)
+        {
+            valueString += "<tr><td>" + testcase + "</td></tr>";
+        }
+        valueString += "            </tbody>";
+        valueString += "            </table>";
+        valueString += "</div> <br/>";
 
         String loopString = "";
 
@@ -278,7 +296,7 @@ public class WeightedGraph extends SourceGraph
         try
         {
             coverInfo =
-                    "        <div>C2 Coverage " + this.computeStatementCov() + "</div></div>\r\n"+
+                    "        <div>C2 Coverage " + this.computeStatementCov() + "</div>\r\n"+
             "        <div>stateCov " + stateCov + "</div></div>\r\n"+
             "        <div>branchCov " + branchCov + "</div></div>\r\n";
         }

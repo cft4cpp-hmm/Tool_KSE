@@ -33,11 +33,11 @@ import java.util.List;
 
 public class WeightedCFGTestGEn
 {
-	public static String pathToZ3 ="..\\cft4cpp-core\\local\\z3\\bin\\z3.exe";
-	public static String pathToMingw32 = "..\\cft4cpp-core\\bin\\mingw32-make.exe";
-	public static String pathToGCC = "..\\cft4cpp-core\\bin\\gcc.exe";
-	public static String pathToGPlus = "..\\cft4cpp-core\\bin\\g++.exe";
-//	public static String pathToConstraint = "D:\\cft4cpp-core\\myConstraint.smt2";
+	public static String pathToZ3 ="..\\Bai10\\local\\z3\\bin\\z3.exe";
+	public static String pathToMingw32 = "..\\Bai10\\bin\\mingw32-make.exe";
+	public static String pathToGCC = "..\\Bai10\\bin\\gcc.exe";
+	public static String pathToGPlus = "..\\Bai10\\bin\\g++.exe";
+//	public static String pathToConstraint = "D:\\Bai10\\myConstraint.smt2";
 //	public static String pathToZ3 = AbstractSetting.getValue(Settingv2.SOLVER_Z3_PATH);
 //	public static String pathToMingw32 = AbstractSetting.getValue(Settingv2.GNU_MAKE_PATH);
 //	public static String pathToGCC = AbstractSetting.getValue(Settingv2.GNU_GCC_PATH);
