@@ -5,6 +5,8 @@ import HybridAutoTestGen.CFT4CPP;
 import HybridAutoTestGen.FullBoundedTestGen;
 import HybridAutoTestGen.HybridAutoTestGen;
 import HybridAutoTestGen.WeightedCFGTestGEn;
+import config.AbstractSetting;
+import config.Settingv2;
 import console.Console;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -230,6 +232,8 @@ public class HybridTestGen extends Component
             value = cboSelectedFunction.getValue().toString();
 
             Console console = new Console(value);
+
+            console.exportToHtml(new File(AbstractSetting.getValue(Settingv2.TEST_REPORT)+".html"), value);
 
             JOptionPane.showMessageDialog(null, "Finish generating data. Click on [View report] " +
                     "for the result.", DSEConstants.PRODUCT_NAME, JOptionPane.INFORMATION_MESSAGE);

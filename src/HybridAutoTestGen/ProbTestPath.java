@@ -1,19 +1,15 @@
 package HybridAutoTestGen;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Pattern;
-
-import javax.xml.crypto.dsig.keyinfo.RetrievalMethod;
-
-import com.ibm.icu.text.DecimalFormat;
-
 import cfg.object.ICfgNode;
 import cfg.testpath.IStaticSolutionGeneration;
+import com.ibm.icu.text.DecimalFormat;
 import testdatagen.se.IPathConstraints;
 import testdatagen.se.PathConstraint;
 import testdatagen.se.PathConstraints;
-import utils.tostring.ToString;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Pattern;
 
 public class ProbTestPath {
 	private List<Edge> edges;
@@ -274,7 +270,7 @@ public class ProbTestPath {
 		return testCase;
 	}
 	public void setTestCase(String testCase) {
-		this.testCase = testCase;
+		this.testCase = testCase.replaceAll(";;",";");
 	}
 	public int getVisitedNumber() {
 		return visitedNumber;

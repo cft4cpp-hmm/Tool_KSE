@@ -1,20 +1,19 @@
 package console;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-
 import config.AbstractSetting;
 import config.IFunctionConfig;
 import config.Paths;
 import config.Settingv2;
 import instrument.FunctionInstrumentationForStatementvsBranch_Marker;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import testdatagen.AbstractTestdataGeneration;
 import testdatagen.TestdataInReport;
 import utils.Utils;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
 
 /**
  * Run cft4cpp on console
@@ -56,8 +55,8 @@ public class Console {
 
 	public Console(String functionName) throws IOException {
 		String TESTING_PROJET_PATH = Paths.TSDV_R1_2;
-		String TESTING_FUNCTIONS_LIST = "/cft4cpp-core/local/test.txt";
-		String CONFIGURATION_FILE_PATH = "/cft4cpp-core/local/setting.properties";
+		String TESTING_FUNCTIONS_LIST = "..\\Bai10\\local\\test.txt";
+		String CONFIGURATION_FILE_PATH = "..\\Bai10\\local\\setting.properties";
 		/** 
 		 * AUTHOR: THE END OF CONFIGURATION
 		 */

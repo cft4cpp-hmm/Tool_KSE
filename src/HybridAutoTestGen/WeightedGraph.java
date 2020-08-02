@@ -26,26 +26,33 @@ public class WeightedGraph extends SourceGraph
     private List<WeightedTestPath> fullWeightedTestPaths;
     protected List<WeightedNode> nodes;
 
-    public void addNode(WeightedNode node) {
-        for(WeightedNode node1: nodes) {
-            if(node1.getCfgNode() == node.getCfgNode()) {
-                return ;
+    public void addNode(WeightedNode node)
+    {
+        for (WeightedNode node1 : nodes)
+        {
+            if (node1.getCfgNode() == node.getCfgNode())
+            {
+                return;
             }
         }
         nodes.add(node);
 
     }
 
-    public WeightedNode getNode(ICfgNode iCfgNode) {
-        for(WeightedNode node: nodes) {
-            if(node.getCfgNode()==iCfgNode) {
+    public WeightedNode getNode(ICfgNode iCfgNode)
+    {
+        for (WeightedNode node : nodes)
+        {
+            if (node.getCfgNode() == iCfgNode)
+            {
                 return node;
             }
         }
         return null;
     }
 
-    public WeightedGraph(LocalDateTime createdDate, ICFG cfg, List<IFullTestpath> fullPossibleIFullTestpaths, IFunctionNode functionNode, String pathtoFile) {
+    public WeightedGraph(LocalDateTime createdDate, ICFG cfg, List<IFullTestpath> fullPossibleIFullTestpaths, IFunctionNode functionNode, String pathtoFile)
+    {
         super(createdDate, cfg, fullPossibleIFullTestpaths, functionNode, pathtoFile);
         nodes = new ArrayList<WeightedNode>();
 
@@ -244,7 +251,7 @@ public class WeightedGraph extends SourceGraph
                 "</head>\r\n" +
                 "\r\n" +
                 "<body>\r\n" +
-                "    <h2>TEST REPORT</h2>\r\n" +
+                "    <h2>HYBRID: TEST REPORT</h2>\r\n" +
 
                 "    <div class=\"table-wrapper\">\r\n" +
                 "        <table class=\"fl-table\">\r\n" +
@@ -252,29 +259,20 @@ public class WeightedGraph extends SourceGraph
                 "                <tr>\r\n" +
                 "                    <th>PathNumber</th>\r\n" +
                 "                    <th style=\"width: 800px\">Test path</th>\r\n" +
-                "                    <th>Test Data</th>\r\n" +
+                "                    <th>CFG generated test data</th>\r\n" +
                 "                </tr>\r\n" +
                 "            </thead>\r\n" +
                 "            <tbody>";
         for (WeightedTestPath testPath : this.getFullWeightedTestPaths())
         {
-            if (toolName == "WCFT4Cpp")
-            {
-                valueString += testPath.toString();
-            }
-            else
-            {
-                valueString += testPath.toStringForCFT4Cpp();
-            }
+            valueString += testPath.toStringForCFT4Cpp();
         }
         valueString += "            </tbody></table> </div><br/>";
-        valueString += "<div  class=\"table-wrapper\">"+
-        "        <table class=\"fl-table\">\r\n" +
+        valueString += "<div  class=\"table-wrapper\">" +
+                "        <table class=\"fl-table\">\r\n" +
                 "            <thead>\r\n" +
                 "                <tr>\r\n" +
-                "                    <th>Test data</th>\r\n" +
-//                "                    <th style=\"width: 800px\">Test path</th>\r\n" +
-//                "                    <th>Test Data</th>\r\n" +
+                "                    <th>All test data = CFG generated test data + boundary value test data</th>\r\n" +
                 "                </tr>\r\n" +
                 "            </thead>\r\n" +
                 "            <tbody>";
@@ -286,6 +284,14 @@ public class WeightedGraph extends SourceGraph
         valueString += "            </table>";
         valueString += "</div> <br/>";
 
+        valueString += "<div  class=\"table-wrapper\">" +
+                "        <table class=\"fl-table\">\r\n" +
+                "            <thead>\r\n" +
+                "                <tr>\r\n" +
+                "                    <th>Coverage information</th>\r\n" +
+                "                </tr>\r\n" +
+                "            </thead>\r\n" +
+                "            <tbody>";
         String loopString = "";
 
         valueString += loopString;
@@ -296,9 +302,9 @@ public class WeightedGraph extends SourceGraph
         try
         {
             coverInfo =
-                    "        <div>C2 Coverage " + this.computeStatementCov() + "</div>\r\n"+
-            "        <div>stateCov " + stateCov + "</div></div>\r\n"+
-            "        <div>branchCov " + branchCov + "</div></div>\r\n";
+                    "   <tr><td> Statement coverage " + stateCov + "</td></tr>" +
+                            "        <tr><td>Branch coverage " + branchCov + "</td></tr>" +
+                            "        <tr><td>Time: " + diff + "s</td></tr>";
         }
         catch (Exception e)
         {
@@ -307,16 +313,21 @@ public class WeightedGraph extends SourceGraph
         }
 
         valueString += coverInfo;
-        valueString += "   <tbody>\r\n" +
+        valueString += "   </tbody>\r\n" +
                 "        </table></div>\r\n" +
-                "<div class=\"conlusion\">\n" +
-                "<pre>" + this.functionNode.getAST().getRawSignature().toString() +
+                "<div  class=\"table-wrapper\">" +
+                "        <table class=\"fl-table\">\r\n" +
+                "            <thead>\r\n" +
+                "                <tr>\r\n" +
+                "                    <th>Function raw signature</th>\r\n" +
+                "                </tr>\r\n" +
+                "            </thead>\r\n" +
+                "            <tbody>" +
+                "<tr><td><pre>" + this.functionNode.getAST().getRawSignature().toString() +
 
-                "</pre>" +
+                "</pre></tr></td>" +
+                "            </tbody></table></div>" +
 
-                "        <div>Time For " + (coverage == 0 ? "C2 :" : "C3: ") + diff + "s</div>\r\n" +
-//
-//                coverInfo +
                 "</body></html>";
         csvWriter.append(valueString);
         csvWriter.close();

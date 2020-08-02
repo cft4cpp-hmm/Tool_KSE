@@ -347,10 +347,26 @@ public class Graph
                 "\r\n" +
                 "</head>\r\n" +
                 "\r\n" +
-                "<body>\r\n" +
-                "    <h2>TEST REPORT</h2>\r\n" +
+                "<body>\r\n";
 
-                "    <div class=\"table-wrapper\">\r\n" +
+        if (toolName == "WCFT4Cpp")
+        {
+            valueString +=
+                    "    <h2>WCFT4CPP: TEST REPORT</h2>\r\n";
+        }
+        else if (toolName == "CFT4Cpp")
+        {
+            valueString +=
+                    "    <h2>CFT4CPP: TEST REPORT</h2>\r\n";
+        }
+        else
+        {
+            valueString +=
+                    "    <h2>Concolic: TEST REPORT</h2>\r\n";
+
+        }
+
+        valueString +="    <div class=\"table-wrapper\">\r\n" +
                 "        <table class=\"fl-table\">\r\n" +
                 "            <thead>\r\n" +
                 "                <tr>\r\n" +
@@ -371,11 +387,19 @@ public class Graph
 				valueString += testPath.toStringForCFT4Cpp();
 			}
         }
+        valueString += "</tbody></table></div>";
 
         String loopString = "";
 
+        valueString += "    <div class=\"table-wrapper\">\r\n" +
+                "        <table class=\"fl-table\">\r\n" +
+                "            <thead>\r\n" +
+                "                <tr>\r\n" +
+                "                    <th>Coverage information</th>\r\n" +
+                "                </tr>\r\n" +
+                "            </thead>\r\n" +
+                "            <tbody>";
 
-        valueString += loopString;
         float stateCov = this.getCfg().computeStatementCoverage();
         float branchCov = this.getCfg().computeBranchCoverage();
 
@@ -383,9 +407,10 @@ public class Graph
         try
         {
             coverInfo =
-                    "        <div>C2 Coverage " + this.computeStatementCov() + "</div></div>\r\n"+
-            "        <div>stateCov " + stateCov + "</div></div>\r\n"+
-            "        <div>branchCov " + branchCov + "</div></div>\r\n";
+                    "        <tr><td>C2 Coverage: " + this.computeStatementCov() + "</td></tr>\r\n"+
+            "        <tr><td>stateCov: " + stateCov + "</td></tr>\r\n"+
+            "        <tr><td>branchCov: " + branchCov + "</td></tr>\r\n"+
+                            "        <tr><td>Time For " + (coverage == 0 ? "C2: " : "C3: ") + diff + "s</td></tr>\r\n";
         }
         catch (Exception e)
         {
@@ -394,14 +419,21 @@ public class Graph
         }
 
         valueString += coverInfo;
-        valueString += "   <tbody>\r\n" +
-                "        </table></div>\r\n" +
-                "<div class=\"conlusion\">\n" +
-                "<pre>" + this.functionNode.getAST().getRawSignature().toString() +
+        valueString += "   </tbody>\r\n" +
+                "        </table></div>\r\n";
 
-                "</pre>" +
 
-                "        <div>Time For " + (coverage == 0 ? "C2 :" : "C3: ") + diff + "s</div>\r\n" +
+        valueString += "    <div class=\"table-wrapper\">\r\n" +
+                "        <table class=\"fl-table\">\r\n" +
+                "            <thead>\r\n" +
+                "                <tr>\r\n" +
+                "                    <th>Function raw signature</th>\r\n" +
+                "                </tr>\r\n" +
+                "            </thead>\r\n" +
+                "            <tbody>"+
+                "<tr><td><pre>" + this.functionNode.getAST().getRawSignature().toString() +
+
+                "</pre></td></tr></tbody></table></div>" +
 
                 "</body></html>";
         csvWriter.append(valueString);
