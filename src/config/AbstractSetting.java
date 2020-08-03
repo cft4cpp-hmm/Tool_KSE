@@ -1,12 +1,11 @@
 package config;
 
+import utils.SpecialCharacter;
+import utils.Utils;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.StringTokenizer;
-
-import HybridAutoTestGen.WeightedCFGTestGEn;
-import utils.SpecialCharacter;
-import utils.Utils;
 
 /**
  * Abstract class for storing setting
@@ -67,29 +66,29 @@ public abstract class AbstractSetting implements ISettingv2 {
 					// is comment. ignore
 					continue;
 				else if (element.length == 2) {
-					if(keyItem.equals("GNU_MAKE_PATH")) {
-						valueItem= WeightedCFGTestGEn.pathToMingw32;
-					}
-					else if(keyItem.equals("Z3_SOLVER_PATH")) {
-						valueItem = WeightedCFGTestGEn.pathToZ3;
-						
-					}
-					else if(keyItem.equals("SMT_LIB_FILE_PATH")) {
-						valueItem = Paths.CURRENT_PROJECT.LOCAL_FOLDER + File.separator+ WeightedCFGTestGEn.pathToConstraint;
-					}
-					else if(keyItem.equals("GNU_GCC_PATH")) {
-						valueItem = WeightedCFGTestGEn.pathToGCC;
-					}
-					else if(keyItem.equals("GNU_GPlusPlus_PATH")) {
-						valueItem = WeightedCFGTestGEn.pathToGPlus;
-					}
-					else if(keyItem.equals("TESTDATA_STRATEGY")){
-						valueItem = "2";
-					}
-					else {
+//					if(keyItem.equals("GNU_MAKE_PATH")) {
+//						valueItem= WeightedCFGTestGEn.pathToMingw32;
+//					}
+//					else if(keyItem.equals("Z3_SOLVER_PATH")) {
+//						valueItem = WeightedCFGTestGEn.pathToZ3;
+//
+//					}
+//					else if(keyItem.equals("SMT_LIB_FILE_PATH")) {
+//						valueItem = Paths.CURRENT_PROJECT.LOCAL_FOLDER + File.separator+ WeightedCFGTestGEn.pathToConstraint;
+//					}
+//					else if(keyItem.equals("GNU_GCC_PATH")) {
+//						valueItem = WeightedCFGTestGEn.pathToGCC;
+//					}
+//					else if(keyItem.equals("GNU_GPlusPlus_PATH")) {
+//						valueItem = WeightedCFGTestGEn.pathToGPlus;
+//					}
+//					else if(keyItem.equals("TESTDATA_STRATEGY")){
+//						valueItem = "2";
+//					}
+//					else {
 						valueItem = element[1];
 						
-					}
+//					}
 					settings.put(keyItem, valueItem);
 				}
 			}

@@ -8,10 +8,7 @@ import cfg.object.ICfgNode;
 import cfg.testpath.IStaticSolutionGeneration;
 import cfg.testpath.ITestpathInCFG;
 import cfg.testpath.PossibleTestpathGeneration;
-import config.FunctionConfig;
-import config.ISettingv2;
-import config.ParameterBound;
-import config.Paths;
+import config.*;
 import normalizer.FunctionNormalizer;
 import parser.projectparser.ProjectParser;
 import testdatagen.se.*;
@@ -33,15 +30,15 @@ import java.util.List;
 
 public class WeightedCFGTestGEn
 {
-	public static String pathToZ3 ="..\\Bai10\\local\\z3\\bin\\z3.exe";
-	public static String pathToMingw32 = "..\\Bai10\\bin\\mingw32-make.exe";
-	public static String pathToGCC = "..\\Bai10\\bin\\gcc.exe";
-	public static String pathToGPlus = "..\\Bai10\\bin\\g++.exe";
+//	public static String pathToZ3 ="..\\Bai10\\local\\z3\\bin\\z3.exe";
+//	public static String pathToMingw32 = "..\\Bai10\\bin\\mingw32-make.exe";
+//	public static String pathToGCC = "..\\Bai10\\bin\\gcc.exe";
+//	public static String pathToGPlus = "..\\Bai10\\bin\\g++.exe";
 //	public static String pathToConstraint = "D:\\Bai10\\myConstraint.smt2";
-//	public static String pathToZ3 = AbstractSetting.getValue(Settingv2.SOLVER_Z3_PATH);
-//	public static String pathToMingw32 = AbstractSetting.getValue(Settingv2.GNU_MAKE_PATH);
-//	public static String pathToGCC = AbstractSetting.getValue(Settingv2.GNU_GCC_PATH);
-//	public static String pathToGPlus = AbstractSetting.getValue(Settingv2.GNU_GPlusPlus_PATH);
+	public static String pathToZ3 = AbstractSetting.getValue(Settingv2.SOLVER_Z3_PATH);
+	public static String pathToMingw32 = AbstractSetting.getValue(Settingv2.GNU_MAKE_PATH);
+	public static String pathToGCC = AbstractSetting.getValue(Settingv2.GNU_GCC_PATH);
+	public static String pathToGPlus = AbstractSetting.getValue(Settingv2.GNU_GPlusPlus_PATH);
 	public static String pathToConstraint = "myConstraint.smt2";
 	
 	public static SmtLibGeneration smt = new SmtLibGeneration();
