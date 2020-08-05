@@ -133,7 +133,12 @@ public class HybridAutoTestGen extends Application
                 graph.getFullWeightedTestPaths().get(i).setTestCase(tpclone.getTestCase());
             }
         }
-        graph.exportReport(LocalDateTime.now(), 0, 1, "CFT4Cpp", testCases);
+
+        LocalDateTime afterGenForC = LocalDateTime.now();
+        graph.computeBranchCover();
+        graph.computeStatementCov();
+
+        graph.exportReport(LocalDateTime.now(), 0, 1, "Hybrid", testCases);
 
     }
 

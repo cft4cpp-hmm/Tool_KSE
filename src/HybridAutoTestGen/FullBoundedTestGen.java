@@ -32,6 +32,7 @@ import utils.search.Search;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -114,6 +115,11 @@ public class FullBoundedTestGen
         LocalDateTime before = LocalDateTime.now();
         this.generateTestpaths(testCases);
         LocalDateTime after = LocalDateTime.now();
+
+        Duration duration = Duration.between(before, after);
+
+        float diff = Math.abs((float) duration.toMillis() / 1000);
+
         List<String> newTestCases = new ArrayList<String>();
         for (String testCase : testCases)
         {
@@ -129,14 +135,51 @@ public class FullBoundedTestGen
 
 
         FileWriter csvWriter = new FileWriter(AbstractSetting.getValue("TEST_REPORT") + ".html", false);
-        String result = "<html><pre>" + this.function.getAST().getRawSignature() + "</pre>";
-        result += "<p> Number of test datas: " + testCases.size() + "</p>";
+
+        String valueString = "<!DOCTYPE html>\r\n" +
+                "<html>\r\n" +
+                "\r\n" +
+                "<head> <link rel=\"stylesheet\" type=\"text/css\" href=\"hmm_report.css\">\r\n" +
+                "\r\n" +
+                "</head>\r\n" +
+                "\r\n" +
+                "<body>\r\n" +
+                "    <h2>BVTG: TEST REPORT</h2>\r\n" +
+
+                "    <div class=\"table-wrapper\">\r\n" +
+                "        <table class=\"fl-table\">\r\n" +
+                "            <thead>\r\n" +
+                "                <tr>\r\n" +
+                "                    <th>Boundary generated test data</th>\r\n" +
+                "                </tr>\r\n" +
+                "            </thead>\r\n" +
+                "            <tbody>";
         for (String testcase : testCases)
         {
-            result += "<p>" + testcase + "</p>";
+            valueString += "<tr><td>" + testcase + "</td></tr>";
         }
-        result += "</html>";
-        csvWriter.write(result);
+
+        valueString += "<tr><td>Elapsed time: " + diff + "</td></tr>";
+
+        valueString += "            </tbody></table></div>";
+
+        valueString += "   </tbody>\r\n" +
+                "        </table></div>\r\n" +
+                "<div  class=\"table-wrapper\">" +
+                "        <table class=\"fl-table\">\r\n" +
+                "            <thead>\r\n" +
+                "                <tr>\r\n" +
+                "                    <th>Function raw signature</th>\r\n" +
+                "                </tr>\r\n" +
+                "            </thead>\r\n" +
+                "            <tbody>" +
+                "<tr><td><pre>" + this.function.getAST().getRawSignature().toString() +
+
+                "</pre></tr></td>" +
+                "            </tbody></table></div>"+
+
+                "</body></html>";
+        csvWriter.append(valueString);
         csvWriter.close();
 //		System.out.println("Result: ");
 //		for(String testcase: newTestCases) {

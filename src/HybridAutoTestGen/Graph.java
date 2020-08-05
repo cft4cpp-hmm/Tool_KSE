@@ -6,6 +6,7 @@ import cfg.ICFG;
 import cfg.object.AbstractConditionLoopCfgNode;
 import cfg.object.ICfgNode;
 import cfg.testpath.IFullTestpath;
+import cfg.testpath.IStaticSolutionGeneration;
 import cfg.testpath.ITestpathInCFG;
 import config.AbstractSetting;
 import testdata.object.TestpathString_Marker;
@@ -378,14 +379,17 @@ public class Graph
                 "            <tbody>";
         for (ProbTestPath testPath : this.getFullProbTestPaths())
         {
-			if (toolName == "WCFT4Cpp")
-			{
-				valueString += testPath.toString();
-			}
-			else
-			{
-				valueString += testPath.toStringForCFT4Cpp();
-			}
+            if (!testPath.getTestCase().equals(IStaticSolutionGeneration.NO_SOLUTION))
+            {
+                if (toolName == "WCFT4Cpp")
+                {
+                    valueString += testPath.toString();
+                }
+                else
+                {
+                    valueString += testPath.toStringForCFT4Cpp();
+                }
+            }
         }
         valueString += "</tbody></table></div>";
 
@@ -400,14 +404,14 @@ public class Graph
                 "            </thead>\r\n" +
                 "            <tbody>";
 
-        float stateCov = this.getCfg().computeStatementCoverage();
-        float branchCov = this.getCfg().computeBranchCoverage();
+        float stateCov = this.statementCover;
+        float branchCov = this.branchCover;
 
         String coverInfo = "";
         try
         {
             coverInfo =
-                    "        <tr><td>C2 Coverage: " + this.computeStatementCov() + "</td></tr>\r\n"+
+//                    "        <tr><td>C2 Coverage: " + this.computeStatementCov() + "</td></tr>\r\n"+
             "        <tr><td>stateCov: " + stateCov + "</td></tr>\r\n"+
             "        <tr><td>branchCov: " + branchCov + "</td></tr>\r\n"+
                             "        <tr><td>Time For " + (coverage == 0 ? "C2: " : "C3: ") + diff + "s</td></tr>\r\n";

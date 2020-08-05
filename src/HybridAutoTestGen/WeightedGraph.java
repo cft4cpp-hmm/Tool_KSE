@@ -295,8 +295,8 @@ public class WeightedGraph extends SourceGraph
         String loopString = "";
 
         valueString += loopString;
-        float stateCov = this.getCfg().computeStatementCoverage();
-        float branchCov = this.getCfg().computeBranchCoverage();
+        float stateCov = this.statementCover;
+        float branchCov = this.branchCover;
 
         String coverInfo = "";
         try

@@ -153,6 +153,10 @@ public class CFT4CPP
                 graph.getFullProbTestPaths().get(i).setTestCase(testpath.getTestCase());
             }
         }
+
+        graph.computeStatementCov();
+        graph.computeBranchCover();
+
         graph.toHtml(LocalDateTime.now(), 0, 1, "CFT4Cpp");
 
     }
