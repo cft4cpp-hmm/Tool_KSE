@@ -6,47 +6,40 @@
 </head>
 
 <body>
-    <h2>HYBRID: TEST REPORT</h2>
+    <h2>CFT4CPP: TEST REPORT</h2>
     <div class="table-wrapper">
         <table class="fl-table">
             <thead>
                 <tr>
                     <th>PathNumber</th>
                     <th style="width: 800px">Test path</th>
-                    <th>CFG generated test data</th>
+                    <th>Test Data</th>
                 </tr>
             </thead>
-            <tbody><tr><td>0</td><td>( int a=0;) <font> => </font>} [7]</td><td>x=5;</td></tr><tr><td>1</td><td>( int a=0;) <font> => </font>( a=4;) <font> => </font>} [7]</td><td>x=4;</td></tr><tr><td>2</td><td>( int a=0;) <font> => </font>( a=3;) <font> => </font>} [7]</td><td>x=3;</td></tr><tr><td>3</td><td>( int a=0;) <font> => </font>( a=2;) <font> => </font>} [7]</td><td>x=2;</td></tr><tr><td>4</td><td>( int a=0;) <font> => </font>( a=1;) <font> => </font>} [7]</td><td>x=1;</td></tr>            </tbody></table> </div><br/><div  class="table-wrapper">        <table class="fl-table">
-            <thead>
-                <tr>
-                    <th>All test data = CFG generated test data + boundary value test data</th>
-                </tr>
-            </thead>
-            <tbody><tr><td>x=0;</td></tr><tr><td>x=1;</td></tr><tr><td>x=2;</td></tr><tr><td>x=91;</td></tr><tr><td>x=2;</td></tr><tr><td>x=3;</td></tr><tr><td>x=61;</td></tr><tr><td>x=3;</td></tr><tr><td>x=4;</td></tr><tr><td>x=19;</td></tr><tr><td>x=4;</td></tr><tr><td>x=5;</td></tr>            </tbody>            </table></div> <br/><div  class="table-wrapper">        <table class="fl-table">
+            <tbody><tr><td>0</td><td>( int x = a+b;) <font> => </font>( int y = x +10;) <font> => </font>return 1/y;</td><td>b=0;a=10;</td></tr><tr><td>1</td><td>( int x = a+b;) <font> => </font>( int y = x +10;) <font> => </font>return 1/x;</td><td>b=0;a=9;</td></tr></tbody></table></div>    <div class="table-wrapper">
+        <table class="fl-table">
             <thead>
                 <tr>
                     <th>Coverage information</th>
                 </tr>
             </thead>
-            <tbody>   <tr><td> Statement coverage 1.0</td></tr>        <tr><td>Branch coverage 1.0</td></tr>        <tr><td>Time: 3.839s</td></tr>   </tbody>
+            <tbody>        <tr><td>stateCov: 1.0</td></tr>
+        <tr><td>branchCov: 1.0</td></tr>
+        <tr><td>Time For C2: 0.56s</td></tr>
+   </tbody>
         </table></div>
-<div  class="table-wrapper">        <table class="fl-table">
+    <div class="table-wrapper">
+        <table class="fl-table">
             <thead>
                 <tr>
                     <th>Function raw signature</th>
                 </tr>
             </thead>
-            <tbody><tr><td><pre>int switchCaseTest(int x){
-	int a=0;
-	switch(x){
-		case 1: a=1;
-			break;
-		case 2: a=2;
-			break;
-		case 3: a=3;
-			break;
-		case 4: a=4;
-			break;
-		default :  break;
+            <tbody><tr><td><pre>int divisionTest(int a, int b){
+	int x = a+b;
+	int y = x +10;
+	if(x<10){
+		return 1/x;
 	}
-}</pre></tr></td>            </tbody></table></div></body></html>
+	else return 1/y;
+}</pre></td></tr></tbody></table></div></body></html>
