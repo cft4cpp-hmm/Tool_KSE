@@ -278,7 +278,7 @@ public class FullBoundedTestGen
 						String result = this.haveSolution(tp1, true);
 						for (IVariableNode variable : this.variables)
 						{
-							if (!result.contains(variable.toString()))
+							if (!result.contains(variable.toString()) && !result.equals(IStaticSolutionGeneration.NO_SOLUTION))
 							{
 								result += variable.toString() + "=" + rand.nextInt(100) + ";";
 							}

@@ -6,40 +6,39 @@
 </head>
 
 <body>
-    <h2>CFT4CPP: TEST REPORT</h2>
+    <h2>HYBRID: TEST REPORT</h2>
     <div class="table-wrapper">
         <table class="fl-table">
             <thead>
                 <tr>
                     <th>PathNumber</th>
                     <th style="width: 800px">Test path</th>
-                    <th>Test Data</th>
+                    <th>CFG generated test data</th>
                 </tr>
             </thead>
-            <tbody><tr><td>0</td><td>( int x = a+b;) <font> => </font>( int y = x +10;) <font> => </font>return 1/y;</td><td>b=0;a=10;</td></tr><tr><td>1</td><td>( int x = a+b;) <font> => </font>( int y = x +10;) <font> => </font>return 1/x;</td><td>b=0;a=9;</td></tr></tbody></table></div>    <div class="table-wrapper">
-        <table class="fl-table">
+            <tbody><tr><td>0</td><td>return 0;</td><td>year=-104000;</td></tr><tr><td>1</td><td>return 1;</td><td>year=-396;</td></tr>            </tbody></table> </div><br/><div  class="table-wrapper">        <table class="fl-table">
+            <thead>
+                <tr>
+                    <th>All test data = CFG generated test data + boundary value test data</th>
+                </tr>
+            </thead>
+            <tbody><tr><td>year=-104000;</td></tr><tr><td>year=-396;</td></tr>            </tbody>            </table></div> <br/><div  class="table-wrapper">        <table class="fl-table">
             <thead>
                 <tr>
                     <th>Coverage information</th>
                 </tr>
             </thead>
-            <tbody>        <tr><td>stateCov: 1.0</td></tr>
-        <tr><td>branchCov: 1.0</td></tr>
-        <tr><td>Time For C2: 0.56s</td></tr>
-   </tbody>
+            <tbody>   <tr><td> Statement coverage 1.0</td></tr>        <tr><td>Branch coverage 1.0</td></tr>        <tr><td>Time: 48.996s</td></tr>   </tbody>
         </table></div>
-    <div class="table-wrapper">
-        <table class="fl-table">
+<div  class="table-wrapper">        <table class="fl-table">
             <thead>
                 <tr>
                     <th>Function raw signature</th>
                 </tr>
             </thead>
-            <tbody><tr><td><pre>int divisionTest(int a, int b){
-	int x = a+b;
-	int y = x +10;
-	if(x<10){
-		return 1/x;
-	}
-	else return 1/y;
-}</pre></td></tr></tbody></table></div></body></html>
+            <tbody><tr><td><pre>int leapYear(int year){ // line 1
+	if(((year % 4 == 0) && (year % 100 != 0)) || (year % 400 != 0)){ // line 2
+		return 1; // line 3
+	}             // line 4
+	return 0;	  // line 5
+}</pre></tr></td>            </tbody></table></div></body></html>

@@ -233,7 +233,7 @@ public class HybridAutoTestGen extends Application
                         String result = this.getSolution(tp11, true);
                         for (IVariableNode variable : this.variables)
                         {
-                            if (!result.contains(variable.toString()))
+                            if (!result.contains(variable.toString()) && !result.equals(IStaticSolutionGeneration.NO_SOLUTION))
                             {
                                 result += variable.toString() + "=" + rand.nextInt(100) + ";";
                             }
