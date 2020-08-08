@@ -117,17 +117,30 @@ else
 
 
 
-float foo(int a, int b, int c, int d)
+//float foo(int a, int b, int c, int d)
+//{
+//	float e;
+//	if(a==0) return 0;
+//	int x=0;
+//	if((a==b)||(c==d))
+//		x=1;
+//	e=1/x;
+//	return e;
+//}
+
+float foo(int a)
 {
+	int maxx = 5;
 	float e;
-	if(a==0) return 0;
 	int x=0;
-	if((a==b)||(c==d))
-		x=1;
-	e=1/x;
+	if (a < maxx){
+		if (a == maxx){
+			x = 2;
+		}
+	}
+	e = 1/x;
 	return e;
 }
-		
 
 int ArrayCmp(int n, int* t1, int* t2) {//pathcrawler
 int i;

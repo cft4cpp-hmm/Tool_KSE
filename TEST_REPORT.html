@@ -16,19 +16,19 @@
                     <th>CFG generated test data</th>
                 </tr>
             </thead>
-            <tbody><tr><td>0</td><td>return 0;</td><td>year=-104000;</td></tr><tr><td>1</td><td>return 1;</td><td>year=-396;</td></tr>            </tbody></table> </div><br/><div  class="table-wrapper">        <table class="fl-table">
+            <tbody><tr><td>0</td><td>( int maxx = 5;) <font> => </font>( float e;) <font> => </font>( int x=0;) <font> => </font>( e = 1/x;) <font> => </font>return e;</td><td>a=5;</td></tr><tr><td>1</td><td>( int maxx = 5;) <font> => </font>( float e;) <font> => </font>( int x=0;) <font> => </font>( e = 1/x;) <font> => </font>return e;</td><td>a=0;</td></tr><tr><td>2</td><td>( int maxx = 5;) <font> => </font>( float e;) <font> => </font>( int x=0;) <font> => </font>( x = 2;) <font> => </font>( e = 1/x;) <font> => </font>return e;</td><td></td></tr>            </tbody></table> </div><br/><div  class="table-wrapper">        <table class="fl-table">
             <thead>
                 <tr>
                     <th>All test data = CFG generated test data + boundary value test data</th>
                 </tr>
             </thead>
-            <tbody><tr><td>year=-96;</td></tr><tr><td>year=-99;</td></tr><tr><td>year=-399;</td></tr><tr><td>year=0;</td></tr><tr><td>year=-104000;</td></tr><tr><td>year=-396;</td></tr>            </tbody>            </table></div> <br/><div  class="table-wrapper">        <table class="fl-table">
+            <tbody><tr><td>a=4;</td></tr><tr><td>a=5;</td></tr><tr><td>a=6;</td></tr><tr><td>a=0;</td></tr>            </tbody>            </table></div> <br/><div  class="table-wrapper">        <table class="fl-table">
             <thead>
                 <tr>
                     <th>Coverage information</th>
                 </tr>
             </thead>
-            <tbody>   <tr><td> Statement coverage 1.0</td></tr>        <tr><td>Branch coverage 1.0</td></tr>        <tr><td>Time: 28.154s</td></tr>   </tbody>
+            <tbody>   <tr><td> Statement coverage 0.7692308</td></tr>        <tr><td>Branch coverage 0.8518519</td></tr>        <tr><td>Time: 3.176s</td></tr>   </tbody>
         </table></div>
 <div  class="table-wrapper">        <table class="fl-table">
             <thead>
@@ -36,9 +36,16 @@
                     <th>Function raw signature</th>
                 </tr>
             </thead>
-            <tbody><tr><td><pre>int leapYear(int year){ // line 1
-	if(((year % 4 == 0) && (year % 100 != 0)) || (year % 400 != 0)){ // line 2
-		return 1; // line 3
-	}             // line 4
-	return 0;	  // line 5
+            <tbody><tr><td><pre>float foo(int a)
+{
+	int maxx = 5;
+	float e;
+	int x=0;
+	if (a < maxx){
+		if (a == maxx){
+			x = 2;
+		}
+	}
+	e = 1/x;
+	return e;
 }</pre></tr></td>            </tbody></table></div></body></html>

@@ -6,7 +6,6 @@ import cfg.ICFG;
 import cfg.object.AbstractConditionLoopCfgNode;
 import cfg.object.ICfgNode;
 import cfg.testpath.IFullTestpath;
-import cfg.testpath.IStaticSolutionGeneration;
 import cfg.testpath.ITestpathInCFG;
 import config.AbstractSetting;
 import testdata.object.TestpathString_Marker;
@@ -379,8 +378,8 @@ public class Graph
                 "            <tbody>";
         for (ProbTestPath testPath : this.getFullProbTestPaths())
         {
-            if (!testPath.getTestCase().equals(IStaticSolutionGeneration.NO_SOLUTION))
-            {
+//            if (!testPath.getTestCase().equals(IStaticSolutionGeneration.NO_SOLUTION))
+//            {
                 if (toolName == "WCFT4Cpp")
                 {
                     valueString += testPath.toString();
@@ -389,7 +388,7 @@ public class Graph
                 {
                     valueString += testPath.toStringForCFT4Cpp();
                 }
-            }
+//            }
         }
         valueString += "</tbody></table></div>";
 

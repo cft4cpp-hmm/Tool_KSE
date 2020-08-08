@@ -218,25 +218,25 @@ public class CFT4CPP
                     if (currentIterations < maxIterationsforEachLoop)
                     {
                         tp1.add(falseNode);
-                        if (this.haveSolution(tp1, false))
-                        {
+//                        if (this.haveSolution(tp1, false))
+//                        {
                             traverseCFG(falseNode, tp, testpaths, function);
-                        }
+//                        }
                         tp2.add(trueNode);
-                        if (this.haveSolution(tp2, true))
-                        {
+//                        if (this.haveSolution(tp2, true))
+//                        {
                             traverseCFG(trueNode, tp, testpaths, function);
-                        }
+//                        }
 
 //						traverseCFG(trueNode, tp, testpaths,function);
                     }
                     else
                     {
                         tp1.add(falseNode);
-                        if (this.haveSolution(tp1, false))
-                        {
+//                        if (this.haveSolution(tp1, false))
+//                        {
                             traverseCFG(falseNode, tp, testpaths, function);
-                        }
+//                        }
 
                     }
                 }
@@ -244,16 +244,16 @@ public class CFT4CPP
                 {
                     tp1.add(falseNode);
 
-                    if (this.haveSolution(tp1, false))
-                    {
+//                    if (this.haveSolution(tp1, false))
+//                    {
                         traverseCFG(falseNode, tp, testpaths, function);
-                    }
+//                    }
 
                     tp2.add(trueNode);
-                    if (this.haveSolution(tp2, true))
-                    {
+//                    if (this.haveSolution(tp2, true))
+//                    {
                         traverseCFG(trueNode, tp, testpaths, function);
-                    }
+//                    }
                 }
             }
             else
