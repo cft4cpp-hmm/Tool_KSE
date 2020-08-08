@@ -11,6 +11,7 @@ import console.Console;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import parser.projectparser.ProjectParser;
@@ -46,6 +47,7 @@ public class HybridTestGen extends Component
     public Button btnGenerateTestData;
     @FXML
     public TextField txtSourceFolder;
+    public CheckBox chkErrorDetectionTest;
 
     @FXML
     protected void btnGetFunctionList_Clicked(ActionEvent event) throws Exception
@@ -121,7 +123,7 @@ public class HybridTestGen extends Component
             }
             value = cboSelectedFunction.getValue().toString();
 
-            WeightedCFGTestGEn weightedCFGTestGEn = new WeightedCFGTestGEn(value, maxloop);
+            WeightedCFGTestGEn weightedCFGTestGEn = new WeightedCFGTestGEn(value, maxloop, txtSourceFolder.getText());
             weightedCFGTestGEn.run();
 
             JOptionPane.showMessageDialog(null, "Finish generating data. Click on [View report] " +
@@ -157,7 +159,7 @@ public class HybridTestGen extends Component
             }
             value = cboSelectedFunction.getValue().toString();
 
-            CFT4CPP cft4cpp = new CFT4CPP(null, maxloop, config.Paths.TSDV_R1_2, value);
+            CFT4CPP cft4cpp = new CFT4CPP(null, maxloop, txtSourceFolder.getText(), value);
 
             cft4cpp.run();
 
@@ -194,7 +196,7 @@ public class HybridTestGen extends Component
             }
             value = cboSelectedFunction.getValue().toString();
 
-            FullBoundedTestGen bGen = new FullBoundedTestGen(null, maxloop, value);
+            FullBoundedTestGen bGen = new FullBoundedTestGen(null, maxloop, value, txtSourceFolder.getText());
 
             bGen.boundaryValueTestGen();
 
@@ -279,7 +281,7 @@ public class HybridTestGen extends Component
 
         //generateTestData(maxloop, value, txtSourceFolder.getText());
 
-        HybridAutoTestGen bGen = new HybridAutoTestGen(maxloop, value, txtSourceFolder.getText(), 1);
+        HybridAutoTestGen bGen = new HybridAutoTestGen(maxloop, value, txtSourceFolder.getText(), 1, chkErrorDetectionTest.isSelected());
 
         bGen.generateTestData();
 

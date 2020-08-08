@@ -23,6 +23,7 @@
                   <Button fx:id="btnBVTG" layoutX="260.0" layoutY="298.0" mnemonicParsing="false" onAction="#btnBVTG_Clicked" prefHeight="40.0" prefWidth="87.0" text="BVTG" />
                   <Button fx:id="btnSTCFG" layoutX="58.0" layoutY="298.0" mnemonicParsing="false" onAction="#btnSTCFG_Clicked" prefHeight="40.0" prefWidth="71.0" text="STCFG" />
                   <Button fx:id="btnWCFT" layoutX="157.0" layoutY="298.0" mnemonicParsing="false" onAction="#btnWCFT_Clicked" prefHeight="40.0" prefWidth="71.0" text="WCFT" />
+                  <CheckBox fx:id="chkErrorDetectionTest" layoutX="192.0" layoutY="111.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="169.0" text="Error detection test" />
                     </children>
                 </AnchorPane>
             </children>

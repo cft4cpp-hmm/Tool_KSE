@@ -49,6 +49,7 @@ public class FullBoundedTestGen
     private int maxIterationsforEachLoop;
     private FullTestpaths possibleTestpaths = new FullTestpaths();
     private List<IVariableNode> variables;
+    private String sourceFolder;
 
     public FullBoundedTestGen()
     {
@@ -56,13 +57,14 @@ public class FullBoundedTestGen
         this.cfg = cfg;
     }
 
-    public FullBoundedTestGen(ICFG cfg1, int maxloop, String functionName) throws Exception
+    public FullBoundedTestGen(ICFG cfg1, int maxloop, String functionName, String _sourceFolder) throws Exception
     {
+        sourceFolder = _sourceFolder;
         functionName = functionName.replace(" ", "");
         if (cfg1 == null)
         {
             CFG cfg;
-            ProjectParser parser = new ProjectParser(new File(Paths.TSDV_R1_2));
+            ProjectParser parser = new ProjectParser(new File(sourceFolder));
             IFunctionNode function;
 
             function = (IFunctionNode) Search
@@ -101,7 +103,7 @@ public class FullBoundedTestGen
 
     public static void main(String[] args) throws Exception
     {
-        FullBoundedTestGen tpGen = new FullBoundedTestGen(null, 1, "PDF(int,int,int)");
+        FullBoundedTestGen tpGen = new FullBoundedTestGen(null, 1, "PDF(int,int,int)", Paths.TSDV_R1_2);
 
         tpGen.boundaryValueTestGen();
 

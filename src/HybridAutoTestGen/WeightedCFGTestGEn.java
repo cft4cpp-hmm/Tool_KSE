@@ -49,13 +49,15 @@ public class WeightedCFGTestGEn
 	public static final int maxLoopInGenerateTestcaseForLoopFunction = 4;
 	private String functionName;
 	private int interations;
+	private String sourceFolder;
 //	public Main(String pathToZ3)
 	public WeightedCFGTestGEn() {
 		
 	}
-	public WeightedCFGTestGEn(String funcName, int iterations) {
+	public WeightedCFGTestGEn(String funcName, int iterations, String _sourceFolder) {
 		this.functionName = funcName;
 		this.interations = iterations;
+		sourceFolder = _sourceFolder;
 	}
 	
 	
@@ -72,7 +74,7 @@ public class WeightedCFGTestGEn
 			int randomTestPath = 1;
 			int maxIterations = this.interations;
 			String func_name = this.functionName;
-			Graph graph = Prob.createGraph(Paths.TSDV_R1_2, func_name ,maxIterations,coverage);
+			Graph graph = Prob.createGraph(sourceFolder, func_name ,maxIterations,coverage);
 			graph.setEpoches(epoch);
 			graph.addConstraint();
 			boolean isLoopFunction = graph.hasLoop();

@@ -236,11 +236,8 @@ public class WeightedGraph extends SourceGraph
         return index;
     }
 
-    public void exportReport(LocalDateTime diff1, int coverage, float timeForLoop, String toolName, List<String> testCases) throws Exception
+    public void exportReport(float diff, int coverage, float timeForLoop, String toolName, List<String> testCases) throws Exception
     {
-        Duration duration = Duration.between(this.createdDate, diff1);
-
-        float diff = Math.abs((float) duration.toMillis() / 1000);
         this.duration = diff;
         FileWriter csvWriter = new FileWriter(AbstractSetting.getValue("TEST_REPORT") + ".html", false);
         String valueString = "<!DOCTYPE html>\r\n" +

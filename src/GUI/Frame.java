@@ -193,8 +193,8 @@ public class Frame {
 					int iterations = (int) comboBox.getSelectedItem();
 					String functionName = funcName.getText();
 					CFT4CPP cft4cpp = new CFT4CPP(null,iterations, Paths.TSDV_R1_2, functionName);
-					WeightedCFGTestGEn weightedCFGTestGEn = new WeightedCFGTestGEn(functionName, iterations);
-					FullBoundedTestGen bGen = new FullBoundedTestGen(null, iterations, functionName);
+					WeightedCFGTestGEn weightedCFGTestGEn = new WeightedCFGTestGEn(functionName, iterations,Paths.TSDV_R1_2);
+					FullBoundedTestGen bGen = new FullBoundedTestGen(null, iterations, functionName, Paths.TSDV_R1_2);
 					if(STCFG.isSelected()) {
 						cft4cpp.run();
 					}

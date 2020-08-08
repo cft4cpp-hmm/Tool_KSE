@@ -1,5 +1,7 @@
 package HybridAutoTestGen;
 
+import cfg.CFG;
+import cfg.CFGGenerationforSubConditionCoverage;
 import cfg.ICFG;
 import cfg.object.AbstractConditionLoopCfgNode;
 import cfg.object.ConditionCfgNode;
@@ -34,6 +36,7 @@ import utils.search.FunctionNodeCondition;
 import utils.search.Search;
 
 import java.io.File;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -59,6 +62,7 @@ public class HybridAutoTestGen extends Application
     private String sourceFolder;
     private List<IVariableNode> variables;
     private float boundStep = 1;
+    private Boolean isErrorDetectionTest = false;
 
     public static void main(String[] args)
     {
@@ -71,12 +75,13 @@ public class HybridAutoTestGen extends Application
 
     }
 
-    public HybridAutoTestGen(int _maxloop, String _functionName, String _sourceFolder, float _boundStep)
+    public HybridAutoTestGen(int _maxloop, String _functionName, String _sourceFolder, float _boundStep, Boolean _isErrorDetectionTest)
     {
         maxloop = _maxloop;
         functionName = _functionName;
         sourceFolder = _sourceFolder;
         boundStep = _boundStep;
+        isErrorDetectionTest = _isErrorDetectionTest;
     }
 
     //public void generateTestData(int maxloop, String functionName, String sourceFolder) throws Exception
@@ -87,22 +92,52 @@ public class HybridAutoTestGen extends Application
         projectNode = parser.getRootTree();
 
         function = (IFunctionNode) Search.searchNodes(projectNode, new FunctionNodeCondition(), functionName).get(0);
+
+        //Sinh dữ liệu test theo biên, cần phải sinh CFG theo sub condition thì mới có được các điều kiện
+        FunctionConfig functionConfig = new FunctionConfig();
+        functionConfig.setSolvingStrategy(ISettingv2.SUPPORT_SOLVING_STRATEGIES[0]);
+        ((IFunctionNode) function).setFunctionConfig(functionConfig);
         FunctionNormalizer fnNorm = ((IFunctionNode) function).normalizedAST();
+        String normalizedCoverage = fnNorm.getNormalizedSourcecode();
+        ((IFunctionNode) function).setAST(fnNorm.getNormalizedAST());
+        IFunctionNode clone = (IFunctionNode) function.clone();
+        clone.setAST(Utils.getFunctionsinAST(normalizedCoverage.toCharArray()).get(0));
+        CFGGenerationforSubConditionCoverage cfgGen = new CFGGenerationforSubConditionCoverage(clone);
 
-        FunctionConfig funcConfig = new FunctionConfig();
-        funcConfig.setCharacterBound(new ParameterBound(32, 100));
-        funcConfig.setIntegerBound(new ParameterBound(0, 100));
-        funcConfig.setSizeOfArray(20);
-        ((IFunctionNode) function).setFunctionConfig(funcConfig);
+        cfg = (CFG) cfgGen.generateCFG();
+        cfg.setFunctionNode(clone);
 
-        ICFG cfg = ((IFunctionNode) function).generateCFG();
-
-        cfg.setFunctionNode(function);
-        this.cfg = cfg;
-        this.function = function;
         this.cfg.resetVisitedStateOfNodes();
         this.cfg.setIdforAllNodes();
         this.testCases = new ArrayList<String>();
+        this.maxIterationsforEachLoop = maxloop;
+        this.variables = function.getArguments();
+
+        LocalDateTime before1 = LocalDateTime.now();
+        this.generateTestpathsForBoundaryTestGen();
+
+        LocalDateTime after1 = LocalDateTime.now();
+
+        Duration duration = Duration.between(before1, after1);
+
+        float diff1 = Math.abs((float) duration.toMillis() / 1000);
+
+
+        //Sinh dữ liệu test theo CFG có trọng số
+
+        function.normalizedAST();
+        FunctionConfig config = new FunctionConfig();
+        config.setCharacterBound(new ParameterBound(32, 100));
+        config.setIntegerBound(new ParameterBound(0, 100));
+        config.setSizeOfArray(20);
+
+        function.setFunctionConfig(config);
+
+        cfg = function.generateCFG();
+
+        cfg.setFunctionNode(function);
+        this.cfg.resetVisitedStateOfNodes();
+        this.cfg.setIdforAllNodes();
         this.maxIterationsforEachLoop = maxloop;
         this.variables = function.getArguments();
 
@@ -122,7 +157,7 @@ public class HybridAutoTestGen extends Application
 
             String testcase = tpclone.getTestCase().replaceAll(";;", ";");
 
-            if (!testCases.contains(testcase))
+            if (!testCases.contains(testcase) && !testcase.equals(IStaticSolutionGeneration.NO_SOLUTION))
             {
                 testCases.add(testcase);
             }
@@ -134,11 +169,19 @@ public class HybridAutoTestGen extends Application
             }
         }
 
-        LocalDateTime afterGenForC = LocalDateTime.now();
+        LocalDateTime after = LocalDateTime.now();
+
+        Duration duration2 = Duration.between(before, after);
+
+        float diff2 = Math.abs((float) duration.toMillis() / 1000);
+
+
+        float durationTotal = diff1 + diff2;
+
         graph.computeBranchCover();
         graph.computeStatementCov();
 
-        graph.exportReport(LocalDateTime.now(), 0, 1, "Hybrid", testCases);
+        graph.exportReport(durationTotal, 0, 1, "Hybrid", testCases);
 
     }
 
@@ -166,19 +209,35 @@ public class HybridAutoTestGen extends Application
         possibleTestpaths = testpaths_;
     }
 
+    public void generateTestpathsForBoundaryTestGen()
+    {
+        FullTestpaths testpaths_ = new FullTestpaths();
+
+        ICfgNode beginNode = cfg.getBeginNode();
+        FullTestpath initialTestpath = new FullTestpath();
+        initialTestpath.setFunctionNode(cfg.getFunctionNode());
+        try
+        {
+            traverseCFGForBoundaryTestGen(beginNode, initialTestpath, testpaths_);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        for (ITestpathInCFG tp : testpaths_)
+        {
+            tp.setFunctionNode(cfg.getFunctionNode());
+        }
+
+        possibleTestpaths = testpaths_;
+    }
+
     private void traverseCFG(ICfgNode stm, FullTestpath tp, FullTestpaths testpaths) throws Exception
     {
-
         tp.add(stm);
-        FullTestpath tp1 = (FullTestpath) tp.clone();
-        FullTestpath tp2 = (FullTestpath) tp.clone();
         if (stm instanceof EndFlagCfgNode)
         {
-//            FullTestpath tpclone = (FullTestpath) tp.clone();
-//            tpclone.setTestCase(this.solveTestpath(function, tp));
-            //testpaths.add(tpclone);
-            //testCases.add(tpclone.getTestCase());
-
             testpaths.add((FullTestpath) tp.clone());
             tp.remove(tp.size() - 1);
         }
@@ -195,25 +254,56 @@ public class HybridAutoTestGen extends Application
                     int currentIterations = tp.count(trueNode);
                     if (currentIterations < maxIterationsforEachLoop)
                     {
-                        tp1.add(falseNode);
-                        if (this.haveSolution(tp1, false))
-                        {
-                            traverseCFG(falseNode, tp, testpaths);
-                        }
-                        tp2.add(trueNode);
-                        if (this.haveSolution(tp2, true))
-                        {
-                            traverseCFG(trueNode, tp, testpaths);
-                        }
+                        traverseCFG(falseNode, tp, testpaths);
+                        traverseCFG(trueNode, tp, testpaths);
                     }
                     else
                     {
-                        tp1.add(falseNode);
-                        if (this.haveSolution(tp1, false))
-                        {
-                            traverseCFG(falseNode, tp, testpaths);
-                        }
+                        traverseCFG(falseNode, tp, testpaths);
+                    }
+                }
+                else
+                {
+                    traverseCFG(falseNode, tp, testpaths);
+                    traverseCFG(trueNode, tp, testpaths);
+                }
+            }
+            else
+            {
+                traverseCFG(trueNode, tp, testpaths);
+            }
 
+            tp.remove(tp.size() - 1);
+        }
+    }
+
+    private void traverseCFGForBoundaryTestGen(ICfgNode stm, FullTestpath tp, FullTestpaths testpaths) throws Exception
+    {
+        tp.add(stm);
+        if (stm instanceof EndFlagCfgNode)
+        {
+            testpaths.add((FullTestpath) tp.clone());
+            tp.remove(tp.size() - 1);
+        }
+        else
+        {
+            ICfgNode trueNode = stm.getTrueNode();
+            ICfgNode falseNode = stm.getFalseNode();
+
+            if (stm instanceof ConditionCfgNode)
+            {
+
+                if (stm instanceof AbstractConditionLoopCfgNode)
+                {
+                    int currentIterations = tp.count(trueNode);
+                    if (currentIterations < maxIterationsforEachLoop)
+                    {
+                        traverseCFGForBoundaryTestGen(falseNode, tp, testpaths);
+                        traverseCFGForBoundaryTestGen(trueNode, tp, testpaths);
+                    }
+                    else
+                    {
+                        traverseCFGForBoundaryTestGen(falseNode, tp, testpaths);
                     }
                 }
                 else
@@ -238,30 +328,19 @@ public class HybridAutoTestGen extends Application
                                 result += variable.toString() + "=" + rand.nextInt(100) + ";";
                             }
                         }
-                        if (!result.equals(IStaticSolutionGeneration.NO_SOLUTION))
+                        result = result.replaceAll(";;", ";");
+                        if (!testCases.contains(result) && !result.equals(IStaticSolutionGeneration.NO_SOLUTION))
                         {
-                            testCases.add(result.replaceAll(";;", ";"));
+                            testCases.add(result);
                         }
                     }
-
-
-                    tp1.add(falseNode);
-
-                    if (this.haveSolution(tp1, false))
-                    {
-                        traverseCFG(falseNode, tp, testpaths);
-                    }
-
-                    tp2.add(trueNode);
-                    if (this.haveSolution(tp2, true))
-                    {
-                        traverseCFG(trueNode, tp, testpaths);
-                    }
+                    traverseCFGForBoundaryTestGen(falseNode, tp, testpaths);
+                    traverseCFGForBoundaryTestGen(trueNode, tp, testpaths);
                 }
             }
             else
             {
-                traverseCFG(trueNode, tp, testpaths);
+                traverseCFGForBoundaryTestGen(trueNode, tp, testpaths);
             }
 
             tp.remove(tp.size() - 1);
