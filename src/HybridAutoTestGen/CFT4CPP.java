@@ -154,8 +154,8 @@ public class CFT4CPP
             }
         }
 
-        graph.computeStatementCov();
-        graph.computeBranchCover();
+        graph.computeStatementCovNew();
+        graph.computeBranchCoverNew();
 
         graph.toHtml(LocalDateTime.now(), 0, 1, "CFT4Cpp");
 

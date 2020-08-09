@@ -229,7 +229,15 @@ public class WeightedTestPath
 
             }
             newString += newLiStrings.get(newLiStrings.size() - 1);
-            newString += "</td>" + "<td>" + this.getTestCase() + "</td></tr>";
+
+            if (!"".equals(this.getTestCase()))
+            {
+                newString += "</td>" + "<td>" + this.getTestCase() + "</td></tr>";
+            }
+            else
+            {
+                newString += "</td>" + "<td>" +  "not have test data" + "</td></tr>";
+            }
             return newString;
         }
 

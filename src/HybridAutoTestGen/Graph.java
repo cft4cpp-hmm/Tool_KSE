@@ -4,8 +4,11 @@ import HMM.HMMGraph;
 import HMM.Node;
 import cfg.ICFG;
 import cfg.object.AbstractConditionLoopCfgNode;
+import cfg.object.ConditionCfgNode;
 import cfg.object.ICfgNode;
+import cfg.object.NormalCfgNode;
 import cfg.testpath.IFullTestpath;
+import cfg.testpath.IStaticSolutionGeneration;
 import cfg.testpath.ITestpathInCFG;
 import config.AbstractSetting;
 import testdata.object.TestpathString_Marker;
@@ -167,6 +170,40 @@ public class Graph
 
     }
 
+
+    public float computeBranchCoverNew() throws Exception
+    {
+        float totalBranch = 0;
+        float conditionStatementCount = 0;
+        for (ICfgNode stm : this.cfg.getAllNodes())
+        {
+            if (stm instanceof ConditionCfgNode)
+            {
+                if (!(stm instanceof AbstractConditionLoopCfgNode))
+                {
+                    conditionStatementCount += 1;
+                }
+            }
+        }
+        totalBranch = conditionStatementCount + 1;
+
+        float testPathHasTestcase = 0;
+
+        if (this.getFullProbTestPaths().size() != 0)
+        {
+            for (ProbTestPath testPath : this.getFullProbTestPaths())
+            {
+                if (!testPath.getTestCase().equals(IStaticSolutionGeneration.NO_SOLUTION))
+                {
+                    testPathHasTestcase += 1;
+                }
+            }
+        }
+
+        this.branchCover = testPathHasTestcase / totalBranch;
+
+        return this.branchCover;
+    }
     public float computeBranchCover() throws Exception
     {
         Set<Edge> setEdges = new HashSet<Edge>();
@@ -209,6 +246,38 @@ public class Graph
 
         probFunction.deleteClone();
         return this.getCfg().computeBranchCoverage();
+    }
+
+    public float computeStatementCovNew()
+    {
+        float visitedNode = 0;
+        float totalStatement = 0;
+
+        for (ICfgNode cfgNode : this.cfg.getAllNodes())
+        {
+            if (cfgNode instanceof NormalCfgNode)
+            {
+                totalStatement += 1;
+            }
+        }
+        for (ICfgNode cfgNode : this.cfg.getAllNodes())
+        {
+            if (cfgNode instanceof NormalCfgNode)
+            {
+                if (cfgNode.isVisited())
+                {
+                    visitedNode++;
+                }
+            }
+        }
+
+        if (visitedNode != 0)
+        {
+            this.statementCover = visitedNode / totalStatement;
+
+        }
+        return this.statementCover;
+
     }
 
     public float computeStatementCov()

@@ -11,7 +11,6 @@ import console.Console;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import parser.projectparser.ProjectParser;
@@ -47,7 +46,6 @@ public class HybridTestGen extends Component
     public Button btnGenerateTestData;
     @FXML
     public TextField txtSourceFolder;
-    public CheckBox chkErrorDetectionTest;
 
     @FXML
     protected void btnGetFunctionList_Clicked(ActionEvent event) throws Exception
@@ -281,7 +279,7 @@ public class HybridTestGen extends Component
 
         //generateTestData(maxloop, value, txtSourceFolder.getText());
 
-        HybridAutoTestGen bGen = new HybridAutoTestGen(maxloop, value, txtSourceFolder.getText(), 1, chkErrorDetectionTest.isSelected());
+        HybridAutoTestGen bGen = new HybridAutoTestGen(maxloop, value, txtSourceFolder.getText(), 1);
 
         bGen.generateTestData();
 

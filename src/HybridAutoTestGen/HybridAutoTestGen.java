@@ -62,7 +62,6 @@ public class HybridAutoTestGen extends Application
     private String sourceFolder;
     private List<IVariableNode> variables;
     private float boundStep = 1;
-    private Boolean isErrorDetectionTest = false;
 
     public static void main(String[] args)
     {
@@ -75,13 +74,12 @@ public class HybridAutoTestGen extends Application
 
     }
 
-    public HybridAutoTestGen(int _maxloop, String _functionName, String _sourceFolder, float _boundStep, Boolean _isErrorDetectionTest)
+    public HybridAutoTestGen(int _maxloop, String _functionName, String _sourceFolder, float _boundStep)
     {
         maxloop = _maxloop;
         functionName = _functionName;
         sourceFolder = _sourceFolder;
         boundStep = _boundStep;
-        isErrorDetectionTest = _isErrorDetectionTest;
     }
 
     //public void generateTestData(int maxloop, String functionName, String sourceFolder) throws Exception
@@ -178,8 +176,8 @@ public class HybridAutoTestGen extends Application
 
         float durationTotal = diff1 + diff2;
 
-        graph.computeBranchCover();
-        graph.computeStatementCov();
+        graph.computeBranchCoverNew();
+        graph.computeStatementCovNew();
 
         graph.exportReport(durationTotal, 0, 1, "Hybrid", testCases);
 

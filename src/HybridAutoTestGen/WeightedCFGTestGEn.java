@@ -116,8 +116,8 @@ public class WeightedCFGTestGEn
 			}while(pathNumber!=-1);
 			
 			LocalDateTime afterGenForC = LocalDateTime.now();
-			graph.computeBranchCover();
-			graph.computeStatementCov();
+			graph.computeBranchCoverNew();
+			graph.computeStatementCovNew();
 			Graph graphForLoop;
 
 			graph.createProbabilityForTestPath(hmmGraph);

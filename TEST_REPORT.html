@@ -16,19 +16,19 @@
                     <th>CFG generated test data</th>
                 </tr>
             </thead>
-            <tbody><tr><td>0</td><td>( int maxx = 5;) <font> => </font>( float e;) <font> => </font>( int x=0;) <font> => </font>( e = 1/x;) <font> => </font>return e;</td><td>a=5;</td></tr><tr><td>1</td><td>( int maxx = 5;) <font> => </font>( float e;) <font> => </font>( int x=0;) <font> => </font>( e = 1/x;) <font> => </font>return e;</td><td>a=0;</td></tr><tr><td>2</td><td>( int maxx = 5;) <font> => </font>( float e;) <font> => </font>( int x=0;) <font> => </font>( x = 2;) <font> => </font>( e = 1/x;) <font> => </font>return e;</td><td></td></tr>            </tbody></table> </div><br/><div  class="table-wrapper">        <table class="fl-table">
+            <tbody><tr><td>0</td><td>( int a[100];) <font> => </font>return 0;</td><td>n=1;</td></tr><tr><td>1</td><td>( int a[100];) <font> => </font>( a[0]=a[1]=1;) <font> => </font>( int i=2;) <font> => </font>return a[n];</td><td></td></tr><tr><td>2</td><td>( int a[100];) <font> => </font>( a[0]=a[1]=1;) <font> => </font>( int i=2;) <font> => </font>( a[i]=a[i-1]+a[i-2];) <font> => </font>( i++) <font> => </font>return a[n];</td><td>n=2;</td></tr>            </tbody></table> </div><br/><div  class="table-wrapper">        <table class="fl-table">
             <thead>
                 <tr>
                     <th>All test data = CFG generated test data + boundary value test data</th>
                 </tr>
             </thead>
-            <tbody><tr><td>a=4;</td></tr><tr><td>a=5;</td></tr><tr><td>a=6;</td></tr><tr><td>a=0;</td></tr>            </tbody>            </table></div> <br/><div  class="table-wrapper">        <table class="fl-table">
+            <tbody><tr><td>n=1;</td></tr><tr><td>n=2;</td></tr><tr><td>n=3;</td></tr>            </tbody>            </table></div> <br/><div  class="table-wrapper">        <table class="fl-table">
             <thead>
                 <tr>
                     <th>Coverage information</th>
                 </tr>
             </thead>
-            <tbody>   <tr><td> Statement coverage 0.7692308</td></tr>        <tr><td>Branch coverage 0.8518519</td></tr>        <tr><td>Time: 3.176s</td></tr>   </tbody>
+            <tbody>   <tr><td> Statement coverage 1.0</td></tr>        <tr><td>Branch coverage 1.0</td></tr>        <tr><td>Time: 1.64s</td></tr>   </tbody>
         </table></div>
 <div  class="table-wrapper">        <table class="fl-table">
             <thead>
@@ -36,16 +36,15 @@
                     <th>Function raw signature</th>
                 </tr>
             </thead>
-            <tbody><tr><td><pre>float foo(int a)
+            <tbody><tr><td><pre>int fibonaci(int n) //huong
 {
-	int maxx = 5;
-	float e;
-	int x=0;
-	if (a < maxx){
-		if (a == maxx){
-			x = 2;
-		}
-	}
-	e = 1/x;
-	return e;
+    int a[100];
+    if(n>=2)
+    {
+    a[0]=a[1]=1;
+    for (int i=2;i<=n;i++)
+        a[i]=a[i-1]+a[i-2];
+    return a[n];
+    }
+    return 0;
 }</pre></tr></td>            </tbody></table></div></body></html>

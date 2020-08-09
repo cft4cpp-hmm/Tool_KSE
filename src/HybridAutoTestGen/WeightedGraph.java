@@ -1,8 +1,12 @@
 package HybridAutoTestGen;
 
 import cfg.ICFG;
+import cfg.object.AbstractConditionLoopCfgNode;
+import cfg.object.ConditionCfgNode;
 import cfg.object.ICfgNode;
+import cfg.object.NormalCfgNode;
 import cfg.testpath.IFullTestpath;
+import cfg.testpath.IStaticSolutionGeneration;
 import config.AbstractSetting;
 import testdata.object.TestpathString_Marker;
 import testdatagen.coverage.CFGUpdater_Mark;
@@ -14,7 +18,6 @@ import tree.object.IFunctionNode;
 import tree.object.INode;
 
 import java.io.FileWriter;
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -112,6 +115,40 @@ public class WeightedGraph extends SourceGraph
     }
 
 
+    public float computeBranchCoverNew() throws Exception
+    {
+        float totalBranch = 0;
+        float conditionStatementCount = 0;
+        for (ICfgNode stm : this.cfg.getAllNodes())
+        {
+            if (stm instanceof ConditionCfgNode)
+            {
+                if (!(stm instanceof AbstractConditionLoopCfgNode))
+                {
+                    conditionStatementCount += 1;
+                }
+            }
+        }
+        totalBranch = conditionStatementCount + 1;
+
+        float testPathHasTestcase = 0;
+
+        if (this.getFullWeightedTestPaths().size() != 0)
+        {
+            for (WeightedTestPath testPath : this.getFullWeightedTestPaths())
+            {
+                if (!testPath.getTestCase().equals(IStaticSolutionGeneration.NO_SOLUTION))
+                {
+                    testPathHasTestcase += 1;
+                }
+            }
+        }
+
+        this.branchCover = testPathHasTestcase / totalBranch;
+
+        return this.branchCover;
+    }
+
     public float computeBranchCover() throws Exception
     {
         Set<WeightedEdge> setEdges = new HashSet<WeightedEdge>();
@@ -154,6 +191,38 @@ public class WeightedGraph extends SourceGraph
         return this.getCfg().computeBranchCoverage();
     }
 
+    public float computeStatementCovNew()
+    {
+        float visitedNode = 0;
+        float totalStatement = 0;
+
+        for (ICfgNode cfgNode : this.cfg.getAllNodes())
+        {
+            if (cfgNode instanceof NormalCfgNode)
+            {
+                totalStatement += 1;
+            }
+        }
+        for (ICfgNode cfgNode : this.cfg.getAllNodes())
+        {
+            if (cfgNode instanceof NormalCfgNode)
+            {
+                if (cfgNode.isVisited())
+                {
+                    visitedNode++;
+                }
+            }
+        }
+
+        if (visitedNode != 0)
+        {
+            this.statementCover = visitedNode / totalStatement;
+
+        }
+        return this.statementCover;
+
+    }
+
     public float computeStatementCov()
     {
         int visitedNode = 0;
@@ -173,7 +242,6 @@ public class WeightedGraph extends SourceGraph
         return this.statementCover;
 
     }
-
 
     public void computeProbabilityForAllPath(int version)
     {
