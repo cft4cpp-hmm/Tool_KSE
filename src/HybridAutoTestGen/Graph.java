@@ -200,7 +200,15 @@ public class Graph
             }
         }
 
-        this.branchCover = testPathHasTestcase / totalBranch;
+        if (totalBranch != 1)
+        {
+            //there is only 1 branch
+            this.branchCover = testPathHasTestcase / totalBranch;
+        }
+        else
+        {
+            this.branchCover = 1;
+        }
 
         return this.branchCover;
     }
