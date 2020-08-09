@@ -1,12 +1,8 @@
 package HybridAutoTestGen;
 
 import cfg.ICFG;
-import cfg.object.AbstractConditionLoopCfgNode;
-import cfg.object.ConditionCfgNode;
-import cfg.object.ICfgNode;
-import cfg.object.NormalCfgNode;
+import cfg.object.*;
 import cfg.testpath.IFullTestpath;
-import cfg.testpath.IStaticSolutionGeneration;
 import config.AbstractSetting;
 import testdata.object.TestpathString_Marker;
 import testdatagen.coverage.CFGUpdater_Mark;
@@ -119,6 +115,7 @@ public class WeightedGraph extends SourceGraph
     {
         float totalBranch = 0;
         float conditionStatementCount = 0;
+        float visitedBranch = 0;
         for (ICfgNode stm : this.cfg.getAllNodes())
         {
             if (stm instanceof ConditionCfgNode)
@@ -126,28 +123,24 @@ public class WeightedGraph extends SourceGraph
                 if (!(stm instanceof AbstractConditionLoopCfgNode))
                 {
                     conditionStatementCount += 1;
+
+                    if (getStatementTrueNode(stm).isVisited() == true)
+                    {
+                        visitedBranch += 1;
+                    }
+                    if(getStatementFalseNode(stm).isVisited() == true)
+                    {
+                        visitedBranch += 1;
+                    }
                 }
             }
         }
-        totalBranch = conditionStatementCount + 1;
+        totalBranch = conditionStatementCount * 2;
 
-        float testPathHasTestcase = 0;
-
-        if (this.getFullWeightedTestPaths().size() != 0)
-        {
-            for (WeightedTestPath testPath : this.getFullWeightedTestPaths())
-            {
-                if (!testPath.getTestCase().equals(IStaticSolutionGeneration.NO_SOLUTION))
-                {
-                    testPathHasTestcase += 1;
-                }
-            }
-        }
-
-        if (totalBranch != 1)
+        if (totalBranch > 0)
         {
             //there is only 1 branch
-            this.branchCover = testPathHasTestcase / totalBranch;
+            this.branchCover = visitedBranch / totalBranch;
         }
         else
         {
@@ -156,6 +149,26 @@ public class WeightedGraph extends SourceGraph
         return this.branchCover;
     }
 
+    private ICfgNode getStatementTrueNode(ICfgNode stm)
+    {
+        ICfgNode trueNode = stm.getTrueNode();
+        while(trueNode instanceof ScopeCfgNode)
+        {
+            trueNode = trueNode.getTrueNode();
+        }
+
+        return trueNode;
+    }
+    private ICfgNode getStatementFalseNode(ICfgNode stm)
+    {
+        ICfgNode falseNode = stm.getFalseNode();
+        while(falseNode instanceof ScopeCfgNode)
+        {
+            falseNode = falseNode.getFalseNode();
+        }
+
+        return falseNode;
+    }
     public float computeBranchCover() throws Exception
     {
         Set<WeightedEdge> setEdges = new HashSet<WeightedEdge>();
