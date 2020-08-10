@@ -6,29 +6,15 @@
 </head>
 
 <body>
-    <h2>HYBRID: TEST REPORT</h2>
+    <h2>BVTG: TEST REPORT</h2>
     <div class="table-wrapper">
         <table class="fl-table">
             <thead>
                 <tr>
-                    <th>PathNumber</th>
-                    <th style="width: 800px">Test path</th>
-                    <th>CFG generated test data</th>
+                    <th>Boundary generated test data</th>
                 </tr>
             </thead>
-            <tbody><tr><td>0</td><td>( int i = 0;) <font> => </font>( int j = 0;) <font> => </font>( int count;) <font> => </font>( int m1 = -1, m2 = -1;) <font> => </font>( count = 0;) <font> => </font>return (m1 + m2)/2;</td><td>n=-17912;m=15438;</td></tr><tr><td>1</td><td>( int i = 0;) <font> => </font>( int j = 0;) <font> => </font>( int count;) <font> => </font>( int m1 = -1, m2 = -1;) <font> => </font>( count = 0;) <font> => </font>( m2 = m1;) <font> => </font>( i != n && j != m) <font> => </font>( m1 = ar1[j++];) <font> => </font>( count++) <font> => </font>return (m1 + m2)/2;</td><td>n=0;m=0;</td></tr><tr><td>2</td><td>( int i = 0;) <font> => </font>( int j = 0;) <font> => </font>( int count;) <font> => </font>( int m1 = -1, m2 = -1;) <font> => </font>( count = 0;) <font> => </font>( m2 = m1;) <font> => </font>( i != n && j != m) <font> => </font>( m1 = ar1[i++];) <font> => </font>( count++) <font> => </font>return (m1 + m2)/2;</td><td></td></tr><tr><td>3</td><td>( int i = 0;) <font> => </font>( int j = 0;) <font> => </font>( int count;) <font> => </font>( int m1 = -1, m2 = -1;) <font> => </font>( count = 0;) <font> => </font>( m2 = m1;) <font> => </font>( i != n && j != m) <font> => </font>( m1  =  ar1[i++];) <font> => </font>( count++) <font> => </font>return (m1 + m2)/2;</td><td>n=-2;m=2;ar1[0]=0;ar2[0]=0;</td></tr><tr><td>4</td><td>( int i = 0;) <font> => </font>( int j = 0;) <font> => </font>( int count;) <font> => </font>( int m1 = -1, m2 = -1;) <font> => </font>( count = 0;) <font> => </font>( m2 = m1;) <font> => </font>( i != n && j != m) <font> => </font>( m1  =  ar2[j++] ;) <font> => </font>( count++) <font> => </font>return (m1 + m2)/2;</td><td>n=-2;m=2;ar1[0]=0;ar2[0]=(-1);</td></tr><tr><td>5</td><td>( int i = 0;) <font> => </font>( int j = 0;) <font> => </font>( int count;) <font> => </font>( int m1 = -1, m2 = -1;) <font> => </font>( count = 0;) <font> => </font>return m1;</td><td>n=-4875;m=0;</td></tr><tr><td>6</td><td>( int i = 0;) <font> => </font>( int j = 0;) <font> => </font>( int count;) <font> => </font>( int m1 = -1, m2 = -1;) <font> => </font>( count = 0;) <font> => </font>( i != n && j != m) <font> => </font>( m1 = ar2[j++];) <font> => </font>( count++) <font> => </font>return m1;</td><td>n=0;m=1;</td></tr><tr><td>7</td><td>( int i = 0;) <font> => </font>( int j = 0;) <font> => </font>( int count;) <font> => </font>( int m1 = -1, m2 = -1;) <font> => </font>( count = 0;) <font> => </font>( i != n && j != m) <font> => </font>( m1 = ar1[i++];) <font> => </font>( count++) <font> => </font>return m1;</td><td>n=1;m=0;</td></tr><tr><td>8</td><td>( int i = 0;) <font> => </font>( int j = 0;) <font> => </font>( int count;) <font> => </font>( int m1 = -1, m2 = -1;) <font> => </font>( count = 0;) <font> => </font>( i != n && j != m) <font> => </font>( m1  =  ar1[i++];) <font> => </font>( count++) <font> => </font>return m1;</td><td>n=-1;m=2;ar1[0]=0;ar2[0]=0;</td></tr><tr><td>9</td><td>( int i = 0;) <font> => </font>( int j = 0;) <font> => </font>( int count;) <font> => </font>( int m1 = -1, m2 = -1;) <font> => </font>( count = 0;) <font> => </font>( i != n && j != m) <font> => </font>( m1  =  ar2[j++] ;) <font> => </font>( count++) <font> => </font>return m1;</td><td>n=-1;m=2;ar1[0]=1;ar2[0]=0;</td></tr>            </tbody></table> </div><br/><div  class="table-wrapper">        <table class="fl-table">
-            <thead>
-                <tr>
-                    <th>All test data = CFG generated test data + boundary value test data</th>
-                </tr>
-            </thead>
-            <tbody><tr><td>n=76;m=15438;ar1=86;ar2=26;</td></tr><tr><td>n=0;m=2473;ar1=95;ar2=4;</td></tr><tr><td>m=1;n=1;ar1=15;ar2=7;</td></tr><tr><td>m=78;n=0;ar1=27;ar2=80;</td></tr><tr><td>m=1;n=-1;ar1=2;ar2=38;</td></tr><tr><td>m=0;n=0;ar1=64;ar2=62;</td></tr><tr><td>n=-1;m=1;ar1=98;ar2=86;</td></tr><tr><td>n=78;m=0;ar1=81;ar2=12;</td></tr><tr><td>n=1;m=-1;ar1=0;ar2=1;</td></tr><tr><td> ar1=74;ar2=6;n=92;m=79;</td></tr><tr><td> ar1=90;ar2=13;n=87;m=39;</td></tr><tr><td> ar1=32;ar2=25;n=37;m=43;</td></tr><tr><td>m=2;n=1;ar1=15;ar2=88;</td></tr><tr><td>m=1;n=0;ar1=98;ar2=18;</td></tr><tr><td>m=16732;n=-1;ar1=93;ar2=99;</td></tr><tr><td>m=1;n=0;ar1=99;ar2=18;</td></tr><tr><td>n=2;m=1;ar1=34;ar2=61;</td></tr><tr><td>n=1;m=0;ar1=28;ar2=26;</td></tr><tr><td>n=16732;m=-1;ar1=21;ar2=32;</td></tr><tr><td>m=0;n=1;ar1=23;ar2=87;</td></tr><tr><td> ar1=12;ar2=38;n=30;m=37;</td></tr><tr><td> ar1=31;ar2=30;n=70;m=5;</td></tr><tr><td> ar1=62;ar2=82;n=28;m=30;</td></tr><tr><td>n=-17912;m=15438;</td></tr><tr><td>n=0;m=0;</td></tr><tr><td>n=-2;m=2;ar1[0]=0;ar2[0]=0;</td></tr><tr><td>n=-2;m=2;ar1[0]=0;ar2[0]=(-1);</td></tr><tr><td>n=-4875;m=0;</td></tr><tr><td>n=0;m=1;</td></tr><tr><td>n=1;m=0;</td></tr><tr><td>n=-1;m=2;ar1[0]=0;ar2[0]=0;</td></tr><tr><td>n=-1;m=2;ar1[0]=1;ar2[0]=0;</td></tr>            </tbody>            </table></div> <br/><div  class="table-wrapper">        <table class="fl-table">
-            <thead>
-                <tr>
-                    <th>Coverage information</th>
-                </tr>
-            </thead>
-            <tbody>   <tr><td> Statement coverage 0.96428573</td></tr>        <tr><td>Branch coverage 0.9285714</td></tr>        <tr><td>Time: 18.036s</td></tr>   </tbody>
+            <tbody><tr><td>c=0;b=0;a=1;</td></tr><tr><td>c=0;b=0;a=0;</td></tr><tr><td>a=1;c=1;b=1;</td></tr><tr><td>a=1;b=1;c=1;</td></tr><tr><td>a=1;c=0;b=1;</td></tr><tr><td>c=1;b=0;a=0;</td></tr><tr><td>a=0;b=0;c=0;</td></tr><tr><td>a=0;c=0;b=1;</td></tr><tr><td>a=0;b=0;c=1;</td></tr><tr><td>Elapsed time: 1.559</td></tr>            </tbody></table></div>   </tbody>
         </table></div>
 <div  class="table-wrapper">        <table class="fl-table">
             <thead>
@@ -36,50 +22,9 @@
                     <th>Function raw signature</th>
                 </tr>
             </thead>
-            <tbody><tr><td><pre>int getMedian(int ar1[],int ar2[],int n,int m)
-{
-    int i = 0; /* Current index of input array ar1[] */
-    int j = 0; /* Current index of input array ar2[] */
-    int count;
-    int m1 = -1, m2 = -1;
-
-    // Since there are (n+m) elements,
-    // There are following two cases
-    // if n+m is odd then the middle
-    //index is median i.e. (m+n)/2
-    if((m + n) % 2 == 1) {
-        for (count = 0; count <= (n + m)/2; count++) {
-            if(i != n && j != m){
-            if ( (ar1[i] > ar2[j]) ) m1  =  ar2[j++] ; else m1  =  ar1[i++];
-            }
-            else if(i < n){
-            m1 = ar1[i++];
-            }
-            // for case when j \le m,
-            else{
-            m1 = ar2[j++];
-            }
-        }
-        return m1;
-    }
-
-    // median will be average of elements
-    // at index ((m+n)/2 - 1) and (m+n)/2
-    // in the array obtained after merging ar1 and ar2
-    else {
-        for (count = 0; count <= (n + m)/2; count++) {
-            m2 = m1;
-            if(i != n && j != m){
-            if ( (ar1[i] > ar2[j]) ) m1  =  ar2[j++] ; else m1  =  ar1[i++];
-            }
-            else if(i < n){
-            m1 = ar1[i++];
-            }
-            // for case when j \le m,
-            else{
-            m1 = ar1[j++];
-            }
-        }
-        return (m1 + m2)/2;
-    }
+            <tbody><tr><td><pre>int isTriangle(int a,int b,int c){
+	if((a <= b+c) && (b <= a+c) && (c< a+b)){
+		return 1;
+	}
+	else return 0;
 }</pre></tr></td>            </tbody></table></div></body></html>

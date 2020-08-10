@@ -171,7 +171,7 @@ public class HybridAutoTestGen extends Application
 
         Duration duration2 = Duration.between(before, after);
 
-        float diff2 = Math.abs((float) duration.toMillis() / 1000);
+        float diff2 = Math.abs((float) duration2.toMillis() / 1000);
 
 
         float durationTotal = diff1 + diff2;
