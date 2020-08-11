@@ -504,7 +504,7 @@ public class Graph
 //                    "        <tr><td>C2 Coverage: " + this.computeStatementCov() + "</td></tr>\r\n"+
             "        <tr><td>stateCov: " + stateCov + "</td></tr>\r\n"+
             "        <tr><td>branchCov: " + branchCov + "</td></tr>\r\n"+
-                            "        <tr><td>Time For " + (coverage == 0 ? "C2: " : "C3: ") + diff + "s</td></tr>\r\n";
+                            "        <tr><td>Time: " + diff + "s</td></tr>\r\n";
         }
         catch (Exception e)
         {

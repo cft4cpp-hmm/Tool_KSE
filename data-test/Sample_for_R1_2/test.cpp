@@ -395,13 +395,12 @@ int getMedian(int ar1[], int ar2[], int n, int m)
         return (m1 + m2)/2;
     }
 }
-
 /*
 
 	input: a,b
-	output: if a+b < 10, the function should return 1/(a+b)
-			if a+b = 0 or a+b+10 = 0, the function should return 0;
-			other wise, the function should return 1/(a+b+10)
+	output: if a+b < -10, the function should return 1/(a+b)
+			if a+b = 0 or a+b+1 = 0, the function should return 0;
+			other wise, the function should return 1/(a+b+1)
 
 
 	Error in function: 2

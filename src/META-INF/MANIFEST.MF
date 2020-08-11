@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Main-Class: GUI.VNUDSE
+Class-Path: E:\VietData\GitLab\Bai10\src\GUI
+

@@ -389,7 +389,7 @@ public class WeightedGraph extends SourceGraph
             coverInfo =
                     "   <tr><td> Statement coverage " + stateCov + "</td></tr>" +
                             "        <tr><td>Branch coverage " + branchCov + "</td></tr>" +
-                            "        <tr><td>Time: " + diff + "s</td></tr>";
+                            "        <tr><td>Number of test data: " + testCases.size() + "; Time: " + diff + "s</td></tr>";
         }
         catch (Exception e)
         {

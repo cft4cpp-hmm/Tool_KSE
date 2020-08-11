@@ -14,7 +14,7 @@
                     <th>Boundary generated test data</th>
                 </tr>
             </thead>
-            <tbody><tr><td>c=0;b=0;a=1;</td></tr><tr><td>c=0;b=0;a=0;</td></tr><tr><td>a=1;c=1;b=1;</td></tr><tr><td>a=1;b=1;c=1;</td></tr><tr><td>a=1;c=0;b=1;</td></tr><tr><td>c=1;b=0;a=0;</td></tr><tr><td>a=0;b=0;c=0;</td></tr><tr><td>a=0;c=0;b=1;</td></tr><tr><td>a=0;b=0;c=1;</td></tr><tr><td>Elapsed time: 1.559</td></tr>            </tbody></table></div>   </tbody>
+            <tbody><tr><td>year=-96;</td></tr><tr><td>year=-99;</td></tr><tr><td>year=0;</td></tr><tr><td>year=-399;</td></tr>        <tr><td>Number of test data: 4; Elapsed time: 1.268</td></tr>            </tbody></table></div>   </tbody>
         </table></div>
 <div  class="table-wrapper">        <table class="fl-table">
             <thead>
@@ -22,9 +22,9 @@
                     <th>Function raw signature</th>
                 </tr>
             </thead>
-            <tbody><tr><td><pre>int isTriangle(int a,int b,int c){
-	if((a <= b+c) && (b <= a+c) && (c< a+b)){
-		return 1;
-	}
-	else return 0;
+            <tbody><tr><td><pre>int leapYear(int year){ // line 1
+	if(((year % 4 == 0) && (year % 100 != 0)) || (year % 400 != 0)){ // line 2
+		return 1; // line 3
+	}             // line 4
+	return 0;	  // line 5
 }</pre></tr></td>            </tbody></table></div></body></html>
