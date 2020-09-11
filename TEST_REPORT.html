@@ -6,15 +6,29 @@
 </head>
 
 <body>
-    <h2>BVTG: TEST REPORT</h2>
+    <h2>HYBRID: TEST REPORT</h2>
     <div class="table-wrapper">
         <table class="fl-table">
             <thead>
                 <tr>
-                    <th>Boundary generated test data</th>
+                    <th>PathNumber</th>
+                    <th style="width: 800px">Test path</th>
+                    <th>CFG generated test data</th>
                 </tr>
             </thead>
-            <tbody><tr><td>year=-96;</td></tr><tr><td>year=-99;</td></tr><tr><td>year=0;</td></tr><tr><td>year=-399;</td></tr>        <tr><td>Number of test data: 4; Elapsed time: 1.268</td></tr>            </tbody></table></div>   </tbody>
+            <tbody><tr><td>0</td><td>( int fibMMm2 = 0;) <font> => </font>( int fibMMm1 = 1;) <font> => </font>( int fibM = fibMMm2 + fibMMm1;) <font> => </font>( int offset = -1;) <font> => </font>return -1;</td><td> </td></tr><tr><td>1</td><td>( int fibMMm2 = 0;) <font> => </font>( int fibMMm1 = 1;) <font> => </font>( int fibM = fibMMm2 + fibMMm1;) <font> => </font>( int offset = -1;) <font> => </font>return offset+1;</td><td> </td></tr><tr><td>2</td><td>( int fibMMm2 = 0;) <font> => </font>( int fibMMm1 = 1;) <font> => </font>( int fibM = fibMMm2 + fibMMm1;) <font> => </font>( int offset = -1;) <font> => </font>( int i = min(offset+fibMMm2, n-1);) <font> => </font>return i;</td><td>n=1;</td></tr><tr><td>3</td><td>( int fibMMm2 = 0;) <font> => </font>( int fibMMm1 = 1;) <font> => </font>( int fibM = fibMMm2 + fibMMm1;) <font> => </font>( int offset = -1;) <font> => </font>( int i = min(offset+fibMMm2, n-1);) <font> => </font>( fibM  = fibMMm2;) <font> => </font>( fibMMm1 = fibMMm1 - fibMMm2;) <font> => </font>( fibMMm2 = fibM - fibMMm1;) <font> => </font>return -1;</td><td>n=1;</td></tr><tr><td>4</td><td>( int fibMMm2 = 0;) <font> => </font>( int fibMMm1 = 1;) <font> => </font>( int fibM = fibMMm2 + fibMMm1;) <font> => </font>( int offset = -1;) <font> => </font>( int i = min(offset+fibMMm2, n-1);) <font> => </font>( fibM  = fibMMm2;) <font> => </font>( fibMMm1 = fibMMm1 - fibMMm2;) <font> => </font>( fibMMm2 = fibM - fibMMm1;) <font> => </font>return offset+1;</td><td>n=1;</td></tr><tr><td>5</td><td>( int fibMMm2 = 0;) <font> => </font>( int fibMMm1 = 1;) <font> => </font>( int fibM = fibMMm2 + fibMMm1;) <font> => </font>( int offset = -1;) <font> => </font>( int i = min(offset+fibMMm2, n-1);) <font> => </font>( fibM  = fibMMm1;) <font> => </font>( fibMMm1 = fibMMm2;) <font> => </font>( fibMMm2 = fibM - fibMMm1;) <font> => </font>( offset = i;) <font> => </font>return -1;</td><td>n=1;</td></tr><tr><td>6</td><td>( int fibMMm2 = 0;) <font> => </font>( int fibMMm1 = 1;) <font> => </font>( int fibM = fibMMm2 + fibMMm1;) <font> => </font>( int offset = -1;) <font> => </font>( int i = min(offset+fibMMm2, n-1);) <font> => </font>( fibM  = fibMMm1;) <font> => </font>( fibMMm1 = fibMMm2;) <font> => </font>( fibMMm2 = fibM - fibMMm1;) <font> => </font>( offset = i;) <font> => </font>return offset+1;</td><td>n=1;</td></tr><tr><td>7</td><td>( int fibMMm2 = 0;) <font> => </font>( int fibMMm1 = 1;) <font> => </font>( int fibM = fibMMm2 + fibMMm1;) <font> => </font>( fibMMm2 = fibMMm1;) <font> => </font>( fibMMm1 = fibM;) <font> => </font>( fibM  = fibMMm2 + fibMMm1;) <font> => </font>( int offset = -1;) <font> => </font>return -1;</td><td>n=2;</td></tr><tr><td>8</td><td>( int fibMMm2 = 0;) <font> => </font>( int fibMMm1 = 1;) <font> => </font>( int fibM = fibMMm2 + fibMMm1;) <font> => </font>( fibMMm2 = fibMMm1;) <font> => </font>( fibMMm1 = fibM;) <font> => </font>( fibM  = fibMMm2 + fibMMm1;) <font> => </font>( int offset = -1;) <font> => </font>return offset+1;</td><td>n=2;</td></tr><tr><td>9</td><td>( int fibMMm2 = 0;) <font> => </font>( int fibMMm1 = 1;) <font> => </font>( int fibM = fibMMm2 + fibMMm1;) <font> => </font>( fibMMm2 = fibMMm1;) <font> => </font>( fibMMm1 = fibM;) <font> => </font>( fibM  = fibMMm2 + fibMMm1;) <font> => </font>( int offset = -1;) <font> => </font>( int i = min(offset+fibMMm2, n-1);) <font> => </font>return i;</td><td>n=2;</td></tr><tr><td>10</td><td>( int fibMMm2 = 0;) <font> => </font>( int fibMMm1 = 1;) <font> => </font>( int fibM = fibMMm2 + fibMMm1;) <font> => </font>( fibMMm2 = fibMMm1;) <font> => </font>( fibMMm1 = fibM;) <font> => </font>( fibM  = fibMMm2 + fibMMm1;) <font> => </font>( int offset = -1;) <font> => </font>( int i = min(offset+fibMMm2, n-1);) <font> => </font>( fibM  = fibMMm2;) <font> => </font>( fibMMm1 = fibMMm1 - fibMMm2;) <font> => </font>( fibMMm2 = fibM - fibMMm1;) <font> => </font>return -1;</td><td>n=2;</td></tr><tr><td>11</td><td>( int fibMMm2 = 0;) <font> => </font>( int fibMMm1 = 1;) <font> => </font>( int fibM = fibMMm2 + fibMMm1;) <font> => </font>( fibMMm2 = fibMMm1;) <font> => </font>( fibMMm1 = fibM;) <font> => </font>( fibM  = fibMMm2 + fibMMm1;) <font> => </font>( int offset = -1;) <font> => </font>( int i = min(offset+fibMMm2, n-1);) <font> => </font>( fibM  = fibMMm2;) <font> => </font>( fibMMm1 = fibMMm1 - fibMMm2;) <font> => </font>( fibMMm2 = fibM - fibMMm1;) <font> => </font>return offset+1;</td><td></td></tr><tr><td>12</td><td>( int fibMMm2 = 0;) <font> => </font>( int fibMMm1 = 1;) <font> => </font>( int fibM = fibMMm2 + fibMMm1;) <font> => </font>( fibMMm2 = fibMMm1;) <font> => </font>( fibMMm1 = fibM;) <font> => </font>( fibM  = fibMMm2 + fibMMm1;) <font> => </font>( int offset = -1;) <font> => </font>( int i = min(offset+fibMMm2, n-1);) <font> => </font>( fibM  = fibMMm1;) <font> => </font>( fibMMm1 = fibMMm2;) <font> => </font>( fibMMm2 = fibM - fibMMm1;) <font> => </font>( offset = i;) <font> => </font>return -1;</td><td>n=2;</td></tr><tr><td>13</td><td>( int fibMMm2 = 0;) <font> => </font>( int fibMMm1 = 1;) <font> => </font>( int fibM = fibMMm2 + fibMMm1;) <font> => </font>( fibMMm2 = fibMMm1;) <font> => </font>( fibMMm1 = fibM;) <font> => </font>( fibM  = fibMMm2 + fibMMm1;) <font> => </font>( int offset = -1;) <font> => </font>( int i = min(offset+fibMMm2, n-1);) <font> => </font>( fibM  = fibMMm1;) <font> => </font>( fibMMm1 = fibMMm2;) <font> => </font>( fibMMm2 = fibM - fibMMm1;) <font> => </font>( offset = i;) <font> => </font>return offset+1;</td><td>n=2;</td></tr>            </tbody></table> </div><br/><div  class="table-wrapper">        <table class="fl-table">
+            <thead>
+                <tr>
+                    <th>All test data = CFG generated test data + boundary value test data</th>
+                </tr>
+            </thead>
+            <tbody><tr><td>fibmmm1 = 0;arr=64;x=10;n=27;</td></tr><tr><td>fibmmm1 = -1.0;arr=38;x=72;n=80;</td></tr><tr><td>fibmmm1 = 1.0;arr=44;x=31;n=41;</td></tr><tr><td>arr[offset+1] = 6arr=58;x=40;n=81;</td></tr><tr><td>arr[offset+1] = 77.0;arr=15;x=18;n=60;</td></tr><tr><td>arr[offset+1] = 79.0;arr=18;x=73;n=34;</td></tr><tr><td>x = 1arr=2;n=96;</td></tr><tr><td>arr[i]  = 9arr=42;x=67;n=2;</td></tr><tr><td>arr[i]  = 94.0;arr=69;x=52;n=22;</td></tr><tr><td>arr[i]  = 96.0;arr=10;x=84;n=64;</td></tr><tr><td> x = 53arr=93;x=19;n=82;</td></tr><tr><td>arr[i]  = 31arr=34;x=44;n=56;</td></tr><tr><td>arr[i]  = 22.0;arr=13;x=62;n=98;</td></tr><tr><td>arr[i]  = 24.0;arr=87;x=72;n=27;</td></tr><tr><td> x = 22arr=31;x=39;n=88;</td></tr><tr><td>fibmmm1 = 0;arr=27;x=50;n=57;</td></tr><tr><td>fibmmm1 = -1.0;arr=50;x=5;n=7;</td></tr><tr><td>fibmmm1 = 1.0;arr=78;x=3;n=89;</td></tr><tr><td>arr[offset+1] = 26arr=82;x=9;n=36;</td></tr><tr><td>arr[offset+1] = 52.0;arr=65;x=74;n=8;</td></tr><tr><td>arr[offset+1] = 54.0;arr=64;x=34;n=72;</td></tr><tr><td>x = 1arr=94;n=45;</td></tr><tr><td>fibmmm1 = 0;arr=83;x=61;n=1;</td></tr><tr><td>fibmmm1 = -1.0;arr=8;x=35;n=90;</td></tr><tr><td>fibmmm1 = 1.0;arr=18;x=79;n=87;</td></tr><tr><td>arr[offset+1] = 33arr=15;x=55;n=59;</td></tr><tr><td>arr[offset+1] = 23.0;arr=45;x=26;n=73;</td></tr><tr><td>arr[offset+1] = 25.0;arr=31;x=25;n=80;</td></tr><tr><td>x = 56arr=85;n=4;</td></tr><tr><td>fibmmm1 = 0;arr=0;x=94;n=68;</td></tr><tr><td>fibmmm1 = -1.0;arr=50;x=49;n=99;</td></tr><tr><td>fibmmm1 = 1.0;arr=55;x=94;n=12;</td></tr><tr><td>arr[offset+1] = 60arr=29;x=91;n=14;</td></tr><tr><td>arr[offset+1] = 83.0;arr=9;x=70;n=54;</td></tr><tr><td>arr[offset+1] = 85.0;arr=41;x=98;n=39;</td></tr><tr><td>x = 52arr=39;n=65;</td></tr><tr><td>arr[i]  = 55arr=82;x=59;n=23;</td></tr><tr><td>arr[i]  = 30.0;arr=27;x=7;n=73;</td></tr><tr><td>arr[i]  = 32.0;arr=61;x=46;n=23;</td></tr><tr><td> x = 91arr=10;x=88;n=52;</td></tr><tr><td>arr[i]  = 62arr=13;x=75;n=84;</td></tr><tr><td>arr[i]  = 28.0;arr=28;x=43;n=71;</td></tr><tr><td>arr[i]  = 30.0;arr=90;x=3;n=13;</td></tr><tr><td> x = 22arr=65;x=98;n=70;</td></tr><tr><td>fibmmm1 = 0;arr=22;x=17;n=74;</td></tr><tr><td>fibmmm1 = -1.0;arr=30;x=80;n=58;</td></tr><tr><td>fibmmm1 = 1.0;arr=65;x=67;n=57;</td></tr><tr><td>arr[offset+1] = 82arr=16;x=59;n=76;</td></tr><tr><td>arr[offset+1] = 98.0;arr=39;x=85;n=51;</td></tr><tr><td>arr[offset+1] = 100.0;arr=60;x=8;n=59;</td></tr><tr><td>x = 86arr=19;n=64;</td></tr><tr><td>fibmmm1 = 0;arr=1;x=13;n=65;</td></tr><tr><td>fibmmm1 = -1.0;arr=4;x=45;n=94;</td></tr><tr><td>fibmmm1 = 1.0;arr=43;x=12;n=29;</td></tr><tr><td>arr[offset+1] = 51arr=58;x=38;n=32;</td></tr><tr><td>arr[offset+1] = 88.0;arr=72;x=23;n=7;</td></tr><tr><td>arr[offset+1] = 90.0;arr=79;x=54;n=6;</td></tr><tr><td>x = 61arr=80;n=91;</td></tr><tr><td> </td></tr><tr><td>n=1;</td></tr><tr><td>n=2;</td></tr>            </tbody>            </table></div> <br/><div  class="table-wrapper">        <table class="fl-table">
+            <thead>
+                <tr>
+                    <th>Coverage information</th>
+                </tr>
+            </thead>
+            <tbody>   <tr><td> Statement coverage 1.0</td></tr>        <tr><td>Branch coverage 1.0</td></tr>        <tr><td>Number of test data: 61; Time: 31.573s</td></tr>   </tbody>
         </table></div>
 <div  class="table-wrapper">        <table class="fl-table">
             <thead>
@@ -22,9 +36,59 @@
                     <th>Function raw signature</th>
                 </tr>
             </thead>
-            <tbody><tr><td><pre>int leapYear(int year){ // line 1
-	if(((year % 4 == 0) && (year % 100 != 0)) || (year % 400 != 0)){ // line 2
-		return 1; // line 3
-	}             // line 4
-	return 0;	  // line 5
+            <tbody><tr><td><pre>int fibMonaccianSearch(int arr[],int x,int n)
+{
+    /* Initialize fibonacci numbers */
+    int fibMMm2 = 0;   // (m-2)'th Fibonacci No.
+    int fibMMm1 = 1;   // (m-1)'th Fibonacci No.
+    int fibM = fibMMm2 + fibMMm1;  // m'th Fibonacci
+
+    /* fibM is going to store the smallest Fibonacci
+       Number greater than or equal to n */
+    while (fibM < n)
+    {
+        fibMMm2 = fibMMm1;
+        fibMMm1 = fibM;
+        fibM  = fibMMm2 + fibMMm1;
+    }
+
+    // Marks the eliminated range from front
+    int offset = -1;
+
+    /* while there are elements to be inspected. Note that
+       we compare arr[fibMm2] with x. When fibM becomes 1,
+       fibMm2 becomes 0 */
+    while (fibM > 1)
+    {
+        // Check if fibMm2 is a valid location
+        int i = min(offset+fibMMm2, n-1);
+
+        /* If x is greater than the value at index fibMm2,
+           cut the subarray array from offset to i */
+        if (arr[i] < x)
+        {
+            fibM  = fibMMm1;
+            fibMMm1 = fibMMm2;
+            fibMMm2 = fibM - fibMMm1;
+            offset = i;
+        }
+
+        /* If x is greater than the value at index fibMm2,
+           cut the subarray after i+1  */
+        else if (arr[i] > x)
+        {
+            fibM  = fibMMm2;
+            fibMMm1 = fibMMm1 - fibMMm2;
+            fibMMm2 = fibM - fibMMm1;
+        }
+
+        /* element found. return index */
+        else return i;
+    }
+
+    /* comparing the last element with x */
+    if(fibMMm1 && arr[offset+1]==x)return offset+1;
+
+    /*element not found. return -1 */
+    return -1;
 }</pre></tr></td>            </tbody></table></div></body></html>
