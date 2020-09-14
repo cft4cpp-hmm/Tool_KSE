@@ -529,11 +529,11 @@ int leapYear(int year){ // line 1
 
 int testBoundaryValue(int x, int y)
 {
-	if (x > 1)
+	if (x > 1 && y > 3)
 	{
 		x = y + 2;
 	}
-	else if (x < 0)
+	else if (x < 0 && y < 2)
 	{
 		x = y - 2;
 	}

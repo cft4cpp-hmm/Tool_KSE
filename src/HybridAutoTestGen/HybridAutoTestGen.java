@@ -1,6 +1,7 @@
 package HybridAutoTestGen;
 
 import cfg.CFG;
+import cfg.CFGGenerationforBranchvsStatementCoverage;
 import cfg.CFGGenerationforSubConditionCoverage;
 import cfg.ICFG;
 import cfg.object.AbstractConditionLoopCfgNode;
@@ -39,9 +40,7 @@ import utils.search.Search;
 import java.io.File;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class HybridAutoTestGen extends Application
 {
@@ -107,7 +106,8 @@ public class HybridAutoTestGen extends Application
         ((IFunctionNode) function).setAST(fnNorm.getNormalizedAST());
         IFunctionNode clone = (IFunctionNode) function.clone();
         clone.setAST(Utils.getFunctionsinAST(normalizedCoverage.toCharArray()).get(0));
-        CFGGenerationforSubConditionCoverage cfgGen = new CFGGenerationforSubConditionCoverage(clone);
+        //CFGGenerationforSubConditionCoverage cfgGen = new CFGGenerationforSubConditionCoverage(clone);
+        CFGGenerationforBranchvsStatementCoverage cfgGen = new CFGGenerationforBranchvsStatementCoverage(function);
 
         cfg = (CFG) cfgGen.generateCFG();
         cfg.setFunctionNode(clone);
@@ -129,6 +129,9 @@ public class HybridAutoTestGen extends Application
 
 
         //Sinh dữ liệu test theo CFG có trọng số
+        CFGGenerationforSubConditionCoverage cfgGen2 = new CFGGenerationforSubConditionCoverage(clone);
+
+        cfg = (CFG) cfgGen2.generateCFG();
 
         function.normalizedAST();
         FunctionConfig config = new FunctionConfig();
@@ -258,60 +261,115 @@ public class HybridAutoTestGen extends Application
                 {
                     Random rand = new Random();
 
-                    for (float i = -boundStep; i <= boundStep; i += boundStep)
-                    {
-                        ConditionCfgNode stm1 = (ConditionCfgNode) node.clone();
+                    ConditionCfgNode stm1 = (ConditionCfgNode) node.clone();
 
-                        String Content = stm1.getContent();
-                        Content = Content.replaceAll("<=|>=|<|>|!=", "==");
+                    String Content = stm1.getContent();
+                    Content = Content.replaceAll("<=|>=|<|>|!=", "==");
 
-                        stm1.setContent(stm1.getContent().replaceAll("<=|>=|<|>|!=", "=="));
-                        stm1.setAst(ASTUtils.convertToIAST(stm1.getContent() + "+" + i));
-                        tp11.add(stm1);
+                    stm1.setContent(stm1.getContent().replaceAll("<=|>=|<|>|!=", "=="));
+                    stm1.setAst(ASTUtils.convertToIAST(stm1.getContent() ));
+                    tp11.add(stm1);
 //                        tp11.add(trueNode);
 
-                        String result = this.getSolution(tp11, true);
-                        for (IVariableNode variable : this.variables)
+                    String result = this.getSolution(tp11, true);
+
+                    List<IVariableNode> listVarInResult = new ArrayList<>();
+
+                    List<String> resultList = new ArrayList<>();
+
+                    if (!result.equals(IStaticSolutionGeneration.NO_SOLUTION))
+                    {
+                        String[] solutionList = result.split(";");
+
+                        resultList = solutionListAnalysis(solutionList);
+
+                        for (String testData : resultList)
                         {
-                            if (!result.contains(variable.toString()) && !result.equals(IStaticSolutionGeneration.NO_SOLUTION))
+                            for (IVariableNode variable : this.variables)
                             {
-                                result += variable.toString() + "=" + rand.nextInt(100) + ";";
+                                if (!testData.contains(variable.toString()))
+                                {
+                                    testData += variable.toString() + "=" + rand.nextInt(100) + ";";
+                                }
                             }
-                        }
-                        result = result.replaceAll(";;", ";");
-                        if (!testCases.contains(result) && !result.equals(IStaticSolutionGeneration.NO_SOLUTION))
-                        {
-                            testCases.add(result);
+                            testData = testData.replaceAll(";;", ";");
+
+                            if (!testCases.contains(testData))
+                            {
+                                testCases.add(testData);
+                            }
                         }
                     }
                 }
             }
         }
+    }
 
+    private List<String> solutionListAnalysis(String[] solutionList)
+    {
+        List<List<String>> list = new ArrayList<>();
+        List<String> newRet = new ArrayList<>();
 
+        for(String solution: solutionList)
+        {
+            if (solution.contains("="))
+            {
+                String param = solution.split("=")[0];
+                String value = solution.split("=")[1];
 
+                List<String> newList = new ArrayList<>();
 
-//        return;
-//        FullTestpaths testpaths_ = new FullTestpaths();
-//
-//        ICfgNode beginNode = cfg.getBeginNode();
-//        FullTestpath initialTestpath = new FullTestpath();
-//        initialTestpath.setFunctionNode(cfg.getFunctionNode());
-//        try
-//        {
-//            traverseCFGForBoundaryTestGen(beginNode, initialTestpath, testpaths_);
-//        }
-//        catch (Exception e)
-//        {
-//            e.printStackTrace();
-//        }
-//
-//        for (ITestpathInCFG tp : testpaths_)
-//        {
-//            tp.setFunctionNode(cfg.getFunctionNode());
-//        }
-//
-//        possibleTestpaths = testpaths_;
+                Random rand = new Random();
+
+                for (float i = -boundStep; i <= boundStep; i += boundStep)
+                {
+                    double val = 0;
+                    try
+                    {
+                        val = Double.parseDouble(value) + i;
+                    }
+                    catch (Exception ex)
+                    {
+                        val = rand.nextInt(100);
+                    }
+                    String newResult = param + "=" + val;
+
+                    newList.add(newResult);
+                }
+
+                list.add(newList);
+            }
+        }
+
+        newRet = CombineList(list.get(0), list.subList(1, list.size()));
+
+        return newRet;
+    }
+
+    private List<String> CombineList(List<String> list1, List<List<String>> list2)
+    {
+        if(list2.size() == 0)
+        {
+            return list1;
+        }
+        else
+        {
+            List<String> list20 = list2.get(0);
+
+            List<String> ret = new ArrayList<>();
+
+            for (String item1: list1)
+            {
+                for (String item2: list20)
+                {
+                    ret.add(item1 + ";" + item2);
+                }
+            }
+            List<String> newRet = CombineList(ret, list2.subList(1,list2.size()));
+
+            return newRet;
+        }
+
     }
 
     private void traverseCFG(ICfgNode stm, FullTestpath tp, FullTestpaths testpaths) throws Exception
