@@ -16,6 +16,7 @@ import config.Settingv2;
 import constraints.checker.RelatedConstraintsChecker;
 import javafx.application.Application;
 import javafx.stage.Stage;
+import javafx.util.Pair;
 import normalizer.FunctionNormalizer;
 import org.apache.log4j.Logger;
 import org.eclipse.core.internal.utils.Convert;
@@ -221,7 +222,6 @@ public class HybridAutoTestGen extends Application
     {
         List<ICfgNode> list = cfg.getAllNodes();
 
-
         for (ICfgNode node : list)
         {
             if (node instanceof ConditionCfgNode && !(node instanceof AbstractConditionLoopCfgNode))
@@ -267,7 +267,7 @@ public class HybridAutoTestGen extends Application
                     Content = Content.replaceAll("<=|>=|<|>|!=", "==");
 
                     stm1.setContent(stm1.getContent().replaceAll("<=|>=|<|>|!=", "=="));
-                    stm1.setAst(ASTUtils.convertToIAST(stm1.getContent() ));
+                    stm1.setAst(ASTUtils.convertToIAST(stm1.getContent()));
                     tp11.add(stm1);
 //                        tp11.add(trueNode);
 
@@ -275,28 +275,29 @@ public class HybridAutoTestGen extends Application
 
                     List<IVariableNode> listVarInResult = new ArrayList<>();
 
-                    List<String> resultList = new ArrayList<>();
+                    List<TestData> resultList = new ArrayList<>();
 
                     if (!result.equals(IStaticSolutionGeneration.NO_SOLUTION))
                     {
                         String[] solutionList = result.split(";");
 
+                        //solutionList is in form of: [x=3][y=4]
+
                         resultList = solutionListAnalysis(solutionList);
 
-                        for (String testData : resultList)
+                        for (TestData testData : resultList)
                         {
                             for (IVariableNode variable : this.variables)
                             {
-                                if (!testData.contains(variable.toString()))
+                                if (!testData.isExist(variable.toString()))
                                 {
-                                    testData += variable.toString() + "=" + rand.nextInt(100) + ";";
+                                    testData.add(new Pair<>(variable.toString(),rand.nextInt(100)));
                                 }
                             }
-                            testData = testData.replaceAll(";;", ";");
 
-                            if (!testCases.contains(testData))
+                            if (!testCases.contains(testData.toString()))
                             {
-                                testCases.add(testData);
+                                testCases.add(testData.toString());
                             }
                         }
                     }
@@ -305,19 +306,26 @@ public class HybridAutoTestGen extends Application
         }
     }
 
-    private List<String> solutionListAnalysis(String[] solutionList)
-    {
-        List<List<String>> list = new ArrayList<>();
-        List<String> newRet = new ArrayList<>();
+    /*
+    solutionList is in form of [x=3][y=4]...
+    result is a list of TestData with boundary value:
+    [<x,3><y,3>][<x,2><y,3>][<x,4><y,3>]...
 
-        for(String solution: solutionList)
+
+     */
+    private List<TestData> solutionListAnalysis(String[] solutionList)
+    {
+        List<List<Pair<String, Object>>> list = new ArrayList<>();
+        List<TestData> newRet = new ArrayList<>();
+
+        for (String solution : solutionList)
         {
             if (solution.contains("="))
             {
                 String param = solution.split("=")[0];
                 String value = solution.split("=")[1];
 
-                List<String> newList = new ArrayList<>();
+                List<Pair<String, Object>> newList = new ArrayList<>();
 
                 Random rand = new Random();
 
@@ -332,7 +340,8 @@ public class HybridAutoTestGen extends Application
                     {
                         val = rand.nextInt(100);
                     }
-                    String newResult = param + "=" + val;
+
+                    Pair<String, Object> newResult = new Pair<>(param, val);
 
                     newList.add(newResult);
                 }
@@ -341,35 +350,52 @@ public class HybridAutoTestGen extends Application
             }
         }
 
-        newRet = CombineList(list.get(0), list.subList(1, list.size()));
+        List<Pair<String, Object>> firstItem = list.get(0);
+        List<TestData> list0 = new ArrayList<>();
+
+        for (Pair<String, Object> item2 : firstItem)
+        {
+            TestData testData = new TestData(item2.getKey(), item2.getValue());
+            list0.add(testData);
+        }
+
+        newRet = CombineList(list0, list.subList(1, list.size()));
 
         return newRet;
     }
 
-    private List<String> CombineList(List<String> list1, List<List<String>> list2)
+    /*
+    Combine list1 with the first item of list2
+    Tinh to hop giua test data trong list1 voi test data trong phan tu dau tien cua list2
+
+     */
+    private List<TestData> CombineList(List<TestData> list1, List<List<Pair<String, Object>>> list2)
     {
-        if(list2.size() == 0)
+        if (list2.size() == 0)
         {
             return list1;
         }
         else
         {
-            List<String> list20 = list2.get(0);
+            List<Pair<String, Object>> list20 = list2.get(0);
 
-            List<String> ret = new ArrayList<>();
+            List<TestData> ret = new ArrayList<>();
 
-            for (String item1: list1)
+            for (TestData item1 : list1)
             {
-                for (String item2: list20)
+                for (Pair<String, Object> item2 : list20)
                 {
-                    ret.add(item1 + ";" + item2);
+                    if (!item1.isExist(item2))
+                    {
+                        item1.add(item2);
+                    }
+                    ret.add(item1);
                 }
             }
-            List<String> newRet = CombineList(ret, list2.subList(1,list2.size()));
+            List<TestData> newRet = CombineList(ret, list2.subList(1, list2.size()));
 
             return newRet;
         }
-
     }
 
     private void traverseCFG(ICfgNode stm, FullTestpath tp, FullTestpaths testpaths) throws Exception

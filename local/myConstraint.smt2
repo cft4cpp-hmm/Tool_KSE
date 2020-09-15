@@ -1,5 +1,5 @@
 (set-option :timeout 5000)
 (declare-fun tvw_x () Int)
 (declare-fun tvw_y () Int)
-(assert (and  (>  tvw_x   1 )   (>  tvw_y   3 ) ) )
+(assert (and  (=  tvw_x   0 )   (=  tvw_y   2 ) ) )
 (check-sat)(get-model)
