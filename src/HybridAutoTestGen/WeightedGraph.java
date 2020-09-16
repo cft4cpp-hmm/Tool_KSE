@@ -12,6 +12,7 @@ import testdatagen.se.SymbolicExecution;
 import tree.object.FunctionNode;
 import tree.object.IFunctionNode;
 import tree.object.INode;
+import tree.object.Testdata;
 
 import java.io.FileWriter;
 import java.time.LocalDateTime;
@@ -324,7 +325,7 @@ public class WeightedGraph extends SourceGraph
         return index;
     }
 
-    public void exportReport(float diff, int coverage, float timeForLoop, String toolName, List<String> testCases) throws Exception
+    public void exportReport(float diff, int coverage, float timeForLoop, String toolName, List<TestData> testCases) throws Exception
     {
         this.duration = diff;
         FileWriter csvWriter = new FileWriter(AbstractSetting.getValue("TEST_REPORT") + ".html", false);
@@ -361,9 +362,9 @@ public class WeightedGraph extends SourceGraph
                 "                </tr>\r\n" +
                 "            </thead>\r\n" +
                 "            <tbody>";
-        for (String testcase : testCases)
+        for (TestData testcase : testCases)
         {
-            valueString += "<tr><td>" + testcase + "</td></tr>";
+            valueString += "<tr><td>" + testcase.toString() + "</td></tr>";
         }
         valueString += "            </tbody>";
         valueString += "            </table>";

@@ -6,29 +6,15 @@
 </head>
 
 <body>
-    <h2>HYBRID: TEST REPORT</h2>
+    <h2>BVTG: TEST REPORT</h2>
     <div class="table-wrapper">
         <table class="fl-table">
             <thead>
                 <tr>
-                    <th>PathNumber</th>
-                    <th style="width: 800px">Test path</th>
-                    <th>CFG generated test data</th>
+                    <th>Boundary generated test data</th>
                 </tr>
             </thead>
-            <tbody><tr><td>0</td><td>( x = y;) <font> => </font>return x;</td><td>y=0;x=2;</td></tr><tr><td>1</td><td>( x = y - 2;) <font> => </font>return x;</td><td>y=0;x=-1;</td></tr><tr><td>2</td><td>( x = y + 2;) <font> => </font>return x;</td><td>y=4;x=2;</td></tr>            </tbody></table> </div><br/><div  class="table-wrapper">        <table class="fl-table">
-            <thead>
-                <tr>
-                    <th>All test data = CFG generated test data + boundary value test data</th>
-                </tr>
-            </thead>
-            <tbody><tr><td>y=2.0;x=0.0</td></tr><tr><td>y=2.0;x=1.0</td></tr><tr><td>y=2.0;x=2.0</td></tr><tr><td>y=3.0;x=0.0</td></tr><tr><td>y=3.0;x=1.0</td></tr><tr><td>y=3.0;x=2.0</td></tr><tr><td>y=4.0;x=0.0</td></tr><tr><td>y=4.0;x=1.0</td></tr><tr><td>y=4.0;x=2.0</td></tr><tr><td>y=1.0;x=-1.0</td></tr><tr><td>y=1.0;x=0.0</td></tr><tr><td>y=1.0;x=1.0</td></tr><tr><td>y=2.0;x=-1.0</td></tr><tr><td>y=3.0;x=-1.0</td></tr><tr><td>y=0;x=2;</td></tr><tr><td>y=0;x=-1;</td></tr><tr><td>y=4;x=2;</td></tr>            </tbody>            </table></div> <br/><div  class="table-wrapper">        <table class="fl-table">
-            <thead>
-                <tr>
-                    <th>Coverage information</th>
-                </tr>
-            </thead>
-            <tbody>   <tr><td> Statement coverage 1.0</td></tr>        <tr><td>Branch coverage 1.0</td></tr>        <tr><td>Number of test data: 17; Time: 90.737s</td></tr>   </tbody>
+            <tbody><tr><td>y=1;x=0;</td></tr><tr><td>y=1;x=-1;</td></tr><tr><td>y=1;x=1;</td></tr><tr><td>y=4;x=2;</td></tr><tr><td>y=4;x=0;</td></tr><tr><td>x=-1;y=3;</td></tr><tr><td>y=4;x=1;</td></tr><tr><td>x=-1;y=2;</td></tr><tr><td>x=-1;y=1;</td></tr><tr><td>x=2;y=3;</td></tr><tr><td>x=2;y=2;</td></tr><tr><td>x=2;y=4;</td></tr>        <tr><td>Number of test data: 12; Elapsed time: 3.043</td></tr>            </tbody></table></div>   </tbody>
         </table></div>
 <div  class="table-wrapper">        <table class="fl-table">
             <thead>

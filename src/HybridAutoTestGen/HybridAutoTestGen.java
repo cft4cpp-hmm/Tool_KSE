@@ -20,6 +20,7 @@ import javafx.util.Pair;
 import normalizer.FunctionNormalizer;
 import org.apache.log4j.Logger;
 import org.eclipse.core.internal.utils.Convert;
+import org.junit.Test;
 import parser.projectparser.ProjectParser;
 import testdatagen.se.ISymbolicExecution;
 import testdatagen.se.Parameter;
@@ -55,7 +56,7 @@ public class HybridAutoTestGen extends Application
     private ICFG cfg;
     private int maxIterationsforEachLoop = ITestpathGeneration.DEFAULT_MAX_ITERATIONS_FOR_EACH_LOOP;
     private FullTestpaths possibleTestpaths = new FullTestpaths();
-    public List<String> testCases;
+    public List<TestData> testCases;
     public IFunctionNode function;
     public IProjectNode projectNode;
     private int maxloop = 0;
@@ -115,7 +116,7 @@ public class HybridAutoTestGen extends Application
 
         this.cfg.resetVisitedStateOfNodes();
         this.cfg.setIdforAllNodes();
-        this.testCases = new ArrayList<String>();
+        this.testCases = new ArrayList<TestData>();
         this.maxIterationsforEachLoop = maxloop;
         this.variables = function.getArguments();
 
@@ -166,9 +167,14 @@ public class HybridAutoTestGen extends Application
 
             String testcase = tpclone.getTestCase().replaceAll(";;", ";");
 
-            if (!testCases.contains(testcase) && !testcase.equals(IStaticSolutionGeneration.NO_SOLUTION))
+            if(!testcase.equals(IStaticSolutionGeneration.NO_SOLUTION))
             {
-                testCases.add(testcase);
+                TestData testData = TestData.parseString(testcase);
+
+                if (!testCases.contains(testData))
+                {
+                    testCases.add(testData);
+                }
             }
 
             if (!tpclone.getTestCase().equals(IStaticSolutionGeneration.NO_SOLUTION))
@@ -240,9 +246,9 @@ public class HybridAutoTestGen extends Application
                         stm1.setContent(stm1.getContent().replaceAll("<=|>=|<|>|!=", "=="));
                         stm1.setAst(ASTUtils.convertToIAST(stm1.getContent() + "+" + i));
                         tp11.add(stm1);
-//                        tp11.add(trueNode);
 
                         String result = this.getSolution(tp11, true);
+
                         for (IVariableNode variable : this.variables)
                         {
                             if (!result.contains(variable.toString()) && !result.equals(IStaticSolutionGeneration.NO_SOLUTION))
@@ -251,9 +257,15 @@ public class HybridAutoTestGen extends Application
                             }
                         }
                         result = result.replaceAll(";;", ";");
-                        if (!testCases.contains(result) && !result.equals(IStaticSolutionGeneration.NO_SOLUTION))
+
+                        if (!result.equals(IStaticSolutionGeneration.NO_SOLUTION))
                         {
-                            testCases.add(result);
+                            TestData testData = TestData.parseString(result);
+
+                            if (!testCases.contains(testData))
+                            {
+                                testCases.add(testData);
+                            }
                         }
                     }
                 }
@@ -295,9 +307,9 @@ public class HybridAutoTestGen extends Application
                                 }
                             }
 
-                            if (!testCases.contains(testData.toString()))
+                            if (!testCases.contains(testData))
                             {
-                                testCases.add(testData.toString());
+                                testCases.add(testData);
                             }
                         }
                     }
@@ -368,6 +380,9 @@ public class HybridAutoTestGen extends Application
     Combine list1 with the first item of list2
     Tinh to hop giua test data trong list1 voi test data trong phan tu dau tien cua list2
 
+    Ket qua là mot danh sach TestData, moi testData là một đối tượng chứa danh sách các cặp
+    <param, value>
+
      */
     private List<TestData> CombineList(List<TestData> list1, List<List<Pair<String, Object>>> list2)
     {
@@ -381,17 +396,18 @@ public class HybridAutoTestGen extends Application
 
             List<TestData> ret = new ArrayList<>();
 
-            for (TestData item1 : list1)
+            for (int i = 0; i < list1.size(); i++)
             {
-                for (Pair<String, Object> item2 : list20)
+                for (int j = 0; j < list20.size(); j++)
                 {
-                    if (!item1.isExist(item2))
-                    {
-                        item1.add(item2);
-                    }
-                    ret.add(item1);
+                    //tạo TestData mới để chứa dữ liệu của list1[0] và list20[0]
+                    TestData testData = new TestData();
+                    testData.add(list1.get(i).getTestData());
+                    testData.add(list20.get(j));
+                    ret.add(testData);
                 }
             }
+
             List<TestData> newRet = CombineList(ret, list2.subList(1, list2.size()));
 
             return newRet;
@@ -442,238 +458,238 @@ public class HybridAutoTestGen extends Application
         }
     }
 
-    private void traverseCFGForBoundaryTestGen(ICfgNode stm, FullTestpath tp, FullTestpaths testpaths) throws Exception
-    {
-        tp.add(stm);
-        if (stm instanceof EndFlagCfgNode)
-        {
-            testpaths.add((FullTestpath) tp.clone());
-            tp.remove(tp.size() - 1);
-        }
-        else
-        {
-            ICfgNode trueNode = stm.getTrueNode();
-            ICfgNode falseNode = stm.getFalseNode();
-
-            if (stm instanceof ConditionCfgNode)
-            {
-
-                if (stm instanceof AbstractConditionLoopCfgNode)
-                {
-                    int currentIterations = tp.count(trueNode);
-                    if (currentIterations < maxIterationsforEachLoop)
-                    {
-                        traverseCFGForBoundaryTestGen(falseNode, tp, testpaths);
-                        traverseCFGForBoundaryTestGen(trueNode, tp, testpaths);
-                    }
-                    else
-                    {
-                        traverseCFGForBoundaryTestGen(falseNode, tp, testpaths);
-                    }
-                }
-                else
-                {
-                    if (solvePathWhenGenBoundaryTestData == true)
-                    {
-                        Random rand = new Random();
-                        for (float i = -boundStep; i <= boundStep; i += boundStep)
-                        {
-                            FullTestpath tp11 = (FullTestpath) tp.clone();
-                            ConditionCfgNode stm1 = (ConditionCfgNode) stm.clone();
-
-                            tp11.remove(tp.lastIndexOf(stm));
-                            stm1.setContent(stm1.getContent().replaceAll("<=|>=|<|>|!=", "=="));
-                            stm1.setAst(ASTUtils.convertToIAST(stm1.getContent() + "+" + i));
-                            tp11.add(stm1);
-                            tp11.add(trueNode);
-
-                            String result = this.getSolution(tp11, true);
-                            for (IVariableNode variable : this.variables)
-                            {
-                                if (!result.contains(variable.toString()) && !result.equals(IStaticSolutionGeneration.NO_SOLUTION))
-                                {
-                                    result += variable.toString() + "=" + rand.nextInt(100) + ";";
-                                }
-                            }
-                            result = result.replaceAll(";;", ";");
-                            if (!testCases.contains(result) && !result.equals(IStaticSolutionGeneration.NO_SOLUTION))
-                            {
-                                testCases.add(result);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        Random rand = new Random();
-
-                        for (float i = -boundStep; i <= boundStep; i += boundStep)
-                        {
-
-                            FullTestpath tp11 = new FullTestpath();
-
-                            ConditionCfgNode stm1 = (ConditionCfgNode) stm.clone();
-
-                            String Content = stm1.getContent();
-                            Content = Content.replaceAll("<=|>=|<|>|!=", "==");
-
-                            stm1.setContent(stm1.getContent().replaceAll("<=|>=|<|>|!=", "=="));
-                            stm1.setAst(ASTUtils.convertToIAST(stm1.getContent() + "+" + i));
-                            tp11.add(stm1);
-                            tp11.add(trueNode);
-
-                            String result = this.getSolution(tp11, true);
-                            for (IVariableNode variable : this.variables)
-                            {
-                                if (!result.contains(variable.toString()) && !result.equals(IStaticSolutionGeneration.NO_SOLUTION))
-                                {
-                                    result += variable.toString() + "=" + rand.nextInt(100) + ";";
-                                }
-                            }
-                            result = result.replaceAll(";;", ";");
-                            if (!testCases.contains(result) && !result.equals(IStaticSolutionGeneration.NO_SOLUTION))
-                            {
-                                testCases.add(result);
-                            }
-                        }
-//                        if (Content.contains("=="))
+//    private void traverseCFGForBoundaryTestGen(ICfgNode stm, FullTestpath tp, FullTestpaths testpaths) throws Exception
+//    {
+//        tp.add(stm);
+//        if (stm instanceof EndFlagCfgNode)
+//        {
+//            testpaths.add((FullTestpath) tp.clone());
+//            tp.remove(tp.size() - 1);
+//        }
+//        else
+//        {
+//            ICfgNode trueNode = stm.getTrueNode();
+//            ICfgNode falseNode = stm.getFalseNode();
+//
+//            if (stm instanceof ConditionCfgNode)
+//            {
+//
+//                if (stm instanceof AbstractConditionLoopCfgNode)
+//                {
+//                    int currentIterations = tp.count(trueNode);
+//                    if (currentIterations < maxIterationsforEachLoop)
+//                    {
+//                        traverseCFGForBoundaryTestGen(falseNode, tp, testpaths);
+//                        traverseCFGForBoundaryTestGen(trueNode, tp, testpaths);
+//                    }
+//                    else
+//                    {
+//                        traverseCFGForBoundaryTestGen(falseNode, tp, testpaths);
+//                    }
+//                }
+//                else
+//                {
+//                    if (solvePathWhenGenBoundaryTestData == true)
+//                    {
+//                        Random rand = new Random();
+//                        for (float i = -boundStep; i <= boundStep; i += boundStep)
+//                        {
+//                            FullTestpath tp11 = (FullTestpath) tp.clone();
+//                            ConditionCfgNode stm1 = (ConditionCfgNode) stm.clone();
+//
+//                            tp11.remove(tp.lastIndexOf(stm));
+//                            stm1.setContent(stm1.getContent().replaceAll("<=|>=|<|>|!=", "=="));
+//                            stm1.setAst(ASTUtils.convertToIAST(stm1.getContent() + "+" + i));
+//                            tp11.add(stm1);
+//                            tp11.add(trueNode);
+//
+//                            String result = this.getSolution(tp11, true);
+//                            for (IVariableNode variable : this.variables)
+//                            {
+//                                if (!result.contains(variable.toString()) && !result.equals(IStaticSolutionGeneration.NO_SOLUTION))
+//                                {
+//                                    result += variable.toString() + "=" + rand.nextInt(100) + ";";
+//                                }
+//                            }
+//                            result = result.replaceAll(";;", ";");
+//                            if (!testCases.contains(result) && !result.equals(IStaticSolutionGeneration.NO_SOLUTION))
+//                            {
+//                                testCases.add(result);
+//                            }
+//                        }
+//                    }
+//                    else
+//                    {
+//                        Random rand = new Random();
+//
+//                        for (float i = -boundStep; i <= boundStep; i += boundStep)
 //                        {
 //
-////                            result += Content;
-////                            result = result.replace("==", "=") + ";";
-////
-////                            String param = Content.split("==")[0].toLowerCase();
-////                            String value = Content.split("==")[1].toLowerCase();
-////
-////                            if ("false".equals(value.toLowerCase()) || "true".equals(value.toLowerCase()))
-////                            {
-////                                //do nothing
-////                            }
-////                            else
-////                            {
-////                                double val = 0;
-////                                try
-////                                {
-////                                    val = Double.parseDouble(value);
-////                                }
-////                                catch (Exception ex)
-////                                {
-////                                    val = rand.nextInt(100);
-////
-////                                    result = param + " = " + rand.nextInt(100);
-////
-////                                    if (contains(this.variables,value))
-////                                    {
-////                                        result3 = value + " = " + rand.nextInt(100);
-////                                    }
-////                                }
-////
-////                                result1 += param + " = " + (val - boundStep) + ";";
-////
-////                                result2 += param + " = " + (val + boundStep) + ";";
-////
-////                                for (IVariableNode variable : this.variables)
-////                                {
-////                                    if (!param.equals(variable.toString()))
-////                                    {
-////                                        result += variable.toString() + "=" + rand.nextInt(100) + ";";
-////                                        result1 += variable.toString() + "=" + rand.nextInt(100) + ";";
-////                                        result2 += variable.toString() + "=" + rand.nextInt(100) + ";";
-////                                    }
-////
-////                                    if (contains(this.variables,value) && !value.equals(variable.toString()))
-////                                    {
-////                                        result3 += variable.toString() + "=" + rand.nextInt(100) + ";";
-////                                    }
-////                                }
-////
-////                                if (!testCases.contains(result))
-////                                {
-////                                    testCases.add(result);
-////                                }
-////                                if (!testCases.contains(result1))
-////                                {
-////                                    testCases.add(result1);
-////                                }
-////                                if (!testCases.contains(result2))
-////                                {
-////                                    testCases.add(result2);
-////                                }
-////
-////                                if (contains(this.variables,value) && !testCases.contains(result3))
-////                                {
-////                                    testCases.add(result3);
-////                                }
-////                            }
-//                        }
-//                        else
-//                        {
-//                            //condition is in the form of if (abc) ==> content = abc, in C or C++, this is equivalence
-//                            //to abc == 0 or abc != 0
+//                            FullTestpath tp11 = new FullTestpath();
 //
-////                            Content = Content.toLowerCase();
-////
-////                            if (contains(this.variables,Content))
-////                            {
-////                                result = Content + " = 0;";
-////                                result1 = Content + " = " + -boundStep + ";";
-////                                result2 = Content + " = " + boundStep + ";";
-////
-////                                for (IVariableNode variable : this.variables)
-////                                {
-////                                    if (!Content.equals(variable.toString().toLowerCase()))
-////                                    {
-////                                        result += variable.toString() + "=" + rand.nextInt(100) + ";";
-////                                        result1 += variable.toString() + "=" + rand.nextInt(100) + ";";
-////                                        result2 += variable.toString() + "=" + rand.nextInt(100) + ";";
-////                                    }
-////                                }
-////
-////                                if (!testCases.contains(result))
-////                                {
-////                                    testCases.add(result);
-////                                }
-////                                if (!testCases.contains(result1))
-////                                {
-////                                    testCases.add(result1);
-////                                }
-////                                if (!testCases.contains(result2))
-////                                {
-////                                    testCases.add(result2);
-////                                }
-////                            }
-////                            else
-////                            {
-////                                result = Content + " = " + rand.nextInt(100) + ";";
-////
-////                                for (IVariableNode variable : this.variables)
-////                                {
-////                                    if (!Content.toLowerCase().equals(variable.toString().toLowerCase()))
-////                                    {
-////                                        result += variable.toString() + "=" + rand.nextInt(100) + ";";
-////                                    }
-////                                }
-////
-////                                if (!testCases.contains(result))
-////                                {
-////                                    testCases.add(result);
-////                                }
-////                            }
+//                            ConditionCfgNode stm1 = (ConditionCfgNode) stm.clone();
+//
+//                            String Content = stm1.getContent();
+//                            Content = Content.replaceAll("<=|>=|<|>|!=", "==");
+//
+//                            stm1.setContent(stm1.getContent().replaceAll("<=|>=|<|>|!=", "=="));
+//                            stm1.setAst(ASTUtils.convertToIAST(stm1.getContent() + "+" + i));
+//                            tp11.add(stm1);
+//                            tp11.add(trueNode);
+//
+//                            String result = this.getSolution(tp11, true);
+//                            for (IVariableNode variable : this.variables)
+//                            {
+//                                if (!result.contains(variable.toString()) && !result.equals(IStaticSolutionGeneration.NO_SOLUTION))
+//                                {
+//                                    result += variable.toString() + "=" + rand.nextInt(100) + ";";
+//                                }
+//                            }
+//                            result = result.replaceAll(";;", ";");
+//                            if (!testCases.contains(result) && !result.equals(IStaticSolutionGeneration.NO_SOLUTION))
+//                            {
+//                                testCases.add(result);
+//                            }
 //                        }
-//                        }
-                    }
-
-                    traverseCFGForBoundaryTestGen(falseNode, tp, testpaths);
-                    traverseCFGForBoundaryTestGen(trueNode, tp, testpaths);
-                }
-            }
-            else
-            {
-                traverseCFGForBoundaryTestGen(trueNode, tp, testpaths);
-            }
-
-            tp.remove(tp.size() - 1);
-        }
-    }
+////                        if (Content.contains("=="))
+////                        {
+////
+//////                            result += Content;
+//////                            result = result.replace("==", "=") + ";";
+//////
+//////                            String param = Content.split("==")[0].toLowerCase();
+//////                            String value = Content.split("==")[1].toLowerCase();
+//////
+//////                            if ("false".equals(value.toLowerCase()) || "true".equals(value.toLowerCase()))
+//////                            {
+//////                                //do nothing
+//////                            }
+//////                            else
+//////                            {
+//////                                double val = 0;
+//////                                try
+//////                                {
+//////                                    val = Double.parseDouble(value);
+//////                                }
+//////                                catch (Exception ex)
+//////                                {
+//////                                    val = rand.nextInt(100);
+//////
+//////                                    result = param + " = " + rand.nextInt(100);
+//////
+//////                                    if (contains(this.variables,value))
+//////                                    {
+//////                                        result3 = value + " = " + rand.nextInt(100);
+//////                                    }
+//////                                }
+//////
+//////                                result1 += param + " = " + (val - boundStep) + ";";
+//////
+//////                                result2 += param + " = " + (val + boundStep) + ";";
+//////
+//////                                for (IVariableNode variable : this.variables)
+//////                                {
+//////                                    if (!param.equals(variable.toString()))
+//////                                    {
+//////                                        result += variable.toString() + "=" + rand.nextInt(100) + ";";
+//////                                        result1 += variable.toString() + "=" + rand.nextInt(100) + ";";
+//////                                        result2 += variable.toString() + "=" + rand.nextInt(100) + ";";
+//////                                    }
+//////
+//////                                    if (contains(this.variables,value) && !value.equals(variable.toString()))
+//////                                    {
+//////                                        result3 += variable.toString() + "=" + rand.nextInt(100) + ";";
+//////                                    }
+//////                                }
+//////
+//////                                if (!testCases.contains(result))
+//////                                {
+//////                                    testCases.add(result);
+//////                                }
+//////                                if (!testCases.contains(result1))
+//////                                {
+//////                                    testCases.add(result1);
+//////                                }
+//////                                if (!testCases.contains(result2))
+//////                                {
+//////                                    testCases.add(result2);
+//////                                }
+//////
+//////                                if (contains(this.variables,value) && !testCases.contains(result3))
+//////                                {
+//////                                    testCases.add(result3);
+//////                                }
+//////                            }
+////                        }
+////                        else
+////                        {
+////                            //condition is in the form of if (abc) ==> content = abc, in C or C++, this is equivalence
+////                            //to abc == 0 or abc != 0
+////
+//////                            Content = Content.toLowerCase();
+//////
+//////                            if (contains(this.variables,Content))
+//////                            {
+//////                                result = Content + " = 0;";
+//////                                result1 = Content + " = " + -boundStep + ";";
+//////                                result2 = Content + " = " + boundStep + ";";
+//////
+//////                                for (IVariableNode variable : this.variables)
+//////                                {
+//////                                    if (!Content.equals(variable.toString().toLowerCase()))
+//////                                    {
+//////                                        result += variable.toString() + "=" + rand.nextInt(100) + ";";
+//////                                        result1 += variable.toString() + "=" + rand.nextInt(100) + ";";
+//////                                        result2 += variable.toString() + "=" + rand.nextInt(100) + ";";
+//////                                    }
+//////                                }
+//////
+//////                                if (!testCases.contains(result))
+//////                                {
+//////                                    testCases.add(result);
+//////                                }
+//////                                if (!testCases.contains(result1))
+//////                                {
+//////                                    testCases.add(result1);
+//////                                }
+//////                                if (!testCases.contains(result2))
+//////                                {
+//////                                    testCases.add(result2);
+//////                                }
+//////                            }
+//////                            else
+//////                            {
+//////                                result = Content + " = " + rand.nextInt(100) + ";";
+//////
+//////                                for (IVariableNode variable : this.variables)
+//////                                {
+//////                                    if (!Content.toLowerCase().equals(variable.toString().toLowerCase()))
+//////                                    {
+//////                                        result += variable.toString() + "=" + rand.nextInt(100) + ";";
+//////                                    }
+//////                                }
+//////
+//////                                if (!testCases.contains(result))
+//////                                {
+//////                                    testCases.add(result);
+//////                                }
+//////                            }
+////                        }
+////                        }
+//                    }
+//
+//                    traverseCFGForBoundaryTestGen(falseNode, tp, testpaths);
+//                    traverseCFGForBoundaryTestGen(trueNode, tp, testpaths);
+//                }
+//            }
+//            else
+//            {
+//                traverseCFGForBoundaryTestGen(trueNode, tp, testpaths);
+//            }
+//
+//            tp.remove(tp.size() - 1);
+//        }
+//    }
 
     private boolean contains(List<IVariableNode> variables, String param)
     {
@@ -832,7 +848,7 @@ public class HybridAutoTestGen extends Application
         return possibleTestpaths;
     }
 
-    public List<String> getTestCases()
+    public List<TestData> getTestCases()
     {
         return this.testCases;
     }
