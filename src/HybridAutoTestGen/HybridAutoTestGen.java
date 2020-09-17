@@ -108,8 +108,8 @@ public class HybridAutoTestGen extends Application
         ((IFunctionNode) function).setAST(fnNorm.getNormalizedAST());
         IFunctionNode clone = (IFunctionNode) function.clone();
         clone.setAST(Utils.getFunctionsinAST(normalizedCoverage.toCharArray()).get(0));
-        //CFGGenerationforSubConditionCoverage cfgGen = new CFGGenerationforSubConditionCoverage(clone);
-        CFGGenerationforBranchvsStatementCoverage cfgGen = new CFGGenerationforBranchvsStatementCoverage(function);
+        CFGGenerationforSubConditionCoverage cfgGen = new CFGGenerationforSubConditionCoverage(clone);
+        //CFGGenerationforBranchvsStatementCoverage cfgGen = new CFGGenerationforBranchvsStatementCoverage(function);
 
         cfg = (CFG) cfgGen.generateCFG();
         cfg.setFunctionNode(clone);
@@ -278,7 +278,7 @@ public class HybridAutoTestGen extends Application
                     String Content = stm1.getContent();
                     Content = Content.replaceAll("<=|>=|<|>|!=", "==");
 
-                    stm1.setContent(stm1.getContent().replaceAll("<=|>=|<|>|!=", "=="));
+                    stm1.setContent(Content);
                     stm1.setAst(ASTUtils.convertToIAST(stm1.getContent()));
                     tp11.add(stm1);
 //                        tp11.add(trueNode);
@@ -289,7 +289,7 @@ public class HybridAutoTestGen extends Application
 
                     List<TestData> resultList = new ArrayList<>();
 
-                    if (!result.equals(IStaticSolutionGeneration.NO_SOLUTION))
+                    if (!result.trim().equals(IStaticSolutionGeneration.NO_SOLUTION))
                     {
                         String[] solutionList = result.split(";");
 
