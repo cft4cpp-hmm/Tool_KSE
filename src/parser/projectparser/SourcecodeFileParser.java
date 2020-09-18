@@ -389,7 +389,7 @@ public class SourcecodeFileParser implements ISourcecodeFileParser {
 		return includes;
 	}
 
-	private IASTTranslationUnit getIASTTranslationUnit(char[] code) throws Exception {
+	public IASTTranslationUnit getIASTTranslationUnit(char[] code) throws Exception {
 		FileContent fc = FileContent.create("", code);
 		Map<String, String> macroDefinitions = new HashMap<>();
 		String[] includeSearchPaths = new String[0];

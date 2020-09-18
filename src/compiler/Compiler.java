@@ -1,18 +1,20 @@
-package com.dse.compiler;
+package compiler;
 
-import com.dse.compiler.message.CompileMessage;
-import com.dse.compiler.message.ICompileMessage;
-import com.dse.config.AkaConfig;
-import com.dse.parser.object.INode;
-import com.dse.user_code.envir.EnvironmentUserCode;
-import com.dse.util.*;
 
+import compiler.message.CompileMessage;
+import compiler.message.ICompileMessage;
+import tree.object.INode;
+import utils.CompilerUtils;
+import utils.PathUtils;
+import utils.SpecialCharacter;
+
+import java.io.BufferedReader;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.FileReader;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class Compiler implements ICompiler {
-    private final static AkaLogger logger = AkaLogger.get(Compiler.class);
 
     private String compileCommand = "compile";
     private String preprocessCommand = "pre-process";
@@ -66,7 +68,7 @@ public class Compiler implements ICompiler {
     @Override
     public ICompileMessage compile(String filePath) {
         String script = generateCompileCommand(filePath);
-        String workspace = new AkaConfig().fromJson().getOpeningWorkspaceDirectory();
+        String workspace = "";
         String directory = new File(workspace).getParentFile().getParentFile().getPath();
 
         ICompileMessage compileMessage = null;
@@ -77,9 +79,7 @@ public class Compiler implements ICompiler {
             compileMessage = new CompileMessage(message, filePath);
             compileMessage.setCompilationCommand(script);
 
-            logger.debug("Compilation of " + filePath + ": " + script);
         } catch (Exception ex) {
-            logger.error("Error " + ex.getMessage() + " when compiling " + filePath);
         }
 
         return compileMessage;
@@ -92,7 +92,7 @@ public class Compiler implements ICompiler {
             outputPaths[i] = PathUtils.toRelative(outputPaths[i]);
         }
         String script = generateLinkCommand(executableFilePath, outputPaths);
-        String workspace = new AkaConfig().fromJson().getOpeningWorkspaceDirectory();
+        String workspace = "";
         String directory = new File(workspace).getParentFile().getParentFile().getPath();
 
         ICompileMessage compileMessage;
@@ -103,7 +103,6 @@ public class Compiler implements ICompiler {
             compileMessage = new CompileMessage(message, executableFilePath);
             compileMessage.setLinkingCommand(script);
         } catch (Exception ex) {
-            logger.error("Can not linkage in " + executableFilePath + " with command " + script);
             compileMessage = null;
         }
 
@@ -128,7 +127,8 @@ public class Compiler implements ICompiler {
             }
         }
 
-        List<String> userCodes = EnvironmentUserCode.getInstance().getAllFilePath();
+        List<String> userCodes = new ArrayList<>();
+        userCodes.add("F:\\VietData\\GitLab\\bai10\\data-test\\Sample_for_R1_2\\test.cpp");
         for (String userCode : userCodes) {
             builder.append(INCLUDE_FILE_FLAG)
                     .append("\"").append(userCode).append("\"")
@@ -210,17 +210,38 @@ public class Compiler implements ICompiler {
             File outFile = new File(outPath);
 
             if (outFile.exists())
-                return Utils.readFileContent(outPath);
+                return readFileContent(outPath);
             else
                 return stderr;
 
         } catch (Exception ex) {
-            logger.error("Error " + ex.getMessage() + " when preprocess " + inPath);
         }
 
         return null;
     }
 
+    public static String readFileContent(INode n) {
+        return readFileContent(n.getAbsolutePath());
+    }
+    public static String readFileContent(String filePath) {
+        StringBuilder fileData = new StringBuilder(3000);
+        try {
+            BufferedReader reader;
+            reader = new BufferedReader(new FileReader(filePath));
+            char[] buf = new char[10];
+            int numRead;
+            while ((numRead = reader.read(buf)) != -1) {
+                String readData = String.valueOf(buf, 0, numRead);
+                fileData.append(readData);
+                buf = new char[1024];
+            }
+            reader.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            return fileData.toString();
+        }
+    }
     @Override
     public String getCompileCommand() {
         return compileCommand;

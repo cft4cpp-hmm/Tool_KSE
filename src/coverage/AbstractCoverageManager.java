@@ -1,23 +1,15 @@
-package com.dse.coverage;
+package coverage;
 
-import auto_testcase_generation.cfg.ICFG;
-import com.dse.environment.object.EnviroCoverageTypeNode;
+import cfg.ICFG;
 import com.dse.coverage.highlight.SourcecodeHighlighterForCoverage;
-import com.dse.parser.object.ICommonFunctionNode;
-import com.dse.parser.object.ISourcecodeFileNode;
-import com.dse.testcase_manager.TestCase;
-import com.dse.util.AkaLogger;
-import com.dse.util.Utils;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import testcase_manager.TestCase;
+import tree.object.ISourcecodeFileNode;
+import utils.Utils;
 
 import java.io.File;
 import java.util.List;
 
 public class AbstractCoverageManager {
-    private final static AkaLogger logger = AkaLogger.get(AbstractCoverageManager.class);
     public static final String EMPTY = "";
     public static final float ZERO_COVERAGE = 0;
 
@@ -28,7 +20,7 @@ public class AbstractCoverageManager {
      */
     public static void exportCoveragesOfTestCaseToFile(TestCase testCase, String typeOfCoverage) {
         // get function
-        ICommonFunctionNode function = testCase.getRootDataNode().getFunctionNode();
+        ICommonFunctionNode function = testCase.getRootDataNode();
         ISourcecodeFileNode sourcecodeFileNode = Utils.getSourcecodeFile(function);
 
         /**

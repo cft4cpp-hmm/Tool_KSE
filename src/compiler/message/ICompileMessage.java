@@ -1,4 +1,4 @@
-package com.dse.compiler.message;
+package compiler.message;
 
 public interface ICompileMessage {
     enum MessageType {

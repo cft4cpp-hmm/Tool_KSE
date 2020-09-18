@@ -1,113 +1,79 @@
 package instrument;
 
-import java.io.File;
-
-import org.apache.log4j.Logger;
-import org.eclipse.cdt.core.dom.ast.IASTBinaryExpression;
-import org.eclipse.cdt.core.dom.ast.IASTBreakStatement;
-import org.eclipse.cdt.core.dom.ast.IASTCompoundStatement;
-import org.eclipse.cdt.core.dom.ast.IASTContinueStatement;
-import org.eclipse.cdt.core.dom.ast.IASTDoStatement;
-import org.eclipse.cdt.core.dom.ast.IASTExpression;
-import org.eclipse.cdt.core.dom.ast.IASTFieldReference;
-import org.eclipse.cdt.core.dom.ast.IASTForStatement;
-import org.eclipse.cdt.core.dom.ast.IASTFunctionDefinition;
-import org.eclipse.cdt.core.dom.ast.IASTIdExpression;
-import org.eclipse.cdt.core.dom.ast.IASTIfStatement;
-import org.eclipse.cdt.core.dom.ast.IASTNode;
-import org.eclipse.cdt.core.dom.ast.IASTNullStatement;
-import org.eclipse.cdt.core.dom.ast.IASTStatement;
-import org.eclipse.cdt.core.dom.ast.IASTWhileStatement;
+import com.dse.parser.ProjectParser;
+import com.dse.parser.object.MacroFunctionNode;
+import com.dse.search.Search;
+import com.dse.search.condition.MacroFunctionNodeCondition;
+import com.dse.testcase_execution.DriverConstant;
+import com.dse.util.AkaLogger;
+import com.dse.util.SpecialCharacter;
+import com.dse.util.Utils;
+import org.eclipse.cdt.core.dom.ast.*;
 import org.eclipse.cdt.core.dom.ast.cpp.ICPPASTCatchHandler;
 import org.eclipse.cdt.core.dom.ast.cpp.ICPPASTTryBlockStatement;
-import org.eclipse.cdt.internal.core.dom.parser.cpp.CPPASTIdExpression;
 
-import config.Paths;
-import parser.projectparser.ProjectParser;
-import testdatagen.fastcompilation.AvoidingErrorFunctionInstrumentation;
-import tree.object.IFunctionNode;
-import tree.object.INode;
-import utils.SpecialCharacter;
-import utils.Utils;
-import utils.search.FunctionNodeCondition;
-import utils.search.Search;
+import java.io.File;
 
 /**
  * Instrument function with sub-condition
  *
- * @author nartoan
+ * @author
  */
+public class FunctionInstrumentationForSubCondition extends AbstractFunctionInstrumentation {
+	final static AkaLogger logger = AkaLogger.get(FunctionInstrumentationForSubCondition.class);
 
-public class FunctionInstrumentationForSubCondition implements IFunctionInstrumentationGeneration {
-	final static Logger logger = Logger.getLogger(AvoidingErrorFunctionInstrumentation.class);
-
-	private IFunctionNode functionNode;
-	private boolean normalizedMode = false;
-
-	public FunctionInstrumentationForSubCondition(IFunctionNode fn) {
-		functionNode = fn;
-		normalizedMode = false;
-	}
-
-	public FunctionInstrumentationForSubCondition(IFunctionNode fn, boolean normalizedMode) {
-		functionNode = fn;
-		this.normalizedMode = normalizedMode;
+	public FunctionInstrumentationForSubCondition(IASTFunctionDefinition astFunctionNode) {
+		this.astFunctionNode = astFunctionNode;
 	}
 
 	public static void main(String[] args) {
-		ProjectParser parser = new ProjectParser(new File(Paths.SYMBOLIC_EXECUTION_TEST));
-		INode function = Search.searchNodes(parser.getRootTree(), new FunctionNodeCondition(), "basicTest18(bool,int)")
-				.get(0);
-		System.out.println(new FunctionInstrumentationForSubCondition((IFunctionNode) function, true)
+		ProjectParser parser = new ProjectParser(new File("D:\\IdeaProjects\\akautauto_2\\datatest\\hoannv\\check_debug"));
+		parser.setExpandTreeuptoMethodLevel_enabled(true);
+		MacroFunctionNode function = (MacroFunctionNode) Search.searchNodes(parser.getRootTree(), new MacroFunctionNodeCondition(),
+				"dbg.h\\check_debug(A,M,...)").get(0);
+		System.out.println(new FunctionInstrumentationForSubCondition(function.convertMacroFunctionToRealFunction(function.getAST()))
 				.generateInstrumentedFunction());
 	}
 
 	@Override
 	public String generateInstrumentedFunction() {
-		StringBuilder tempStr = new StringBuilder();
-		IASTFunctionDefinition fnDef = null;
-
-		if (!normalizedMode) {
-			fnDef = functionNode.getAST();
+		if (astFunctionNode != null) {
+			StringBuilder tempStr = new StringBuilder();
+			tempStr.append(getShortenContent(astFunctionNode.getDeclSpecifier()))
+					.append(SpecialCharacter.SPACE)
+					.append(getShortenContent(astFunctionNode.getDeclarator()))
+					.append(parseCompoundStatement((IASTCompoundStatement) astFunctionNode.getBody(), null, ""));
+			return tempStr.toString();
 		} else {
-			try {
-				fnDef = functionNode.normalizedAST().getNormalizedAST();
-			} catch (Exception e) {
-				e.printStackTrace();
-				fnDef = functionNode.getAST();
-			}
+			return "";
 		}
-		if (fnDef != null) {
-			tempStr.append(ast(fnDef.getDeclSpecifier())).append(SpecialCharacter.SPACE)
-					.append(ast(fnDef.getDeclarator()))
-					.append(parseBlock((IASTCompoundStatement) fnDef.getBody(), null, ""));
-		}
-		return tempStr.toString();
 	}
 
-	private String parseBlock(IASTCompoundStatement block, String extra, String margin) {
-		StringBuilder tempStr = new StringBuilder();
-		String inside = margin + SpecialCharacter.TAB;
-
-		tempStr.append(SpecialCharacter.OPEN_BRACE).append("mark(\"{\");").append(SpecialCharacter.LINE_BREAK);
+	private String parseCompoundStatement(IASTCompoundStatement block, String extra, String margin) {
+		StringBuilder markedContent = new StringBuilder();
+		markedContent.append(SpecialCharacter.OPEN_BRACE);
+		markedContent.append(SpecialCharacter.LINE_BREAK);
 
 		if (extra != null) {
-			tempStr.append(inside);
+			markedContent.append(margin + SpecialCharacter.TAB);
 		}
 
 		for (IASTStatement stm : block.getStatements())
-			tempStr.append(inside).append(parseStatement(stm, inside)).append(SpecialCharacter.LINE_BREAK)
+			markedContent.append(margin + SpecialCharacter.TAB)
+					.append(parseStatement(stm, margin + SpecialCharacter.TAB))
+					.append(SpecialCharacter.LINE_BREAK)
 					.append(SpecialCharacter.LINE_BREAK);
 
-		tempStr.append(margin).append("mark(\"}\");").append(SpecialCharacter.CLOSE_BRACE);
+		markedContent.append(SpecialCharacter.CLOSE_BRACE);
 
-		return tempStr.toString();
+		return markedContent.toString();
 	}
 
 	private String parseStatement(IASTStatement stm, String margin) {
 		StringBuilder tempStr = new StringBuilder();
 		if (stm instanceof IASTCompoundStatement) {
-			tempStr.append(parseBlock((IASTCompoundStatement) stm, null, margin));
+			tempStr.append(parseCompoundStatement((IASTCompoundStatement) stm, null, margin));
+
 		} else if (stm instanceof IASTIfStatement) {
 			IASTIfStatement astIf = (IASTIfStatement) stm;
 			IASTStatement astElse = astIf.getElseClause();
@@ -128,16 +94,17 @@ public class FunctionInstrumentationForSubCondition implements IFunctionInstrume
 			IASTExpression astIter = astFor.getIterationExpression();
 
 			if (!(astInit instanceof IASTNullStatement))
-				tempStr.append(mark(esc(ast(astInit)), true, true)).append(SpecialCharacter.LINE_BREAK).append(margin);
-			tempStr.append("for (").append(ast(astInit));
+				//tempStr.append(mark(esc(ast(astInit)), true)).append(SpecialCharacter.LINE_BREAK).append(margin);
+				tempStr.append(createMarkForNormalStatement(astInit, true)).append(SpecialCharacter.LINE_BREAK).append(margin);
+			tempStr.append("for (").append(getShortenContent(astInit));
 
 			if (astCond != null)
 				tempStr.append(createMarkForSubCondition(astCond));
 			tempStr.append("; ");
 
 			if (astIter != null)
-				tempStr.append(mark(esc(ast(astIter)), false, true)).append(',');
-			tempStr.append(ast(astIter)).append(") ");
+				tempStr.append(createMarkForNormalStatement(astIter, false)).append(',');
+			tempStr.append(getShortenContent(astIter)).append(") ");
 
 			// Block for does not have condition, e.g., for (int i=0;;)
 			if (astCond == null)
@@ -164,7 +131,7 @@ public class FunctionInstrumentationForSubCondition implements IFunctionInstrume
 			ICPPASTTryBlockStatement astTry = (ICPPASTTryBlockStatement) stm;
 
 			String extra = "start try";
-			tempStr.append(mark(extra, true, true));
+			tempStr.append(createMarkForTryCatch(extra, true));
 
 			tempStr.append(SpecialCharacter.LINE_BREAK).append(margin).append("try ");
 			tempStr.append(addExtraCall(astTry.getTryBody(), null, margin));
@@ -172,21 +139,22 @@ public class FunctionInstrumentationForSubCondition implements IFunctionInstrume
 			for (ICPPASTCatchHandler catcher : astTry.getCatchHandlers()) {
 				tempStr.append(SpecialCharacter.LINE_BREAK).append(margin).append("catch (");
 
-				String exception = catcher.isCatchAll() ? "..." : ast(catcher.getDeclaration());
+				String exception = catcher.isCatchAll() ? "..." : getShortenContent(catcher.getDeclaration());
 				tempStr.append(exception).append(") ");
 
-				extra = SpecialCharacter.MARK + exception + SpecialCharacter.MARK;
+				extra = SpecialCharacter.EMPTY + exception + SpecialCharacter.EMPTY;
 				tempStr.append(addExtraCall(catcher.getCatchBody(), extra, margin));
 			}
 
 			extra = "end catch";
-			tempStr.append(SpecialCharacter.LINE_BREAK).append(margin).append(mark(extra, true, true));
+			tempStr.append(SpecialCharacter.LINE_BREAK).append(margin)
+					.append(createMarkForTryCatch(extra, true));
 
 		} else if (stm instanceof IASTBreakStatement || stm instanceof IASTContinueStatement)
-			tempStr.append(ast(stm));
+			tempStr.append(getShortenContent(stm));
 		else {
-			String raw = ast(stm);
-			tempStr.append(mark(esc(raw), true, true)).append(SpecialCharacter.SPACE).append(raw);
+			String raw = getShortenContent(stm);
+			tempStr.append(createMarkForNormalStatement(stm, true)).append(SpecialCharacter.SPACE).append(raw);
 		}
 
 		return tempStr.toString();
@@ -204,8 +172,8 @@ public class FunctionInstrumentationForSubCondition implements IFunctionInstrume
 				case IASTBinaryExpression.op_greaterThan:
 				case IASTBinaryExpression.op_lessEqual:
 				case IASTBinaryExpression.op_lessThan:
-					String markAstCon = "mark(\"" + Utils.shortenAstNode(astCon).getRawSignature() + "\")";
-					tempStr.append("	(" + astCon + "&&" + Utils.shortenAstNode(astCon).getRawSignature() + ")");
+					tempStr.append("	(").append(astCon)
+							.append("&&").append(Utils.shortenAstNode(astCon).getRawSignature()).append(")");
 					break;
 
 				case IASTBinaryExpression.op_logicalAnd:
@@ -213,102 +181,62 @@ public class FunctionInstrumentationForSubCondition implements IFunctionInstrume
 					IASTExpression operand1 = ((IASTBinaryExpression) astCon).getOperand1();
 					IASTExpression operand2 = ((IASTBinaryExpression) astCon).getOperand2();
 
-					tempStr.append("(" + createMarkForSubCondition(operand1) + ")")
-							.append(operator == IASTBinaryExpression.op_logicalAnd ? "	&&" : "	||")
-							.append("(" + createMarkForSubCondition(operand2) + ")");
-
+					tempStr.append("(").append(createMarkForSubCondition(operand1)).append(")")
+                            .append(operator == IASTBinaryExpression.op_logicalAnd ? "	&&" : "	||").append("(").append(createMarkForSubCondition(operand2)).append(")");
 					break;
 				}
-			} else if (astCon instanceof CPPASTIdExpression) {
-				tempStr.append("mark(\"" + astCon.getRawSignature() + "\")&&" + astCon.getRawSignature());
 			} else {
-				// unknown cases
-				tempStr.append("mark(\"" + astCon.getRawSignature() + "\")&&" + astCon.getRawSignature());
+				// unary expression
+				tempStr.append(DriverConstant.MARK + "(\"")
+						.append(addContentOfMarkFunction(astCon, astFunctionNode, functionPath, false, true)).
+						append("\")&&").
+						append(astCon.getRawSignature());
 			}
 		} else {
-			tempStr.append("mark(\"" + Utils.shortenAstNode(astCon).getRawSignature() + "\")").append("&&")
-					.append("(" + Utils.shortenAstNode(astCon).getRawSignature() + ")");
+			tempStr.append(DriverConstant.MARK + "(\"")
+					.append(addContentOfMarkFunction(astCon, astFunctionNode, functionPath, false, true)).
+					append("\")&&").
+					append(astCon.getRawSignature());
 		}
 
 		return tempStr.toString();
 	}
 
-	private boolean isCondition(IASTNode condition) {
-		boolean isCondition = false;
-		// Ex1: abc
-		// Ex2: 123
-		// Ex3: sv.name
-		condition = Utils.shortenAstNode(condition);
-		if (condition instanceof IASTIdExpression || condition instanceof IASTFieldReference) {
-			isCondition = true;
-
-		} else if (condition instanceof IASTBinaryExpression) {
-			IASTBinaryExpression binaryCon = (IASTBinaryExpression) condition;
-			int operator = binaryCon.getOperator();
-
-			switch (operator) {
-			case IASTBinaryExpression.op_logicalAnd:
-			case IASTBinaryExpression.op_logicalOr:
-				isCondition = true;
-				break;
-			}
-		}
-		return isCondition;
-	}
-
 	private String addExtraCall(IASTStatement stm, String extra, String margin) {
 		if (extra != null)
-			extra = mark(extra, true, false);
+			extra = createMarkForTryCatch(extra, true);
 
 		if (stm instanceof IASTCompoundStatement)
-			return parseBlock((IASTCompoundStatement) stm, extra, margin);
+			return parseCompoundStatement((IASTCompoundStatement) stm, extra, margin);
 		else {
-			StringBuilder b = new StringBuilder();
 			String inside = margin + SpecialCharacter.TAB;
-			b.append(SpecialCharacter.OPEN_BRACE).append("mark(\"{\");").append(SpecialCharacter.LINE_BREAK)
-					.append(inside).append(inside).append(parseStatement(stm, inside))
-					.append(SpecialCharacter.LINE_BREAK).append(margin).append("mark(\"}\");")
-					.append(SpecialCharacter.CLOSE_BRACE);
-			return b.toString();
+			String b = SpecialCharacter.OPEN_BRACE +
+					SpecialCharacter.LINE_BREAK +
+					inside + inside + parseStatement(stm, inside) +
+					SpecialCharacter.LINE_BREAK + margin +
+					SpecialCharacter.CLOSE_BRACE;
+			return b;
 		}
 	}
 
-	private String mark(String arg, boolean end, boolean count) {
-		String b = "mark(\"" + arg + "\")";
+	private String createMarkForNormalStatement(IASTNode astCon, boolean end) {
+		StringBuilder tempStr = new StringBuilder();
+		tempStr.append(DriverConstant.MARK + "(\"").
+				append(addContentOfMarkFunction(astCon, astFunctionNode, functionPath, false, false)).
+				append("\")");
+
+		if (end)
+			tempStr.append(';');
+
+		return tempStr.toString();
+	}
+
+	private String createMarkForTryCatch(String arg, boolean end) {
+		String b = DriverConstant.MARK + "(\"" + arg + "\")";
 
 		if (end)
 			b += ';';
 
 		return b;
-	}
-
-	private String esc(String str) {
-		str = str.replaceAll("\\\\", "\\\\\\\\").replaceAll("\\\"", "\\\\\"");
-		str = str.replaceAll("(\\n)|(\\r\\n)", " ");
-		return str;
-	}
-
-	/**
-	 * Ex: "( x ==1 )"------> "x==1". We normalize condition
-	 */
-	private String ast(IASTNode node) {
-		if (node != null) {
-			if (!node.getRawSignature().endsWith(SpecialCharacter.END_OF_STATEMENT)) {
-				node = Utils.shortenAstNode(node);
-			}
-			return node.getRawSignature();
-		} else {
-			return "";
-		}
-	}
-
-	@Override
-	public IFunctionNode getFunctionNode() {
-		return null;
-	}
-
-	@Override
-	public void setFunctionNode(IFunctionNode functionNode) {
-
 	}
 }

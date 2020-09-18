@@ -1,6 +1,6 @@
-package com.dse.coverage.function_call;
+package coverage.function_call;
 
-import com.dse.report.element.Event;
+import report.element.Event;
 
 import java.util.Objects;
 

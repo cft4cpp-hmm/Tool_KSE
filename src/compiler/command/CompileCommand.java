@@ -1,13 +1,14 @@
-package com.dse.compiler.command;
+package compiler.command;
 
-import com.dse.compiler.Compiler;
-import com.dse.compiler.ICompiler;
+import compiler.Compiler;
+import compiler.ICompiler;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class CompileCommand extends CompilerCommand {
+public class CompileCommand extends compiler.command.CompilerCommand
+{
 
     private String[] includeDirectories;
 

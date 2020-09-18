@@ -15,5 +15,22 @@ public interface SpecialCharacter {
     static final String MARK = "";
     static final char OPEN_BRACE = '{';
 
-    static final String POINTER = "*";
+    String EMPTY = "";
+
+    String DOT_IN_STRUCT = ".";
+
+    char CLOSE_SQUARE_BRACE = ']';
+    char OPEN_SQUARE_BRACE = '[';
+
+    String POINTER = "*";
+
+    String STD_NAMESPACE = "std::";
+
+    char UNDERSCORE_CHAR = '_';
+    String UNDERSCORE = "_";
+    char DOT = '.';
+    char EQUAL = '=';
+    String NO = "#";
+
+    String POINT_TO = "->";
 }

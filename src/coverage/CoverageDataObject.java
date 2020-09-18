@@ -1,4 +1,4 @@
-package com.dse.coverage;
+package coverage;
 
 
 /**

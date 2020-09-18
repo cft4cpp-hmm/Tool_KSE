@@ -1,31 +1,26 @@
-package com.dse.coverage;
+package coverage;
 
-import auto_testcase_generation.cfg.ICFG;
-import auto_testcase_generation.instrument.IFunctionInstrumentationGeneration;
-import auto_testcase_generation.testdata.object.TestpathString_Marker;
-import auto_testcase_generation.testdatagen.coverage.CFGUpdaterv2;
-import auto_testcase_generation.testdatagen.coverage.ICoverageComputation;
-import com.dse.environment.object.EnviroCoverageTypeNode;
+import cfg.CFGGenerationforSubConditionCoverage;
+import cfg.ICFG;
+import instrument.IFunctionInstrumentationGeneration;
+import testdata.object.TestpathString_Marker;
 import com.dse.coverage.highlight.AbstractHighlighterForSourcecodeLevel;
-import com.dse.parser.object.AbstractFunctionNode;
-import com.dse.parser.object.IFunctionNode;
-import com.dse.parser.object.INode;
-import com.dse.parser.object.MacroFunctionNode;
-import com.dse.search.Search;
-import com.dse.search.condition.AbstractFunctionNodeCondition;
-import com.dse.search.condition.MacroFunctionNodeCondition;
-import com.dse.util.AkaLogger;
-import com.dse.util.PathUtils;
-import com.dse.util.Utils;
+import testdatagen.coverage.ICoverageComputation;
+import tree.object.AbstractFunctionNode;
+import tree.object.IFunctionNode;
+import tree.object.INode;
+import utils.PathUtils;
+import utils.Utils;
+import utils.search.AbstractFunctionNodeCondition;
+import utils.search.Search;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public abstract class AbstractCoverageComputation implements ICoverageComputation {
-
-    private final static AkaLogger logger = AkaLogger.get(AbstractCoverageComputation.class);
+public abstract class AbstractCoverageComputation implements ICoverageComputation
+{
 
     protected String testpathContent; // may visit may source code files
     protected INode consideredSourcecodeNode; // the source code file which we need to compute coverage at file level
@@ -47,16 +42,6 @@ public abstract class AbstractCoverageComputation implements ICoverageComputatio
                 nInstructions = getNumberofBranches(consideredSourcecodeNode);
                 break;
             }
-
-            case EnviroCoverageTypeNode.MCDC: {
-                nInstructions = getNumberofMcdcs(consideredSourcecodeNode);
-                break;
-            }
-
-            case EnviroCoverageTypeNode.BASIS_PATH: {
-                nInstructions = getNumberOfBasisPath(consideredSourcecodeNode);
-                break;
-            }
         }
         return nInstructions;
     }
@@ -72,7 +57,6 @@ public abstract class AbstractCoverageComputation implements ICoverageComputatio
         for (String functionPath : affectedFunctions.keySet())
             // only consider functions in a specified source code file
             if (functionPath.contains(consideredSourcecodeNode.getAbsolutePath())) {
-                logger.debug("Analyzing " + PathUtils.toRelative(functionPath));
                 // Find the function node
                 TestpathsOfAFunction testpathsOfAFunction = affectedFunctions.get(functionPath);
 
@@ -87,14 +71,12 @@ public abstract class AbstractCoverageComputation implements ICoverageComputatio
                 INode functionNode = functionNodes.get(0);
                 try {
                     ICFG cfg = null;
+                        if (functionNode instanceof AbstractFunctionNode) {
 
-                    if (functionNode instanceof MacroFunctionNode) {
-                        IFunctionNode tmpFunctionNode = ((MacroFunctionNode) functionNode).getCorrespondingFunctionNode();
-                        cfg = Utils.createCFG(tmpFunctionNode, coverage);
-                        allCFG.add(cfg);
-                        cfg.setFunctionNode(tmpFunctionNode);
-                    } else if (functionNode instanceof AbstractFunctionNode) {
-                        cfg = Utils.createCFG((IFunctionNode) functionNode, coverage);
+                            IFunctionNode clone = (IFunctionNode) functionNode.clone();
+                            CFGGenerationforSubConditionCoverage cfgGen = new CFGGenerationforSubConditionCoverage(clone);
+
+                        cfg = cfgGen.generateCFG();
                         allCFG.add(cfg);
                         cfg.setFunctionNode((IFunctionNode) functionNode);
                     }
@@ -117,18 +99,11 @@ public abstract class AbstractCoverageComputation implements ICoverageComputatio
                             nVisitedInstructions += cfg.getVisitedStatements().size();
                             break;
                         }
-                        case EnviroCoverageTypeNode.MCDC:
                         case EnviroCoverageTypeNode.BRANCH: {
                             nVisitedInstructions += cfg.getVisitedBranches().size();
                             break;
                         }
-
-                        case EnviroCoverageTypeNode.BASIS_PATH: {
-                            nVisitedInstructions += cfg.getVisitedBasisPaths().size();
-                            break;
-                        }
                     }
-                    logger.debug("Num of visited instructions = " + nVisitedInstructions);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -152,18 +127,9 @@ public abstract class AbstractCoverageComputation implements ICoverageComputatio
 
                 switch (coverage) {
                     case EnviroCoverageTypeNode.BRANCH:
-                    case EnviroCoverageTypeNode.BASIS_PATH:
                     case EnviroCoverageTypeNode.STATEMENT: {
                         if (AbstractHighlighterForSourcecodeLevel.isSubCondition(testpath))
                             // ignore the test path which goes through subcondition
-                            continue;
-                        else
-                            break;
-                    }
-
-                    case EnviroCoverageTypeNode.MCDC: {
-                        if (AbstractHighlighterForSourcecodeLevel.isFullCondition(testpath))
-                            // ignore the test path which goes through full condition
                             continue;
                         else
                             break;
@@ -185,9 +151,6 @@ public abstract class AbstractCoverageComputation implements ICoverageComputatio
         return tps;
     }
 
-    protected int getNumberOfBasisPath(INode consideredSourcecodeNode) {
-        return 0; // code later
-    }
 
     protected String getValue(String line, String property) {
         if (line.contains(IFunctionInstrumentationGeneration.DELIMITER_BETWEEN_PROPERTIES)) {
@@ -203,7 +166,6 @@ public abstract class AbstractCoverageComputation implements ICoverageComputatio
 
     protected abstract int getNumberofStatements(INode consideredSourcecodeNode);
 
-    protected abstract int getNumberofMcdcs(INode consideredSourcecodeNode);
 
     public void setTestpathContent(String testpathContent) {
         this.testpathContent = testpathContent;

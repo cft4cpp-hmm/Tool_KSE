@@ -1,6 +1,6 @@
-package com.dse.compiler.command;
+package compiler.command;
 
-import com.dse.compiler.Compiler;
+import compiler.Compiler;
 
 public abstract class CompilerCommand {
 

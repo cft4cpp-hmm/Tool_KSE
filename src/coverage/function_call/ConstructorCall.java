@@ -1,4 +1,4 @@
-package com.dse.coverage.function_call;
+package coverage.function_call;
 
 public class ConstructorCall extends FunctionCall {
     private String parameterPath;

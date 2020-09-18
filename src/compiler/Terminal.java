@@ -1,6 +1,6 @@
-package com.dse.compiler;
+package compiler;
 
-import com.dse.util.SpecialCharacter;
+import utils.SpecialCharacter;
 
 import java.io.*;
 import java.util.Arrays;

@@ -1,7 +1,7 @@
-package com.dse.compiler;
+package compiler;
 
-import com.dse.compiler.message.ICompileMessage;
-import com.dse.parser.object.INode;
+import compiler.message.ICompileMessage;
+import tree.object.INode;
 
 import java.util.List;
 

@@ -1,16 +1,6 @@
 package utils;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,6 +11,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import cfg.ICFG;
 import org.apache.commons.io.FileDeleteStrategy;
 import org.apache.log4j.Logger;
 import org.eclipse.cdt.core.dom.ast.ASTVisitor;
@@ -66,24 +57,12 @@ import config.AbstractSetting;
 import config.ISettingv2;
 import parser.makefile.CompilerFolderParser;
 import parser.projectparser.ProjectLoader;
+import parser.projectparser.SourcecodeFileParser;
 import testdatagen.se.ExpressionRewriterUtils;
 import testdatagen.se.memory.ISymbolicVariable;
 import testdatagen.se.memory.IVariableNodeTable;
 import testdatagen.testdatainit.VariableTypes;
-import tree.object.AvailableTypeNode;
-import tree.object.ClassNode;
-import tree.object.FunctionNode;
-import tree.object.HeaderNode;
-import tree.object.IFunctionNode;
-import tree.object.INode;
-import tree.object.IProjectNode;
-import tree.object.ISourcecodeFileNode;
-import tree.object.IVariableNode;
-import tree.object.NamespaceNode;
-import tree.object.SourcecodeFileNode;
-import tree.object.StructNode;
-import tree.object.StructureNode;
-import tree.object.VariableNode;
+import tree.object.*;
 import utils.search.FunctionNodeCondition;
 import utils.search.Search;
 import utils.search.SourcecodeFileNodeCondition;
@@ -1585,5 +1564,97 @@ public class Utils implements IRegex {
 			expression = expression.replace(m.group(0), newValue);
 		}
 		return expression;
+	}
+
+
+	public static String readResourceContent(String cTestDriverPath)
+	{
+		InputStream in = Utils.class.getResourceAsStream("");
+
+		StringBuilder template = new StringBuilder();
+		String line;
+
+		try {
+			BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+
+			while ((line = reader.readLine()) != null)
+				template.append(line).append(SpecialCharacter.LINE_BREAK);
+		} catch (IOException ex) {
+			logger.error("Cant read resource content from " + "");
+		}
+
+		return template.toString();
+	}
+
+	public static String insertSpaceToFunctionContent(int expectedStartLine, int expectedNodeOffset, String oldFunction) {
+	{
+		String addition = "";
+		for (int i = 0; i < expectedStartLine - 2; i++) {
+			addition += "\n";
+		}
+		int additionalOffset = expectedNodeOffset - addition.length() - 1;
+		for (int i = 0; i < additionalOffset; i++) {
+			addition += " ";
+		}
+		if (expectedStartLine > 1)
+			addition += "\n";
+		return addition + oldFunction;
+	}
+}
+
+
+	public static String doubleNormalizePath(String path) {
+		String singleBackSlash = "\\";
+		String doubleBackSlash = singleBackSlash + singleBackSlash;
+		String singleSlash = "/";
+
+		String result = normalizePath(path);
+
+		if (!File.separator.equals(singleSlash)) {
+			result = result.replace(File.separator, doubleBackSlash);
+		}
+
+		return result;
+	}
+	public static IASTFunctionDefinition disableMacroInFunction(IASTFunctionDefinition astFunctionNode, IFunctionNode functionNode){
+		if (astFunctionNode.getFileLocation() == null)
+			return astFunctionNode;
+
+		IASTFunctionDefinition output = null;
+		// insert spaces to ensure that the location of new function and of the old function are the same
+		try {
+			int startLine = astFunctionNode.getFileLocation().getStartingLineNumber();
+			int startOffset = astFunctionNode.getFileLocation().getNodeOffset();
+			String content = astFunctionNode.getRawSignature();
+			if (functionNode != null && (functionNode instanceof ConstructorNode || functionNode instanceof DestructorNode)
+					&& functionNode.getParent() instanceof ClassNode) {
+				// put the function in a class to void error when constructing ast
+				String className = functionNode.getParent().getName();
+				content = "class " + className + "{" + content + "};";
+				String newContent = Utils.insertSpaceToFunctionContent(startLine,
+						startOffset - new String("class " + className + "{").length(), content);
+				IASTTranslationUnit unit = new SourcecodeFileParser().getIASTTranslationUnit(newContent.toCharArray());
+				//                logger.debug("Reconstructed tree: ");
+//                ASTUtils.printTreeFromAstNode(unit, "\t");
+				output = (IASTFunctionDefinition) unit.getChildren()[0].
+						getChildren()[0].getChildren()[1];
+
+			} else {
+				String newContent = Utils.insertSpaceToFunctionContent(startLine, startOffset, content);
+				IASTTranslationUnit unit = new SourcecodeFileParser().getIASTTranslationUnit(newContent.toCharArray());
+				output = (IASTFunctionDefinition) unit.getChildren()[0];
+			}
+		} catch (Exception e) {
+//			e.printStackTrace();
+			output = astFunctionNode;
+		} finally {
+			// log
+			if (output == null || output instanceof CPPASTProblemDeclaration || output.getFileLocation() == null ||
+					output.getFileLocation().getStartingLineNumber() != astFunctionNode.getFileLocation().getStartingLineNumber()
+							&& output.getFileLocation().getNodeOffset() != astFunctionNode.getFileLocation().getNodeOffset()) {
+				logger.error("Fail to instrument [" + astFunctionNode.getClass() + "] content = " + astFunctionNode.getRawSignature());
+			}
+			return output;
+		}
 	}
 }

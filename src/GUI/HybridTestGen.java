@@ -50,6 +50,7 @@ public class HybridTestGen extends Component
 
     @FXML
     public CheckBox chkSolvePathWhenGenBoundaryTestData;
+    public Button btnRunTest;
 
     @FXML
     protected void btnGetFunctionList_Clicked(ActionEvent event) throws Exception
@@ -75,6 +76,16 @@ public class HybridTestGen extends Component
     protected void btnViewReport_Clicked(ActionEvent event) throws Exception
     {
         System.out.println("btnViewReport_Clicked started");
+        Path currentRelativePath = Paths.get("");
+        String path = currentRelativePath.toAbsolutePath().toString() + "\\TEST_REPORT.html";
+
+        File htmlFile = new File(path);
+        Desktop.getDesktop().browse(htmlFile.toURI());
+    }
+    @FXML
+    protected void btnRunTest_Clicked(ActionEvent event) throws Exception
+    {
+        System.out.println("btnRunTest_Clicked started");
         Path currentRelativePath = Paths.get("");
         String path = currentRelativePath.toAbsolutePath().toString() + "\\TEST_REPORT.html";
 
