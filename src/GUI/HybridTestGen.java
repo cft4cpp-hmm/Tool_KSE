@@ -1,18 +1,22 @@
 package GUI;
 
+
 import Common.DSEConstants;
 import HybridAutoTestGen.CFT4CPP;
 import HybridAutoTestGen.FullBoundedTestGen;
 import HybridAutoTestGen.HybridAutoTestGen;
 import HybridAutoTestGen.WeightedCFGTestGEn;
+import compiler.AvailableCompiler;
+import compiler.message.ICompileMessage;
+import compiler.Compiler;
 import config.AbstractSetting;
 import config.Settingv2;
 import console.Console;
+import coverage.IEnvironmentNode;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.*;
 import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import parser.projectparser.ProjectParser;
 import tree.object.INode;
@@ -26,6 +30,7 @@ import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+
 
 public class HybridTestGen extends Component
 {
@@ -91,8 +96,67 @@ public class HybridTestGen extends Component
 
         File htmlFile = new File(path);
         Desktop.getDesktop().browse(htmlFile.toURI());
+
+        Compiler c = getCompiler();
+
+        //for (INode currentSrcFile : Search.searchNodes(Environment.getInstance().getProjectNode(), new SourcecodeFileNodeCondition())) {
+//                    UILogger.getUiLogger().log("Compiling " + currentSrcFile.getAbsolutePath());
+            //ICompileMessage message = c.compile(currentSrcFile);
+
+//            if (message.getType() == ICompileMessage.MessageType.ERROR) {
+//                String error = "Source code file: " + currentSrcFile.getAbsolutePath()
+//                        + "\nMESSSAGE:\n" + message.getMessage() + "\n----------------\n";
+//                UIController.showDetailDialog(Alert.AlertType.ERROR, "Compilation message", "Compile message", error);
+//                return;
+//            }
+        //}
+//        UIController.showSuccessDialog("Compile all source code files successfully"
+//                , "Compilation message", "Compile message");
+
+
+    }
+    public Compiler getCompiler() {
+//        if (compiler == null) {
+        Compiler compiler = new Compiler();
+
+        Compiler compiler = createTemporaryCompiler(cbCompilers.getValue());
+        preprocessCmd.setText(compiler.getPreprocessCommand());
+        compileCmd.setText(compiler.getCompileCommand());
+        tfDefineFlag.setText(compiler.getDefineFlag());
+        tfIncludeFlag.setText(compiler.getIncludeFlag());
+        tfOutfileFlag.setText(compiler.getOutputFlag());
+        tfOutfileExtension.setText(compiler.getOutputExtension());
+        tfLinkCommand.setText(compiler.getLinkCommand());
+        tfDebugCommand.setText(compiler.getDebugCommand());
+
+        compiler.setCompileCommand(envNode.getCompileCmd());
+        compiler.setPreprocessCommand(envNode.getPreprocessCmd());
+        compiler.setLinkCommand(envNode.getLinkCmd());
+        compiler.setDebugCommand(envNode.getDebugCmd());
+        compiler.setIncludeFlag(envNode.getIncludeFlag());
+        compiler.setDefineFlag(envNode.getDefineFlag());
+        compiler.setOutputFlag(envNode.getOutputFlag());
+        compiler.setDebugFlag(envNode.getDebugFlag());
+        compiler.setOutputExtension(envNode.getOutputExt());
+
+        return compiler;
     }
 
+    private Compiler createTemporaryCompiler(String opt) {
+        if (opt != null) {
+            for (Class<?> c : AvailableCompiler.class.getClasses()) {
+                try {
+                    String name = c.getField("NAME").get(null).toString();
+
+                    if (name.equals(opt))
+                        return new Compiler(c);
+                } catch (Exception ex) {
+                }
+            }
+        }
+
+        return null;
+    }
     @FXML
     protected void btnBrowseInput_Clicked(ActionEvent event) throws Exception
     {

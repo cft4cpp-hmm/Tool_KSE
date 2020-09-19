@@ -1,4 +1,4 @@
-package com.dse.compiler;
+package compiler;
 
 public class AvailableCompiler {
     public static class TEMPLATE {

@@ -1,6 +1,7 @@
-package testcase_execution;
+package instrument;
 
-public interface DriverConstant {
+public interface DriverConstant
+{
 
     String ASSERT_ENABLE = "ASSERT_ENABLE";
 

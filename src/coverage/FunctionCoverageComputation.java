@@ -2,7 +2,6 @@ package coverage;
 
 import cfg.CFGGenerationforSubConditionCoverage;
 import cfg.ICFG;
-import com.dse.coverage.highlight.SourcecodeHighlighterForCoverage;
 import parser.projectparser.ICommonFunctionNode;
 import tree.object.AbstractFunctionNode;
 import tree.object.IFunctionNode;
@@ -63,17 +62,6 @@ public class FunctionCoverageComputation extends AbstractCoverageComputation {
                 IFunctionNode clone = (IFunctionNode) functionNode.clone();
                 CFGGenerationforSubConditionCoverage cfgGen = new CFGGenerationforSubConditionCoverage(clone);
 
-                ICFG cfg = cfgGen.generateCFG();
-                if (cfg != null) {
-                    nBranches += cfg.getVisitedBranches().size() + cfg.getUnvisitedBranches().size();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } else if (functionNode instanceof MacroFunctionNode) {
-            try {
-                IFunctionNode clone = (IFunctionNode) functionNode.clone();
-                CFGGenerationforSubConditionCoverage cfgGen = new CFGGenerationforSubConditionCoverage(clone);
                 ICFG cfg = cfgGen.generateCFG();
                 if (cfg != null) {
                     nBranches += cfg.getVisitedBranches().size() + cfg.getUnvisitedBranches().size();

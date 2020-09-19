@@ -1,4 +1,4 @@
-package com.dse.compiler.message.error_tree.node;
+package compiler.message.error_tree.node;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,11 +30,11 @@ public abstract class ErrorNode implements IErrorNode {
         this.parent = parent;
 
         if (!parent.getChildren().contains(this)) {
-            if (parent instanceof ScopeErrorNode) {
-                String parentMessage = parent.getMessage();
-                parentMessage += message + "\n";
-                parent.setMessage(parentMessage);
-            }
+//            if (parent instanceof ScopeErrorNode) {
+//                String parentMessage = parent.getMessage();
+//                parentMessage += message + "\n";
+//                parent.setMessage(parentMessage);
+//            }
 
             parent.getChildren().add(this);
         }

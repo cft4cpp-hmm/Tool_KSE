@@ -1,11 +1,11 @@
 package coverage.function_call;
 
-import report.element.Event;
-
-import java.util.Objects;
+//import report.element.Event;
+//
+//import java.util.Objects;
 
 public class FunctionCall {
-    private Event.Position category;
+//    private Event.Position category;
 
     private String absolutePath;
 
@@ -13,13 +13,13 @@ public class FunctionCall {
 
     private int iterator;
 
-    public Event.Position getCategory() {
-        return category;
-    }
+//    public Event.Position getCategory() {
+//        return category;
+//    }
 
-    public void setCategory(Event.Position category) {
-        this.category = category;
-    }
+//    public void setCategory(Event.Position category) {
+//        this.category = category;
+//    }
 
     public String getAbsolutePath() {
         return absolutePath;
@@ -42,13 +42,15 @@ public class FunctionCall {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         FunctionCall call = (FunctionCall) o;
-        return category == call.category &&
-                Objects.equals(absolutePath, call.absolutePath);
+
+//        return category == call.category &&
+//                Objects.equals(absolutePath, call.absolutePath);
+        return false;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(category, absolutePath);
+        return 0;// Objects.hash(category, absolutePath);
     }
 
     public enum Category {

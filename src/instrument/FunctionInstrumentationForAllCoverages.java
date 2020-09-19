@@ -1,6 +1,5 @@
 package instrument;
 
-import testcase_execution.DriverConstant;
 import utils.SpecialCharacter;
 import utils.Utils;
 import org.eclipse.cdt.core.dom.ast.*;

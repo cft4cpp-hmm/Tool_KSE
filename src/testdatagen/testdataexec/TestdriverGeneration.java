@@ -74,7 +74,7 @@ public abstract class TestdriverGeneration implements ITestdriverGeneration {
 			fnInstrumentation = new FunctionInstrumentationForStatementvsBranch_Marker(getFunction());
 			break;
 		case IFunctionConfig.SUBCONDITION:
-			fnInstrumentation = new FunctionInstrumentationForSubCondition(getFunction());
+			fnInstrumentation = new FunctionInstrumentationForSubCondition((IASTFunctionDefinition) getFunction());
 			break;
 		}
 

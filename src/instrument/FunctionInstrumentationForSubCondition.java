@@ -1,16 +1,11 @@
 package instrument;
 
-import com.dse.parser.ProjectParser;
-import com.dse.parser.object.MacroFunctionNode;
-import com.dse.search.Search;
-import com.dse.search.condition.MacroFunctionNodeCondition;
-import com.dse.testcase_execution.DriverConstant;
-import com.dse.util.AkaLogger;
-import com.dse.util.SpecialCharacter;
-import com.dse.util.Utils;
 import org.eclipse.cdt.core.dom.ast.*;
 import org.eclipse.cdt.core.dom.ast.cpp.ICPPASTCatchHandler;
 import org.eclipse.cdt.core.dom.ast.cpp.ICPPASTTryBlockStatement;
+import tree.object.IFunctionNode;
+import utils.SpecialCharacter;
+import utils.Utils;
 
 import java.io.File;
 
@@ -20,19 +15,17 @@ import java.io.File;
  * @author
  */
 public class FunctionInstrumentationForSubCondition extends AbstractFunctionInstrumentation {
-	final static AkaLogger logger = AkaLogger.get(FunctionInstrumentationForSubCondition.class);
-
 	public FunctionInstrumentationForSubCondition(IASTFunctionDefinition astFunctionNode) {
 		this.astFunctionNode = astFunctionNode;
 	}
 
 	public static void main(String[] args) {
-		ProjectParser parser = new ProjectParser(new File("D:\\IdeaProjects\\akautauto_2\\datatest\\hoannv\\check_debug"));
-		parser.setExpandTreeuptoMethodLevel_enabled(true);
-		MacroFunctionNode function = (MacroFunctionNode) Search.searchNodes(parser.getRootTree(), new MacroFunctionNodeCondition(),
-				"dbg.h\\check_debug(A,M,...)").get(0);
-		System.out.println(new FunctionInstrumentationForSubCondition(function.convertMacroFunctionToRealFunction(function.getAST()))
-				.generateInstrumentedFunction());
+//		ProjectParser parser = new ProjectParser(new File("D:\\IdeaProjects\\akautauto_2\\datatest\\hoannv\\check_debug"));
+//		parser.setExpandTreeuptoMethodLevel_enabled(true);
+//		MacroFunctionNode function = (MacroFunctionNode) Search.searchNodes(parser.getRootTree(), new MacroFunctionNodeCondition(),
+//				"dbg.h\\check_debug(A,M,...)").get(0);
+//		System.out.println(new FunctionInstrumentationForSubCondition(function.convertMacroFunctionToRealFunction(function.getAST()))
+//				.generateInstrumentedFunction());
 	}
 
 	@Override
@@ -47,6 +40,18 @@ public class FunctionInstrumentationForSubCondition extends AbstractFunctionInst
 		} else {
 			return "";
 		}
+	}
+
+	@Override
+	public IFunctionNode getFunctionNode()
+	{
+		return null;
+	}
+
+	@Override
+	public void setFunctionNode(IFunctionNode functionNode)
+	{
+
 	}
 
 	private String parseCompoundStatement(IASTCompoundStatement block, String extra, String margin) {

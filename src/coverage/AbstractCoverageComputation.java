@@ -4,7 +4,6 @@ import cfg.CFGGenerationforSubConditionCoverage;
 import cfg.ICFG;
 import instrument.IFunctionInstrumentationGeneration;
 import testdata.object.TestpathString_Marker;
-import com.dse.coverage.highlight.AbstractHighlighterForSourcecodeLevel;
 import testdatagen.coverage.ICoverageComputation;
 import tree.object.AbstractFunctionNode;
 import tree.object.IFunctionNode;
@@ -12,6 +11,7 @@ import tree.object.INode;
 import utils.PathUtils;
 import utils.Utils;
 import utils.search.AbstractFunctionNodeCondition;
+import utils.search.FunctionNodeCondition;
 import utils.search.Search;
 
 import java.util.ArrayList;
@@ -62,7 +62,7 @@ public abstract class AbstractCoverageComputation implements ICoverageComputatio
 
                 List<INode> functionNodes = Search.searchNodes(consideredSourcecodeNode, new AbstractFunctionNodeCondition(), PathUtils.toAbsolute(functionPath));
                 if (functionNodes.size() == 0)
-                    functionNodes = Search.searchNodes(consideredSourcecodeNode, new MacroFunctionNodeCondition(), PathUtils.toAbsolute(functionPath));
+                    functionNodes = Search.searchNodes(consideredSourcecodeNode, new FunctionNodeCondition(), PathUtils.toAbsolute(functionPath));
 
                 if (functionNodes.size() != 1)
                     return ERROR;
@@ -128,10 +128,10 @@ public abstract class AbstractCoverageComputation implements ICoverageComputatio
                 switch (coverage) {
                     case EnviroCoverageTypeNode.BRANCH:
                     case EnviroCoverageTypeNode.STATEMENT: {
-                        if (AbstractHighlighterForSourcecodeLevel.isSubCondition(testpath))
-                            // ignore the test path which goes through subcondition
-                            continue;
-                        else
+//                        if (AbstractHighlighterForSourcecodeLevel.isSubCondition(testpath))
+//                            // ignore the test path which goes through subcondition
+//                            continue;
+                        //else
                             break;
                     }
                 }
