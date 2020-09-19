@@ -69,13 +69,13 @@ public class Compiler implements ICompiler {
     public ICompileMessage compile(String filePath) {
         String script = generateCompileCommand(filePath);
         String workspace = "";
-        String directory = new File(workspace).getParentFile().getParentFile().getPath();
+        //String directory = new File(workspace).getParentFile().getParentFile().getPath();
 
         ICompileMessage compileMessage = null;
 
         try {
             String[] command = CompilerUtils.prepareForTerminal(this, script);
-            String message = new Terminal(command, directory).get();
+            String message = new Terminal(command, "F:\\VietData\\GitLab\\bai10\\data-test\\Output").get();
             compileMessage = new CompileMessage(message, filePath);
             compileMessage.setCompilationCommand(script);
 
@@ -128,7 +128,7 @@ public class Compiler implements ICompiler {
         }
 
         List<String> userCodes = new ArrayList<>();
-        userCodes.add("F:\\VietData\\GitLab\\bai10\\data-test\\Sample_for_R1_2\\test.cpp");
+        //userCodes.add("F:\\VietData\\GitLab\\bai10\\data-test\\Sample_for_R1_2\\test.cpp");
         for (String userCode : userCodes) {
             builder.append(INCLUDE_FILE_FLAG)
                     .append("\"").append(userCode).append("\"")

@@ -1,6 +1,6 @@
 package GUI;
 
-
+import compiler.AvailableCompiler;
 import Common.DSEConstants;
 import HybridAutoTestGen.CFT4CPP;
 import HybridAutoTestGen.FullBoundedTestGen;
@@ -91,24 +91,26 @@ public class HybridTestGen extends Component
     protected void btnRunTest_Clicked(ActionEvent event) throws Exception
     {
         System.out.println("btnRunTest_Clicked started");
-        Path currentRelativePath = Paths.get("");
-        String path = currentRelativePath.toAbsolutePath().toString() + "\\TEST_REPORT.html";
-
-        File htmlFile = new File(path);
-        Desktop.getDesktop().browse(htmlFile.toURI());
+//        Path currentRelativePath = Paths.get("");
+//        String path = currentRelativePath.toAbsolutePath().toString() + "\\TEST_REPORT.html";
+//
+//        File htmlFile = new File(path);
+//        Desktop.getDesktop().browse(htmlFile.toURI());
 
         Compiler c = getCompiler();
 
         //for (INode currentSrcFile : Search.searchNodes(Environment.getInstance().getProjectNode(), new SourcecodeFileNodeCondition())) {
 //                    UILogger.getUiLogger().log("Compiling " + currentSrcFile.getAbsolutePath());
-            //ICompileMessage message = c.compile(currentSrcFile);
+            ICompileMessage message = c.compile("F:\\VietData\\GitLab\\bai10\\data-test\\Sample_for_R1_2\\test.cpp");
 
-//            if (message.getType() == ICompileMessage.MessageType.ERROR) {
-//                String error = "Source code file: " + currentSrcFile.getAbsolutePath()
-//                        + "\nMESSSAGE:\n" + message.getMessage() + "\n----------------\n";
-//                UIController.showDetailDialog(Alert.AlertType.ERROR, "Compilation message", "Compile message", error);
-//                return;
-//            }
+            if (message.getType() == ICompileMessage.MessageType.ERROR) {
+                String error = "Source code file: "
+                        + "\nMESSSAGE:\n" + message.getMessage() + "\n----------------\n";
+                //JOptionPane.showMessageDialog(, "Compilation message", "Compile message", error);
+
+                JOptionPane.showMessageDialog(null, "Error: " + error, DSEConstants.PRODUCT_NAME, JOptionPane.INFORMATION_MESSAGE);
+                return;
+            }
         //}
 //        UIController.showSuccessDialog("Compile all source code files successfully"
 //                , "Compilation message", "Compile message");
@@ -116,28 +118,17 @@ public class HybridTestGen extends Component
 
     }
     public Compiler getCompiler() {
-//        if (compiler == null) {
-        Compiler compiler = new Compiler();
+        Compiler compiler = createTemporaryCompiler("[GNU Native] C++ 11");
 
-        Compiler compiler = createTemporaryCompiler(cbCompilers.getValue());
-        preprocessCmd.setText(compiler.getPreprocessCommand());
-        compileCmd.setText(compiler.getCompileCommand());
-        tfDefineFlag.setText(compiler.getDefineFlag());
-        tfIncludeFlag.setText(compiler.getIncludeFlag());
-        tfOutfileFlag.setText(compiler.getOutputFlag());
-        tfOutfileExtension.setText(compiler.getOutputExtension());
-        tfLinkCommand.setText(compiler.getLinkCommand());
-        tfDebugCommand.setText(compiler.getDebugCommand());
-
-        compiler.setCompileCommand(envNode.getCompileCmd());
-        compiler.setPreprocessCommand(envNode.getPreprocessCmd());
-        compiler.setLinkCommand(envNode.getLinkCmd());
-        compiler.setDebugCommand(envNode.getDebugCmd());
-        compiler.setIncludeFlag(envNode.getIncludeFlag());
-        compiler.setDefineFlag(envNode.getDefineFlag());
-        compiler.setOutputFlag(envNode.getOutputFlag());
-        compiler.setDebugFlag(envNode.getDebugFlag());
-        compiler.setOutputExtension(envNode.getOutputExt());
+        compiler.setCompileCommand(AvailableCompiler.CPP_11_GNU_NATIVE.COMPILE_CMD);
+        compiler.setPreprocessCommand(AvailableCompiler.CPP_11_GNU_NATIVE.PRE_PRECESS_CMD);
+        compiler.setLinkCommand(AvailableCompiler.CPP_11_GNU_NATIVE.LINK_CMD);
+        compiler.setDebugCommand(AvailableCompiler.CPP_11_GNU_NATIVE.DEBUG_CMD);
+        compiler.setIncludeFlag(AvailableCompiler.CPP_11_GNU_NATIVE.INCLUDE_FLAG);
+        compiler.setDefineFlag(AvailableCompiler.CPP_11_GNU_NATIVE.DEFINE_FLAG);
+        compiler.setOutputFlag(AvailableCompiler.CPP_11_GNU_NATIVE.OUTPUT_FLAG);
+        compiler.setDebugFlag(AvailableCompiler.CPP_11_GNU_NATIVE.DEBUG_FLAG);
+        compiler.setOutputExtension(AvailableCompiler.CPP_11_GNU_NATIVE.OUTPUT_EXTENSION);
 
         return compiler;
     }

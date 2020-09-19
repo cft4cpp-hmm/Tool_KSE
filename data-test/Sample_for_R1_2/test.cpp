@@ -1,3 +1,6 @@
+#include <iostream>
+#include <cstring>
+using namespace std;
 /*
 Source getting from website: https://www.geeksforgeeks.org/
 */
@@ -179,6 +182,7 @@ void heapSort(int arr[], int n)
 // alphabatical order
 void countSort(char arr[])
 {
+	int RANGE = 10;
     // The output character array
     // that will have sorted arr
     char output[strlen(arr)];
