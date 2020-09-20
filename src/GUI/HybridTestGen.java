@@ -19,10 +19,14 @@ import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import parser.projectparser.ProjectParser;
+import project_init.ProjectClone;
 import tree.object.INode;
 import tree.object.IProjectNode;
+import utils.SpecialCharacter;
+import utils.Utils;
 import utils.search.FunctionNodeCondition;
 import utils.search.Search;
+import utils.search.SourcecodeFileNodeCondition;
 
 import javax.swing.*;
 import java.awt.*;
@@ -87,37 +91,57 @@ public class HybridTestGen extends Component
         File htmlFile = new File(path);
         Desktop.getDesktop().browse(htmlFile.toURI());
     }
+
     @FXML
     protected void btnRunTest_Clicked(ActionEvent event) throws Exception
     {
         System.out.println("btnRunTest_Clicked started");
-//        Path currentRelativePath = Paths.get("");
-//        String path = currentRelativePath.toAbsolutePath().toString() + "\\TEST_REPORT.html";
-//
-//        File htmlFile = new File(path);
-//        Desktop.getDesktop().browse(htmlFile.toURI());
+
+        String file = "F:\\VietData\\GitLab\\bai10\\data-test\\Sample_for_R1_2\\test.cpp";
 
         Compiler c = getCompiler();
 
-        //for (INode currentSrcFile : Search.searchNodes(Environment.getInstance().getProjectNode(), new SourcecodeFileNodeCondition())) {
-//                    UILogger.getUiLogger().log("Compiling " + currentSrcFile.getAbsolutePath());
-            ICompileMessage message = c.compile("F:\\VietData\\GitLab\\bai10\\data-test\\Sample_for_R1_2\\test.cpp");
+        ICompileMessage message = c.compile(file);
 
-            if (message.getType() == ICompileMessage.MessageType.ERROR) {
-                String error = "Source code file: "
-                        + "\nMESSSAGE:\n" + message.getMessage() + "\n----------------\n";
-                //JOptionPane.showMessageDialog(, "Compilation message", "Compile message", error);
+        if (message.getType() == ICompileMessage.MessageType.ERROR)
+        {
+            String error = "Source code file: "
+                    + "\nMESSSAGE:\n" + message.getMessage() + "\n----------------\n";
+            JOptionPane.showMessageDialog(null, "Error: " + error, DSEConstants.PRODUCT_NAME, JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
 
-                JOptionPane.showMessageDialog(null, "Error: " + error, DSEConstants.PRODUCT_NAME, JOptionPane.INFORMATION_MESSAGE);
-                return;
+        ProjectParser parser = new ProjectParser(new File(txtSourceFolder.getText()));
+
+        projectNode = parser.getRootTree();
+
+        //List<INode> functionList = Search.getAllNodes(projectNode, new FunctionNodeCondition());
+
+        List<INode> sources = Search.searchNodes(projectNode, new SourcecodeFileNodeCondition());
+
+        for (INode sourceCode : sources) {
+            ProjectClone clone = new ProjectClone();
+
+            try {
+                String newContent = clone.generateFileContent(sourceCode);
+                Utils.writeContentToFile(newContent, getClonedFilePath(sourceCode.getAbsolutePath()));
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
-        //}
-//        UIController.showSuccessDialog("Compile all source code files successfully"
-//                , "Compilation message", "Compile message");
-
-
+        }
     }
-    public Compiler getCompiler() {
+    public static String getClonedFilePath(String origin) {
+        String originName = new File(origin).getName();
+
+        int lastDotPos = originName.lastIndexOf(SpecialCharacter.DOT);
+
+        String clonedName = originName.substring(0, lastDotPos) + ProjectClone.CLONED_FILE_EXTENSION + originName.substring(lastDotPos);
+
+        return origin.replace(originName, clonedName);
+    }
+
+    public Compiler getCompiler()
+    {
         Compiler compiler = createTemporaryCompiler("[GNU Native] C++ 11");
 
         compiler.setCompileCommand(AvailableCompiler.CPP_11_GNU_NATIVE.COMPILE_CMD);
@@ -133,21 +157,30 @@ public class HybridTestGen extends Component
         return compiler;
     }
 
-    private Compiler createTemporaryCompiler(String opt) {
-        if (opt != null) {
-            for (Class<?> c : AvailableCompiler.class.getClasses()) {
-                try {
+    private Compiler createTemporaryCompiler(String opt)
+    {
+        if (opt != null)
+        {
+            for (Class<?> c : AvailableCompiler.class.getClasses())
+            {
+                try
+                {
                     String name = c.getField("NAME").get(null).toString();
 
                     if (name.equals(opt))
+                    {
                         return new Compiler(c);
-                } catch (Exception ex) {
+                    }
+                }
+                catch (Exception ex)
+                {
                 }
             }
         }
 
         return null;
     }
+
     @FXML
     protected void btnBrowseInput_Clicked(ActionEvent event) throws Exception
     {
@@ -303,7 +336,7 @@ public class HybridTestGen extends Component
 
             Console console = new Console(value);
 
-            console.exportToHtml(new File(AbstractSetting.getValue(Settingv2.TEST_REPORT)+".html"), value);
+            console.exportToHtml(new File(AbstractSetting.getValue(Settingv2.TEST_REPORT) + ".html"), value);
 
             JOptionPane.showMessageDialog(null, "Finish generating data. Click on [View report] " +
                     "for the result.", DSEConstants.PRODUCT_NAME, JOptionPane.INFORMATION_MESSAGE);

@@ -30,8 +30,6 @@ public class ProjectClone {
     public static void cloneASourceCodeFile(INode sourceCode){
         if (!(sourceCode instanceof SourcecodeFileNode))
             return;
-
-
         ProjectClone clone = new ProjectClone();
 
         try {
@@ -47,7 +45,7 @@ public class ProjectClone {
 
     List<String> globalDeclarations = new ArrayList<>();
 
-    private String generateFileContent(INode sourceCode) throws InterruptedException {
+    public String generateFileContent(INode sourceCode) throws InterruptedException {
         String oldContent = Utils.readFileContent(sourceCode.getAbsolutePath());
 
         List<SearchCondition> conditions = new ArrayList<>();
