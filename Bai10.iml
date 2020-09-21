@@ -38,5 +38,7 @@
     <orderEntry type="library" name="org.eclipse.cdt_9.0.0.201607151550" level="project" />
     <orderEntry type="library" name="lib" level="project" />
     <orderEntry type="library" name="runable" level="project" />
+    <orderEntry type="library" name="gson-2.8.6-javadoc" level="project" />
+    <orderEntry type="library" name="gson-2.8.6" level="project" />
   </component>
 </module>
