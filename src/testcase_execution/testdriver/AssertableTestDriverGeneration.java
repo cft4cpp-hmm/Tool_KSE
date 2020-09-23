@@ -16,7 +16,7 @@ public abstract class AssertableTestDriverGeneration extends TestDriverGeneratio
         String testCaseNameAssign = String.format("%s=\"%s\";", "TestCase1", testCase.getName());
 
         // STEP 2: Generate initialization of variables
-        String initialization = generateInitialization(testCase);
+        String initialization = "";// generateInitialization(testCase);
 
         // STEP 3: Generate full function call
         String functionCall = generateFunctionCall(testCase);
