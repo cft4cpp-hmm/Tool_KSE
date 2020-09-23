@@ -1,6 +1,5 @@
 package testcase_manager;
 
-import com.dse.testcasescript.object.TestNewNode;
 import compiler.AvailableCompiler;
 import compiler.Compiler;
 import config.CommandConfig;
@@ -21,8 +20,6 @@ public abstract class AbstractTestCase implements ITestCase {
 
     // name of test case
     private String name;
-
-    private TestNewNode testNewNode;
 
     // Not executed (by default)
     private String status = TestCase.STATUS_NA;
