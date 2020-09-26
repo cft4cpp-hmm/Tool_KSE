@@ -9,6 +9,7 @@ import org.apache.commons.io.FileUtils;
 import parser.projectparser.ICommonFunctionNode;
 import parser.projectparser.ProjectParser;
 import testdata.object.RootDataNode;
+import tree.object.IFunctionNode;
 import tree.object.IProjectNode;
 import utils.DateTimeUtils;
 import utils.PathUtils;
@@ -78,7 +79,7 @@ public class TestCaseManager {
 //        }
     }
 
-    public static TestCase createTestCase(String name, ICommonFunctionNode functionNode) {
+    public static TestCase createTestCase(String name, IFunctionNode functionNode) {
         if (name == null || functionNode == null)
             return null;
 
@@ -101,14 +102,14 @@ public class TestCaseManager {
         }
     }
 
-    public static TestCase createTestCase(ICommonFunctionNode functionNode, String nameTestcase) {
+    public static TestCase createTestCase(IFunctionNode functionNode, String nameTestcase) {
         TestCase testCase;
         String testCaseName = "TestCase1";
         testCase = createTestCase(testCaseName, functionNode);
         return testCase;
     }
 
-    public static TestCase createTestCase(ICommonFunctionNode functionNode) {
+    public static TestCase createTestCase(IFunctionNode functionNode) {
         if (functionNode == null)
             return null;
         String testCaseName = "TestCase1";
@@ -226,7 +227,7 @@ public class TestCaseManager {
         if (jsonObject.get("status") != null)
             status = jsonObject.get("status").getAsString();
 
-        ICommonFunctionNode functionNode = null;
+        IFunctionNode functionNode = null;
         if (jsonObject.get("rootDataNode") != null) {
             JsonObject rootDataNodeJsonObject = jsonObject.get("rootDataNode").getAsJsonObject();
             String functionPath = rootDataNodeJsonObject.get("functionNode").getAsString();

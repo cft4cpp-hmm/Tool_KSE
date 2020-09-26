@@ -2,17 +2,14 @@ package testcase_execution.testdriver;
 
 import compiler.AvailableCompiler;
 import compiler.Compiler;
-import parser.projectparser.ICommonFunctionNode;
 import project_init.IGTestConstant;
 import testcase_execution.DriverConstant;
 import testcase_manager.ITestCase;
 import testcase_manager.TestCase;
-import testdata.object.RootDataNode;
 import tree.object.*;
 import utils.PathUtils;
 import utils.SpecialCharacter;
 import utils.Utils;
-import utils.search.Search;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,25 +58,18 @@ public abstract class TestDriverGeneration implements ITestDriverGeneration {
                 .replace(ADDITIONAL_HEADERS_TAG, additionalIncludes)
                 .replace(EXEC_TRACE_FILE_TAG, testCase.getExecutionResultTrace())
                 .replace(DriverConstant.ADD_TESTS_TAG, generateAddTestStm(testCase));
-
-//        if (testCase instanceof CompoundTestCase) {
-//            TestCaseUserCode userCode = testCase.getTestCaseUserCode();
-//            testDriver = testDriver
-//                    .replace(COMPOUND_TEST_CASE_SETUP, userCode.getSetUpContent())
-//                    .replace(COMPOUND_TEST_CASE_TEARDOWN, userCode.getTearDownContent());
-//        }
     }
 
     @Override
     public String generateTestScript(TestCase testCase) throws Exception {
         String body = generateBodyScript(testCase);
 
-        String testCaseName = testCase.getName().replaceAll("[^\\w]", SpecialCharacter.UNDERSCORE);
+        String testCaseName = "TestCase1";
 
-        return String.format("void " + AKA_TEST_PREFIX + "%s(void) {\n%s\n}\n", testCaseName, body);
+        return String.format("void " + UET_TEST_PREFIX + "%s(void) {\n%s\n}\n", testCaseName, body);
     }
 
-    protected static final String AKA_TEST_PREFIX = "AKA_TEST_";
+    protected static final String UET_TEST_PREFIX = "UET_TEST_";
 
     private String generateAddTestStm(ITestCase testCase) {
         StringBuilder out = new StringBuilder();
@@ -96,7 +86,7 @@ public abstract class TestDriverGeneration implements ITestDriverGeneration {
         String testCaseName = testCase.getName();
         String testName = testCaseName.toUpperCase();
         testCaseName = testCaseName.replaceAll("[^\\w]", SpecialCharacter.UNDERSCORE);
-        String test = AKA_TEST_PREFIX + testCaseName;
+        String test = UET_TEST_PREFIX + testCaseName;
         return String.format(RUN_FORMAT, testName, test, iterator);
     }
 
@@ -105,15 +95,8 @@ public abstract class TestDriverGeneration implements ITestDriverGeneration {
     private String generateAdditionalHeaders() {
         StringBuilder builder = new StringBuilder();
 
-        if (testCase.getAdditionalHeaders() != null) {
+        if (testCase.getAdditionalHeaders() != null)
             builder.append(testCase.getAdditionalHeaders()).append(SpecialCharacter.LINE_BREAK);
-        }
-
-        List<String> userCodeList = testCase.getAdditionalIncludes();
-        for (String item : userCodeList) {
-            String stm = String.format("#include \"%s\"\n", item);
-            builder.append(stm);
-        }
 
         return builder.toString();
     }
@@ -171,7 +154,7 @@ public abstract class TestDriverGeneration implements ITestDriverGeneration {
             includedPart += String.format("#include \"%s\"\n", path);
 
             if (!isC()) {
-                ICommonFunctionNode sut = ((TestCase) testCase).getFunctionNode();
+                IFunctionNode sut = ((TestCase) testCase).getFunctionNode();
 
                 if (sut instanceof AbstractFunctionNode) {
                     INode realParent = ((AbstractFunctionNode) sut).getRealParent();
@@ -241,7 +224,7 @@ public abstract class TestDriverGeneration implements ITestDriverGeneration {
     }
 
     protected String generateReturnMark(TestCase testCase) {
-        ICommonFunctionNode sut = testCase.getFunctionNode();
+        IFunctionNode sut = testCase.getFunctionNode();
 
         String markStm = "";
 
@@ -272,7 +255,7 @@ public abstract class TestDriverGeneration implements ITestDriverGeneration {
 //    }
 
     protected String generateFunctionCall(TestCase testCase) {
-        ICommonFunctionNode functionNode = testCase.getFunctionNode();
+        IFunctionNode functionNode = testCase.getFunctionNode();
 
         String functionCall = "";
 
@@ -283,7 +266,7 @@ public abstract class TestDriverGeneration implements ITestDriverGeneration {
         String returnType = functionNode.getReturnType().trim();
 
 
-        functionCall = functionCall.replaceAll("\\bmain\\b", "AKA_MAIN");
+        functionCall = functionCall.replaceAll("\\bmain\\b", "UET_MAIN");
 
         functionCall = String.format(DriverConstant.MARK + "(\"<<PRE-CALLING>> Test %s\");%s", testCase.getName(), functionCall);
 

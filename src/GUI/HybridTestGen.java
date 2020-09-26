@@ -144,10 +144,11 @@ public class HybridTestGen extends Component
                 function = (IFunctionNode) Search.searchNodes(projectNode, new FunctionNodeCondition(), value).get(0);
 
                 TestcaseExecution executor = new TestcaseExecution();
-                executor.setFunction((ICommonFunctionNode) function);
+                executor.setFunction(function);
                 executor.setMode(TestcaseExecution.IN_AUTOMATED_TESTDATA_GENERATION_MODE);
 
                 TestCase testCase= new TestCase();
+                testCase.setFunctionNode(function);
 
                 executor.setTestCase(testCase);
                 executor.execute();

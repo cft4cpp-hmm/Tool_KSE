@@ -5,6 +5,7 @@ import testcase_manager.CompoundTestCase;
 import testcase_manager.ITestCase;
 import testcase_manager.TestCase;
 import testcase_manager.TestCaseManager;
+import tree.object.IFunctionNode;
 
 import java.time.LocalDateTime;
 
@@ -44,7 +45,7 @@ public class TestCaseExecutionThread extends AbstractUETTask<ITestCase>
 
     private ITestCase callWithTestCase(TestCase testCase) throws Exception {
 
-        ICommonFunctionNode function = testCase.getFunctionNode();
+        IFunctionNode function = testCase.getFunctionNode();
 
         // execute test case
         TestcaseExecution executor = new TestcaseExecution();

@@ -38,9 +38,7 @@ public interface ITestcaseExecution {
 
     void execute() throws Exception;
 
-    void initializeConfigurationOfTestcase(ITestCase testCase);
-
     TestDriverGeneration generateTestDriver(ITestCase testCase) throws Exception;
 
-    String compileAndLink(CommandConfig customCommandConfig) throws IOException, InterruptedException;
+    String compileAndLink() throws IOException, InterruptedException;
 }

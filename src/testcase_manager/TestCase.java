@@ -2,6 +2,7 @@ package testcase_manager;
 
 import parser.projectparser.ICommonFunctionNode;
 import testdata.object.RootDataNode;
+import tree.object.IFunctionNode;
 import tree.object.INode;
 import utils.SpecialCharacter;
 
@@ -14,9 +15,9 @@ import java.util.stream.Collectors;
  */
 public class TestCase extends AbstractTestCase {
     private RootDataNode rootDataNode;
-    private ICommonFunctionNode functionNode;
+    private IFunctionNode functionNode;
 
-    public TestCase(ICommonFunctionNode functionNode, String name) {
+    public TestCase(IFunctionNode functionNode, String name) {
         setName(name);
         setFunctionNode(functionNode);
     }
@@ -138,12 +139,12 @@ public class TestCase extends AbstractTestCase {
 
         return String.format("-DAKA_TC_%s", defineName);
     }
-    public void setFunctionNode(ICommonFunctionNode functionNode) {
+    public void setFunctionNode(IFunctionNode functionNode) {
         this.functionNode = functionNode;
     }
 
 
-    public ICommonFunctionNode getFunctionNode() {
+    public IFunctionNode getFunctionNode() {
         return this.functionNode;
     }
 }

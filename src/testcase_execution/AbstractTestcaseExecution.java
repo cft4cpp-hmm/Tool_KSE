@@ -92,27 +92,23 @@ public abstract class AbstractTestcaseExecution implements ITestcaseExecution {
 
         return compiler;
     }
-    public String compileAndLink(CommandConfig customCommandConfig) throws IOException, InterruptedException {
+    public String compileAndLink() throws IOException, InterruptedException {
         StringBuilder output = new StringBuilder();
 
-        Map<String, String> compilationCommands = customCommandConfig.getCompilationCommands();
-
         String directory = "F:\\VietData\\GitLab\\bai10\\data-test\\Sample_for_R1_2";
+        String compilationCommand = "g++ -c -std\u003dc++14 \"F:\\\\VietData\\\\GitLab\\\\bai10\\\\data-test\\\\aka-working-space\\\\TestCPP14_4\\\\test-drivers\\grade.random.0.cpp\" -o\"F:\\\\VietData\\\\GitLab\\\\bai10\\\\data-test\\\\aka-working-space\\\\TestCPP14_4\\\\test-drivers\\grade.random.0.out\" -DAKA_TC_GRADE_RANDOM_0 -lgtest_main  -lgtest -w";
+        String linkCommand = "g++ -std\u003dc++14 \"F:\\\\VietData\\\\GitLab\\\\bai10\\\\data-test\\\\aka-working-space\\\\TestCPP14_4\\\\test-drivers\\grade.random.0.out\" -o\"F:\\\\VietData\\\\GitLab\\\\bai10\\\\data-test\\\\aka-working-space\\\\TestCPP14_4\\\\exe\\grade.random.0.exe\" -lgtest_main  -lgtest -w";
 
-        // Create an executable file
-        for (String filePath : compilationCommands.keySet()) {
-            String compilationCommand = compilationCommands.get(filePath);
+        String executablePath = "F:\\\\VietData\\\\GitLab\\\\bai10\\\\data-test\\\\aka-working-space\\\\TestCPP14_4\\\\exe\\grade.random.0.exe";
 
+        String[] script = CompilerUtils.prepareForTerminal(getCompiler(), compilationCommand);
 
-            String[] script = CompilerUtils.prepareForTerminal(getCompiler(), compilationCommand);
+        String response = new Terminal(script, directory).get();
 
-            String response = new Terminal(script, directory).get();
-
-            output.append(response).append("\n");
-        }
+        output.append(response).append("\n");
 
         String[] linkScript = CompilerUtils
-                .prepareForTerminal(getCompiler(), customCommandConfig.getLinkingCommand());
+                .prepareForTerminal(getCompiler(), linkCommand);
         String linkResponse = new Terminal(linkScript, directory).get();
         output.append(linkResponse);
 
@@ -126,7 +122,6 @@ public abstract class AbstractTestcaseExecution implements ITestcaseExecution {
         int countReadFile = 0;
 
         do {
-            //logger.debug("Finish. We are getting a execution path from hard disk");
             encodedTestpath.setEncodedTestpath(normalizeTestpathFromFile(
                     Utils.readFileContent(testCase.getTestPathFile())));
 
@@ -248,29 +243,6 @@ public abstract class AbstractTestcaseExecution implements ITestcaseExecution {
         return tpContent.contains(TestPathUtils.END_TAG);
     }
 
-    protected void showExecutionResultDialog(ITestCase testCase, String result) {
-        Alert.AlertType type;
-        String headerText;
-
-        if (result.contains(IGTestConstant.FAILED_FLAG)) {
-            type = Alert.AlertType.ERROR;
-            headerText = "Fail to execute test case " + testCase.getName();
-        } else if (result.contains(IGTestConstant.PASSED_FLAG)) {
-            type = Alert.AlertType.INFORMATION;
-            headerText = "Execute test case " + testCase.getName() + " successfully";
-        } else {
-            type = Alert.AlertType.WARNING;
-            headerText = "Fail to execute test case " + testCase.getName();
-
-            if (!result.endsWith(SpecialCharacter.LINE_BREAK))
-                result += SpecialCharacter.LINE_BREAK;
-
-            result += "Catch a runtime error when execute test case " + testCase.getName();
-        }
-
-        String content = result;
-
-    }
 
     public void initializeConfigurationOfTestcase(ITestCase testCase) {
         /*
@@ -299,26 +271,16 @@ public abstract class AbstractTestcaseExecution implements ITestcaseExecution {
 
         testCase.setExecutedTime(-1);
 
-        //TestCaseManager.exportTestCaseToFile(testCase);
     }
 
-    protected String runExecutableFile(CommandConfig commandConfig) throws IOException, InterruptedException {
-        String executableFilePath = commandConfig.getExecutablePath();
+    protected String runExecutableFile(String executableFile) throws IOException, InterruptedException {
 
-        String workspace = "F:\\VietData\\GitLab\\bai10\\data-test\\Sample_for_R1_2";
-        String directory = new File(workspace).getParentFile().getParentFile().getPath();
+        String directory = "F:\\VietData\\GitLab\\bai10\\data-test\\Sample_for_R1_2";
 
 
         Terminal terminal;
 
-//        if (mode == IN_EXECUTION_WITH_FRAMEWORK_TESTING_MODE) {
-//            String[] executeCommand = new String[] {executableFilePath, "--gtest_output="
-//                    + String.format("xml:%s", testCase.getExecutionResultFile())};
-//
-//            terminal = new Terminal(executeCommand, directory);
-//
-//        } else
-            terminal = new Terminal(executableFilePath, directory);
+        terminal = new Terminal(executableFile, directory);
 
         Process p = terminal.getProcess();
         p.waitFor(10, TimeUnit.SECONDS); // give it a chance to stop
@@ -341,20 +303,5 @@ public abstract class AbstractTestcaseExecution implements ITestcaseExecution {
 
     public void setTestDriverGeneration(TestDriverGeneration testDriverGeneration) {
         this.testDriverGen = testDriverGeneration;
-    }
-
-    protected CommandConfig initializeCommandConfigToRunTestCase(ITestCase testCase, boolean shouldIncludeGtestLib) {
-        /*
-         * create the command file of the test case from the original command file
-         */
-        String rootCommandFile = "F:\\VietData\\GitLab\\bai10\\data-test\\Sample_for_R1_2";
-
-        CommandConfig commandConfig = testCase.generateCommands(rootCommandFile,
-                testCase.getExecutableFile(), shouldIncludeGtestLib);
-
-        commandConfig.exportToJson(new File(testCase.getCommandConfigFile()));
-
-
-        return commandConfig;
     }
 }
