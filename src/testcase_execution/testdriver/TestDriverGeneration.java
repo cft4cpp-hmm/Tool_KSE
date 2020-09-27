@@ -1,5 +1,7 @@
 package testcase_execution.testdriver;
 
+import Common.DSEConstants;
+import Common.TestConfig;
 import compiler.AvailableCompiler;
 import compiler.Compiler;
 import project_init.IGTestConstant;
@@ -14,11 +16,6 @@ import utils.Utils;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Generate test driver for a function
- *
- * @author Vu + D.Anh
- */
 public abstract class TestDriverGeneration implements ITestDriverGeneration {
 
     protected List<String> testScripts;
@@ -33,7 +30,7 @@ public abstract class TestDriverGeneration implements ITestDriverGeneration {
 
     @Override
     public void generate() throws Exception {
-        testPathFilePath = testCase.getTestPathFile();
+        testPathFilePath = ((TestCase)testCase).getSourceCodeFile();
 
         testScripts = new ArrayList<>();
         clonedFilePaths = new ArrayList<>();
@@ -56,7 +53,7 @@ public abstract class TestDriverGeneration implements ITestDriverGeneration {
                 .replace(CLONED_SOURCE_FILE_PATH_TAG, includedPart)
                 .replace(TEST_SCRIPTS_TAG, testScriptPart.toString())
                 .replace(ADDITIONAL_HEADERS_TAG, additionalIncludes)
-                .replace(EXEC_TRACE_FILE_TAG, testCase.getExecutionResultTrace())
+                //.replace(EXEC_TRACE_FILE_TAG, testCase.getExecutionResultTrace())
                 .replace(DriverConstant.ADD_TESTS_TAG, generateAddTestStm(testCase));
     }
 
@@ -64,7 +61,7 @@ public abstract class TestDriverGeneration implements ITestDriverGeneration {
     public String generateTestScript(TestCase testCase) throws Exception {
         String body = generateBodyScript(testCase);
 
-        String testCaseName = "TestCase1";
+        String testCaseName = TestConfig.TESTCASE_NAME;
 
         return String.format("void " + UET_TEST_PREFIX + "%s(void) {\n%s\n}\n", testCaseName, body);
     }
@@ -95,8 +92,8 @@ public abstract class TestDriverGeneration implements ITestDriverGeneration {
     private String generateAdditionalHeaders() {
         StringBuilder builder = new StringBuilder();
 
-        if (testCase.getAdditionalHeaders() != null)
-            builder.append(testCase.getAdditionalHeaders()).append(SpecialCharacter.LINE_BREAK);
+//        if (testCase.getAdditionalHeaders() != null)
+//            builder.append(testCase.getAdditionalHeaders()).append(SpecialCharacter.LINE_BREAK);
 
         return builder.toString();
     }
@@ -148,7 +145,7 @@ public abstract class TestDriverGeneration implements ITestDriverGeneration {
         String includedPart = "";
 
         if (testCase instanceof TestCase) {
-            String path = "F:\\VietData\\GitLab\\bai10\\data-test\\Sample_for_R1_2";
+            String path = TestConfig.PROJECT_PATH;
             clonedFilePaths.add(path);
 
             includedPart += String.format("#include \"%s\"\n", path);

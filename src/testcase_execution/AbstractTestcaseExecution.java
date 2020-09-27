@@ -1,36 +1,30 @@
 package testcase_execution;
 
+import Common.TestConfig;
 import cfg.testpath.ITestpathInCFG;
 import compiler.AvailableCompiler;
 import compiler.Compiler;
 import compiler.Terminal;
-import config.CommandConfig;
 import coverage.EnviroCoverageTypeNode;
 import coverage.SourcecodeCoverageComputation;
 import coverage.TestPathUtils;
 import instrument.FunctionInstrumentationForStatementvsBranch_Markerv2;
-import project_init.IGTestConstant;
 import testcase_execution.testdriver.TestDriverGeneration;
 import testcase_manager.ITestCase;
 import testcase_manager.TestCase;
-import javafx.application.Platform;
-import javafx.scene.control.Alert;
-import testcase_manager.TestCaseManager;
 import testdata.object.TestpathString_Marker;
 import tree.object.ISourcecodeFileNode;
-import utils.CompilerUtils;
-import utils.SpecialCharacter;
-import utils.Utils;
+import utils.*;
 
 import java.io.File;
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import static Common.TestConfig.COMPILE_COMMAND_TEMPLATE;
+
 public abstract class AbstractTestcaseExecution implements ITestcaseExecution {
-    private int mode = IN_EXECUTION_WITH_FRAMEWORK_TESTING_MODE; //IN_EXECUTION_WITHOUT_GTEST_MODE; // by default
+    private int mode = IN_EXECUTION_WITH_FRAMEWORK_TESTING_MODE;
 
     private ITestCase testCase;
 
@@ -50,7 +44,9 @@ public abstract class AbstractTestcaseExecution implements ITestcaseExecution {
 
     public void setTestCase(ITestCase testcase) {
         this.testCase = testcase;
+        //setTestCaseInfo();
     }
+
 
     private Compiler createTemporaryCompiler(String opt)
     {
@@ -95,21 +91,26 @@ public abstract class AbstractTestcaseExecution implements ITestcaseExecution {
     public String compileAndLink() throws IOException, InterruptedException {
         StringBuilder output = new StringBuilder();
 
-        String directory = "F:\\VietData\\GitLab\\bai10\\data-test\\Sample_for_R1_2";
-        String compilationCommand = "g++ -c -std\u003dc++14 \"F:\\\\VietData\\\\GitLab\\\\bai10\\\\data-test\\\\aka-working-space\\\\TestCPP14_4\\\\test-drivers\\grade.random.0.cpp\" -o\"F:\\\\VietData\\\\GitLab\\\\bai10\\\\data-test\\\\aka-working-space\\\\TestCPP14_4\\\\test-drivers\\grade.random.0.out\" -DAKA_TC_GRADE_RANDOM_0 -lgtest_main  -lgtest -w";
-        String linkCommand = "g++ -std\u003dc++14 \"F:\\\\VietData\\\\GitLab\\\\bai10\\\\data-test\\\\aka-working-space\\\\TestCPP14_4\\\\test-drivers\\grade.random.0.out\" -o\"F:\\\\VietData\\\\GitLab\\\\bai10\\\\data-test\\\\aka-working-space\\\\TestCPP14_4\\\\exe\\grade.random.0.exe\" -lgtest_main  -lgtest -w";
+        TestCase tc = (TestCase)testCase;
 
-        String executablePath = "F:\\\\VietData\\\\GitLab\\\\bai10\\\\data-test\\\\aka-working-space\\\\TestCPP14_4\\\\exe\\grade.random.0.exe";
+        String testCaseName = testCase.getName();
+        String sourceFile = tc.getSourceCodeFile();
+        String outFile = TestConfig.COMPILE_OUTPUT + "\\" + testCaseName + ".out";
+
+        String compilationCommand = String.format(COMPILE_COMMAND_TEMPLATE, sourceFile, outFile);
+
+        String exeFile = TestConfig.EXE_PATH + "\\" + testCaseName + ".exe";
+        String linkCommand = String.format(COMPILE_COMMAND_TEMPLATE, outFile, exeFile);
 
         String[] script = CompilerUtils.prepareForTerminal(getCompiler(), compilationCommand);
 
-        String response = new Terminal(script, directory).get();
+        String response = new Terminal(script, TestConfig.COMPILE_OUTPUT).get();
 
         output.append(response).append("\n");
 
         String[] linkScript = CompilerUtils
                 .prepareForTerminal(getCompiler(), linkCommand);
-        String linkResponse = new Terminal(linkScript, directory).get();
+        String linkResponse = new Terminal(linkScript, TestConfig.LINK_OUTPUT).get();
         output.append(linkResponse);
 
         return output.toString().trim();
@@ -123,7 +124,7 @@ public abstract class AbstractTestcaseExecution implements ITestcaseExecution {
 
         do {
             encodedTestpath.setEncodedTestpath(normalizeTestpathFromFile(
-                    Utils.readFileContent(testCase.getTestPathFile())));
+                    Utils.readFileContent("")));//testCase.getTestPathFile()
 
             if (encodedTestpath.getEncodedTestpath().length() == 0) {
                 //initialization = "";
@@ -165,20 +166,6 @@ public abstract class AbstractTestcaseExecution implements ITestcaseExecution {
         return encodedTestpath;
     }
 
-    protected void refactorResultTrace(ITestCase testCase) {
-        final String END_TAG = ",\n";
-        String path = testCase.getExecutionResultTrace();
-        if (new File(path).exists()) {
-            String oldContent = Utils.readFileContent(path);
-            String newContent = oldContent;
-            if (oldContent.endsWith(END_TAG)) {
-                newContent = SpecialCharacter.OPEN_SQUARE_BRACE
-                        + newContent.substring(0, newContent.length() - END_TAG.length())
-                        + SpecialCharacter.CLOSE_SQUARE_BRACE;
-            }
-            Utils.writeContentToFile(newContent, path);
-        }
-    }
 
     protected boolean analyzeTestpathFile(TestCase testCase) throws Exception {
         // Read hard disk until the test path is written into file completely
@@ -197,7 +184,7 @@ public abstract class AbstractTestcaseExecution implements ITestcaseExecution {
             String msg = "The content of test path file is empty after execution";
             if (/*getMode() == IN_EXECUTION_WITHOUT_GTEST_MODE
                     || */getMode() == IN_EXECUTION_WITH_FRAMEWORK_TESTING_MODE) {
-                testCase.setStatus(TestCase.STATUS_FAILED);
+                //testCase.setStatus(TestCase.STATUS_FAILED);
             }
             success = false;
             throw new Exception(msg);
@@ -211,7 +198,7 @@ public abstract class AbstractTestcaseExecution implements ITestcaseExecution {
 
         // coverage computation
         ISourcecodeFileNode srcNode = Utils.getSourcecodeFile(testCase.getFunctionNode());
-        String tpContent = Utils.readFileContent(testCase.getTestPathFile());
+        String tpContent = Utils.readFileContent("");//testCase.getTestPathFile()
 
         SourcecodeCoverageComputation computator = new SourcecodeCoverageComputation();
         try {
@@ -244,39 +231,9 @@ public abstract class AbstractTestcaseExecution implements ITestcaseExecution {
     }
 
 
-    public void initializeConfigurationOfTestcase(ITestCase testCase) {
-        /*
-         * Update test case
-         */
-        // test path
-        testCase.setTestPathFileDefault();
-        // executable file
-        testCase.setExecutableFileDefault();
-        // debug executable file
-        testCase.setDebugExecutableFileDefault();
-        // command file
-        testCase.setCommandConfigFileDefault();
-        // debug file
-        testCase.setCommandDebugFileDefault();
-        // breakpoint
-        testCase.setBreakpointPathDefault();
-        // test case path
-        testCase.setTestPathFileDefault();
-        // exec result path
-            testCase.setExecutionResultFileDefault();
-        // source code file path
-        testCase.setSourcecodeFileDefault();
-        // execution date and time
-        testCase.setExecutionDateTime(LocalDateTime.now());
-
-        testCase.setExecutedTime(-1);
-
-    }
-
     protected String runExecutableFile(String executableFile) throws IOException, InterruptedException {
 
-        String directory = "F:\\VietData\\GitLab\\bai10\\data-test\\Sample_for_R1_2";
-
+        String directory = TestConfig.PROJECT_PATH;
 
         Terminal terminal;
 
@@ -292,7 +249,7 @@ public abstract class AbstractTestcaseExecution implements ITestcaseExecution {
             p.waitFor();
         }
 
-        testCase.setExecutedTime(terminal.getTime());
+        //testCase.setExecutedTime(terminal.getTime());
 
         return  terminal.get();
     }

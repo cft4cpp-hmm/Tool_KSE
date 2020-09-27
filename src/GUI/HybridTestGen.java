@@ -1,5 +1,7 @@
 package GUI;
 
+import Common.TestConfig;
+import com.google.gson.JsonObject;
 import compiler.AvailableCompiler;
 import Common.DSEConstants;
 import HybridAutoTestGen.CFT4CPP;
@@ -22,10 +24,13 @@ import parser.projectparser.ICommonFunctionNode;
 import parser.projectparser.ProjectParser;
 import project_init.ProjectClone;
 import testcase_execution.TestcaseExecution;
+import testcase_manager.ITestCase;
 import testcase_manager.TestCase;
 import tree.object.IFunctionNode;
 import tree.object.INode;
 import tree.object.IProjectNode;
+import utils.DateTimeUtils;
+import utils.PathUtils;
 import utils.SpecialCharacter;
 import utils.Utils;
 import utils.search.FunctionNodeCondition;
@@ -37,8 +42,8 @@ import java.awt.*;
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.List;
-
 
 public class HybridTestGen extends Component
 {
@@ -115,11 +120,13 @@ public class HybridTestGen extends Component
             return;
         }
 
+        TestConfig.SetProjectPath(txtSourceFolder.getText());
+
         ProjectParser parser = new ProjectParser(new File(txtSourceFolder.getText()));
 
         projectNode = parser.getRootTree();
 
-        //List<INode> functionList = Search.getAllNodes(projectNode, new FunctionNodeCondition());
+        config.Paths.DATA_GEN_TEST = txtSourceFolder.getText();
 
         List<INode> sources = Search.searchNodes(projectNode, new SourcecodeFileNodeCondition());
 
@@ -148,18 +155,20 @@ public class HybridTestGen extends Component
                 executor.setMode(TestcaseExecution.IN_AUTOMATED_TESTDATA_GENERATION_MODE);
 
                 TestCase testCase= new TestCase();
+                testCase.setName(TestConfig.TESTCASE_NAME);
                 testCase.setFunctionNode(function);
 
                 executor.setTestCase(testCase);
                 executor.execute();
                 // save test case to file
-                testCase.setPathDefault();
+                //testCase.setPathDefault();
 
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
     }
+
     public static String getClonedFilePath(String origin) {
         String originName = new File(origin).getName();
 

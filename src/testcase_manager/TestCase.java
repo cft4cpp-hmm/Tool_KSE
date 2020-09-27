@@ -25,96 +25,6 @@ public class TestCase extends AbstractTestCase {
     public TestCase() {
     }
 
-    @Override
-    public void setPathDefault() {
-        String testcasePath = "F:\\VietData\\GitLab\\bai10\\data-test\\Sample_for_R1_2";
-        setPath(testcasePath);
-    }
-
-    @Override
-    public void setTestPathFileDefault()
-    {
-
-    }
-
-    @Override
-    public String getExecutionResultTrace()
-    {
-        return null;
-    }
-
-    @Override
-    public void setExecutableFileDefault()
-    {
-
-    }
-
-    @Override
-    public void setCommandConfigFileDefault()
-    {
-
-    }
-
-    @Override
-    public void setCommandDebugFileDefault()
-    {
-
-    }
-
-    @Override
-    public void setBreakpointPathDefault()
-    {
-
-    }
-
-    @Override
-    public void setDebugExecutableFileDefault()
-    {
-
-    }
-
-    @Override
-    public void setExecutionResultFileDefault()
-    {
-
-    }
-
-    @Override
-    public void setCurrentCoverageDefault()
-    {
-
-    }
-
-    @Override
-    public void setCurrentProgressDefault()
-    {
-
-    }
-
-    @Override
-    public void deleteOldData()
-    {
-
-    }
-
-    @Override
-    public void deleteOldDataExceptValue()
-    {
-
-    }
-
-    @Override
-    public void setSourcecodeFileDefault()
-    {
-
-    }
-
-    @Override
-    public List<String> getAdditionalIncludes()
-    {
-        return null;
-    }
-
 
     public RootDataNode getRootDataNode() {
         return rootDataNode;
@@ -126,10 +36,6 @@ public class TestCase extends AbstractTestCase {
 
     public void setName(String name) {
         super.setName(name);
-        setPathDefault();
-        setBreakpointPathDefault();
-        setCurrentCoverageDefault();
-        setCurrentProgressDefault();
     }
 
     @Override
@@ -137,7 +43,7 @@ public class TestCase extends AbstractTestCase {
         String defineName = getName().toUpperCase()
                 .replace(SpecialCharacter.DOT, SpecialCharacter.UNDERSCORE_CHAR);
 
-        return String.format("-DAKA_TC_%s", defineName);
+        return String.format("-UET_TC_%s", defineName);
     }
     public void setFunctionNode(IFunctionNode functionNode) {
         this.functionNode = functionNode;

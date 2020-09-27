@@ -17,7 +17,7 @@ public class TestCaseExecutionThread extends AbstractUETTask<ITestCase>
 
     public TestCaseExecutionThread(ITestCase testCase) {
         this.testCase = testCase;
-        this.testCase.setStatus(TestCase.STATUS_NA);
+        //this.testCase.setStatus(TestCase.STATUS_NA);
         setOnSucceeded(event -> {
             // Generate test case data report
 //            ExecutionResultReport report = new ExecutionResultReport(testCase, LocalDateTime.now());
@@ -30,13 +30,13 @@ public class TestCaseExecutionThread extends AbstractUETTask<ITestCase>
 
     @Override
     protected ITestCase call() {
-        testCase.setStatus(TestCase.STATUS_EXECUTING);
+        //testCase.setStatus(TestCase.STATUS_EXECUTING);
 
         try {
             if (testCase instanceof TestCase)
                 return callWithTestCase((TestCase) testCase);
         } catch (Exception e) {
-            testCase.setStatus(TestCase.STATUS_FAILED);
+            //testCase.setStatus(TestCase.STATUS_FAILED);
             e.printStackTrace();
         }
 

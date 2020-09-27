@@ -247,56 +247,13 @@ public class TestCaseManager {
 
         TestCase testCase = new TestCase();
         testCase.setName(name);
-        testCase.setStatus(status);
+        //testCase.setStatus(status);
 
-        extractRelateInfo(jsonObject, testCase);
+        //extractRelateInfo(jsonObject, testCase);
 
         // todo: nead to validate status
         testCase.setFunctionNode(functionNode);
         return testCase;
-    }
-
-    public static void extractRelateInfo(JsonObject jsonObject, ITestCase testCase) {
-        if (jsonObject.get("path") != null)
-            testCase.setPath(PathUtils.toAbsolute(jsonObject.get("path").getAsString()));
-
-        if (jsonObject.get("sourceCode") != null)
-            testCase.setSourceCodeFile(PathUtils.toAbsolute(jsonObject.get("sourceCode").getAsString()));
-
-        if (jsonObject.get("testPath") != null)
-            testCase.setTestPathFile(PathUtils.toAbsolute(jsonObject.get("testPath").getAsString()));
-
-        if (jsonObject.get("executable") != null)
-            testCase.setExecutableFile(PathUtils.toAbsolute(jsonObject.get("executable").getAsString()));
-
-        if (jsonObject.get("commandConfig") != null)
-            testCase.setCommandConfigFile(PathUtils.toAbsolute(jsonObject.get("commandConfig").getAsString()));
-
-        if (jsonObject.get("commandDebug") != null)
-            testCase.setCommandDebugFile(PathUtils.toAbsolute(jsonObject.get("commandDebug").getAsString()));
-
-        if (jsonObject.get("breakPoint") != null)
-            testCase.setBreakpointPath(PathUtils.toAbsolute(jsonObject.get("breakPoint").getAsString()));
-
-        if (jsonObject.get("debugExecutable") != null)
-            testCase.setDebugExecutableFile(PathUtils.toAbsolute(jsonObject.get("debugExecutable").getAsString()));
-
-        if (jsonObject.get("executionResult") != null)
-            testCase.setExecutionResultFile(PathUtils.toAbsolute(jsonObject.get("executionResult").getAsString()));
-
-        if (jsonObject.get("creationDate") != null) {
-            LocalDateTime dt = DateTimeUtils.parse(jsonObject.get("creationDate").getAsString());
-            testCase.setCreationDateTime(dt);
-        }
-    }
-
-
-    public static String getStatusTestCaseByName(String name) {
-        ITestCase testCase = getTestCaseByNameWithoutData(name);
-        if (testCase == null)
-            return ITestCase.STATUS_EMPTY;
-        else
-            return testCase.getStatus();
     }
 
     public static TestCase getBasicTestCaseByName(String name, String testCaseDirectory, boolean parseData) {
@@ -304,78 +261,11 @@ public class TestCaseManager {
         if (new File(fullPathOfTestcase).exists()) {
             String json = Utils.readFileContent(fullPathOfTestcase);
             JsonObject jsonObject = new JsonParser().parse(json).getAsJsonObject();
-//
-//            if (parseData)
-//                return parseJsonToTestCase(jsonObject);
-//            else
                 return parseJsonToTestCaseWithoutData(jsonObject);
         }
         return null;
     }
 
-    public static void compressRelateInfo(JsonObject json, ITestCase testCase) {
-        JsonObject jsonObject = new JsonObject();
-
-        // USER CODE
-//        TestCaseUserCode testCaseUserCode = testCase.getTestCaseUserCode();
-
-        JsonArray includePaths = new JsonArray();
-//        for (String string : testCaseUserCode.getIncludePaths())
-//            includePaths.add(string);
-//        jsonObject.add("includePaths", includePaths);
-//
-//        jsonObject.addProperty("setUpContent", testCaseUserCode.getSetUpContent());
-//        jsonObject.addProperty("tearDownContent", testCaseUserCode.getTearDownContent());
-//
-//        json.add("testCaseUserCode", jsonObject);
-//
-//        // TEST RESULT
-//        AssertionResult executionResult = testCase.getExecutionResult();
-//        if (executionResult != null)
-//            json.addProperty("result", String.format("%d/%d",
-//                    executionResult.getPass(),
-//                    executionResult.getTotal()
-//            ));
-
-        String path = testCase.getPath();
-        json.addProperty("path", PathUtils.toRelative(path));
-
-        String sourceCodeFile = testCase.getSourceCodeFile();
-        if (sourceCodeFile != null)
-            json.addProperty("sourceCode", PathUtils.toRelative(sourceCodeFile));
-
-        String testPathFile = testCase.getTestPathFile();
-        if (testPathFile != null)
-            json.addProperty("testPath", PathUtils.toRelative(testPathFile));
-
-        String executableFile = testCase.getExecutableFile();
-        if (executableFile != null)
-            json.addProperty("executable", PathUtils.toRelative(executableFile));
-
-        String commandConfigFile = testCase.getCommandConfigFile();
-        if (commandConfigFile != null)
-            json.addProperty("commandConfig", PathUtils.toRelative(commandConfigFile));
-
-        String commandDebugFile = testCase.getCommandDebugFile();
-        if (commandDebugFile != null)
-            json.addProperty("commandDebug", PathUtils.toRelative(commandDebugFile));
-
-        String breakpointPath = testCase.getBreakpointPath();
-        if (breakpointPath != null)
-            json.addProperty("breakPoint", PathUtils.toRelative(breakpointPath));
-
-        String debugExecutableFile = testCase.getDebugExecutableFile();
-        if (debugExecutableFile != null)
-            json.addProperty("debugExecutable", PathUtils.toRelative(debugExecutableFile));
-
-        String executionResultFile = testCase.getExecutionResultFile();
-        if (executionResultFile != null)
-            json.addProperty("executionResult", PathUtils.toRelative(executionResultFile));
-
-        LocalDateTime creationDateTime = testCase.getCreationDateTime();
-        if (creationDateTime != null)
-            json.addProperty("creationDate", PathUtils.toRelative(creationDateTime.toString()));
-    }
 
     public static boolean checkTestCaseExisted(String name) {
         optimizeNameToBasicTestCaseMap(name);
@@ -386,21 +276,7 @@ public class TestCaseManager {
         TestCase tc = nameToBasicTestCaseMap.get(name);
         if (tc == null)
             return;
-        String path = tc.getPath();
-        if (path == null || !new File(path).exists()) {
-            nameToBasicTestCaseMap.remove(name);
-        }
-    }
 
-    public static List<TestCase> getTestCasesByFunction(ICommonFunctionNode functionNode) {
-        List<TestCase> testCases = new ArrayList<>();
-        List<String> names = functionToTestCasesMap.get(functionNode);
-        for (String name : names) {
-            TestCase tc = getBasicTestCaseByName(name);
-            if (tc != null && new File(tc.getPath()).exists())
-                testCases.add(tc);
-        }
-        return testCases;
     }
 
     private static final int RANDOM_BOUND = 9999999;

@@ -45,27 +45,27 @@ public class TestcaseExecution extends AbstractTestcaseExecution
             if (new File(executableFile).exists()) {
 
                 String message = runExecutableFile(executableFile);
-                testCase.setExecuteLog(message);
+                //testCase.setExecuteLog(message);
 
 
                 if (getMode() == IN_DEBUG_MODE) {
                     // nothing to do
                 } else {
-                    if (new File(testCase.getTestPathFile()).exists()) {
-                        refactorResultTrace(testCase);
+                    if (new File(((TestCase)testCase).getSourceCodeFile()).exists()) {
+                        //refactorResultTrace(testCase);
                         boolean completed = analyzeTestpathFile(testCase);
 
                         if (!completed) {
-                            String msg = "Runtime error " + testCase.getExecutableFile();
-                            testCase.setStatus(ITestCase.STATUS_RUNTIME_ERR);
+                            String msg = "Runtime error " + ((TestCase)testCase).getSourceCodeFile();
+                            //testCase.setStatus(ITestCase.STATUS_RUNTIME_ERR);
                             return;
                         }
 
                     } else {
-                        String msg = "Does not found the test path file when executing " + testCase.getExecutableFile();
+                        String msg = "Does not found the test path file when executing " + ((TestCase)testCase).getSourceCodeFile();
 
                         if (getMode() == IN_EXECUTION_WITH_FRAMEWORK_TESTING_MODE) {
-                            testCase.setStatus(TestCase.STATUS_FAILED);
+                            //testCase.setStatus(TestCase.STATUS_FAILED);
                             return;
                         }
                     }
@@ -74,14 +74,14 @@ public class TestcaseExecution extends AbstractTestcaseExecution
                 String msg = "Can not generate executable file " + testCase.getFunctionNode().getAbsolutePath() + "\nError:" + compileAndLinkMessage;
 
                 if (getMode() == IN_EXECUTION_WITH_FRAMEWORK_TESTING_MODE) {
-                    testCase.setStatus(TestCase.STATUS_FAILED);
+                    //testCase.setStatus(TestCase.STATUS_FAILED);
                     return;
                 } else if (getMode() == IN_AUTOMATED_TESTDATA_GENERATION_MODE) {
-                    testCase.setStatus(TestCase.STATUS_FAILED);
+                    //testCase.setStatus(TestCase.STATUS_FAILED);
                     return;
                 }
 
-                testCase.setStatus(TestCase.STATUS_FAILED);
+                //testCase.setStatus(TestCase.STATUS_FAILED);
                 return;
             }
 
@@ -89,11 +89,11 @@ public class TestcaseExecution extends AbstractTestcaseExecution
             String msg = "Can not generate test driver of the test case for the function "
                     + testCase.getFunctionNode().getAbsolutePath();
             if (getMode() == IN_EXECUTION_WITH_FRAMEWORK_TESTING_MODE) {
-                testCase.setStatus(TestCase.STATUS_FAILED);
+                //testCase.setStatus(TestCase.STATUS_FAILED);
                 return;
             }
         }
-        testCase.setStatus(TestCase.STATUS_SUCCESS);
+        //testCase.setStatus(TestCase.STATUS_SUCCESS);
     }
 
     public boolean isC() {
@@ -121,7 +121,7 @@ public class TestcaseExecution extends AbstractTestcaseExecution
             testDriver.generate();
             String testdriverContent = testDriver.getTestDriver();
 
-            Utils.writeContentToFile(testdriverContent, testCase.getSourceCodeFile());
+            Utils.writeContentToFile(testdriverContent, ((TestCase)testCase).getSourceCodeFile());
 
         }
 
