@@ -136,36 +136,33 @@ public class HybridTestGen extends Component
             try {
                 String newContent = clone.generateFileContent(sourceCode);
                 Utils.writeContentToFile(newContent, getClonedFilePath(sourceCode.getAbsolutePath()));
-
-                IFunctionNode function;
-
-                String value = "";
-
-                if (cboSelectedFunction.getValue() == null)
-                {
-                    JOptionPane.showMessageDialog(null, "Please click on [Get function list] button, then choose a function to generate test data", DSEConstants.PRODUCT_NAME, JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-                value = cboSelectedFunction.getValue().toString();
-
-                function = (IFunctionNode) Search.searchNodes(projectNode, new FunctionNodeCondition(), value).get(0);
-
-                TestcaseExecution executor = new TestcaseExecution();
-                executor.setFunction(function);
-                executor.setMode(TestcaseExecution.IN_AUTOMATED_TESTDATA_GENERATION_MODE);
-
-                TestCase testCase= new TestCase();
-                testCase.setName(TestConfig.TESTCASE_NAME);
-                testCase.setFunctionNode(function);
-
-                executor.setTestCase(testCase);
-                executor.execute();
-                // save test case to file
-                //testCase.setPathDefault();
-
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+
+            IFunctionNode function;
+
+            String value = "";
+
+            if (cboSelectedFunction.getValue() == null)
+            {
+                JOptionPane.showMessageDialog(null, "Please click on [Get function list] button, then choose a function to generate test data", DSEConstants.PRODUCT_NAME, JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            value = cboSelectedFunction.getValue().toString();
+
+            function = (IFunctionNode) Search.searchNodes(projectNode, new FunctionNodeCondition(), value).get(0);
+
+            TestcaseExecution executor = new TestcaseExecution();
+            executor.setFunction(function);
+            executor.setMode(TestcaseExecution.IN_AUTOMATED_TESTDATA_GENERATION_MODE);
+
+            TestCase testCase= new TestCase();
+            testCase.setName(TestConfig.TESTCASE_NAME);
+            testCase.setFunctionNode(function);
+
+            executor.setTestCase(testCase);
+            executor.execute();
         }
     }
 

@@ -30,7 +30,7 @@ public abstract class TestDriverGeneration implements ITestDriverGeneration {
 
     @Override
     public void generate() throws Exception {
-        testPathFilePath = ((TestCase)testCase).getSourceCodeFile();
+        testPathFilePath = TestConfig.TESTPATH_FILE + "\\" + (testCase.getName()) + ".tp";
 
         testScripts = new ArrayList<>();
         clonedFilePaths = new ArrayList<>();

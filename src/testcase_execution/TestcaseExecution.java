@@ -1,5 +1,6 @@
 package testcase_execution;
 
+import Common.TestConfig;
 import config.CommandConfig;
 import javafx.scene.control.Alert;
 import parser.projectparser.ICommonFunctionNode;
@@ -71,7 +72,7 @@ public class TestcaseExecution extends AbstractTestcaseExecution
                     }
                 }
             } else {
-                String msg = "Can not generate executable file " + testCase.getFunctionNode().getAbsolutePath() + "\nError:" + compileAndLinkMessage;
+                String msg = "Cannot generate executable file " + testCase.getFunctionNode().getAbsolutePath() + "\nError:" + compileAndLinkMessage;
 
                 if (getMode() == IN_EXECUTION_WITH_FRAMEWORK_TESTING_MODE) {
                     //testCase.setStatus(TestCase.STATUS_FAILED);
@@ -121,7 +122,9 @@ public class TestcaseExecution extends AbstractTestcaseExecution
             testDriver.generate();
             String testdriverContent = testDriver.getTestDriver();
 
-            Utils.writeContentToFile(testdriverContent, ((TestCase)testCase).getSourceCodeFile());
+            String testDriverFile = TestConfig.TEST_DRIVER_PATH + "\\" + (testCase.getName()) + ".cpp";
+
+            Utils.writeContentToFile(testdriverContent, testDriverFile);
 
         }
 
