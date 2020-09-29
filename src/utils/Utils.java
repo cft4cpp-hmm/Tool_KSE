@@ -1569,7 +1569,7 @@ public class Utils implements IRegex {
 
 	public static String readResourceContent(String cTestDriverPath)
 	{
-		InputStream in = Utils.class.getResourceAsStream("");
+		InputStream in = Utils.class.getResourceAsStream(cTestDriverPath);
 
 		StringBuilder template = new StringBuilder();
 		String line;

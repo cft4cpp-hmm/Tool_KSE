@@ -130,43 +130,56 @@ public class HybridTestGen extends Component
 
         List<INode> sources = Search.searchNodes(projectNode, new SourcecodeFileNodeCondition());
 
-        for (INode sourceCode : sources) {
+        for (INode sourceCode : sources)
+        {
             ProjectClone clone = new ProjectClone();
+            String uetignoreFilePath = getClonedFilePath(sourceCode.getAbsolutePath());
 
-            try {
+            try
+            {
                 String newContent = clone.generateFileContent(sourceCode);
-                Utils.writeContentToFile(newContent, getClonedFilePath(sourceCode.getAbsolutePath()));
-            } catch (InterruptedException e) {
+                Utils.writeContentToFile(newContent, uetignoreFilePath);
+            }
+            catch (InterruptedException e)
+            {
                 e.printStackTrace();
             }
-
-            IFunctionNode function;
-
-            String value = "";
-
-            if (cboSelectedFunction.getValue() == null)
-            {
-                JOptionPane.showMessageDialog(null, "Please click on [Get function list] button, then choose a function to generate test data", DSEConstants.PRODUCT_NAME, JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-            value = cboSelectedFunction.getValue().toString();
-
-            function = (IFunctionNode) Search.searchNodes(projectNode, new FunctionNodeCondition(), value).get(0);
-
-            TestcaseExecution executor = new TestcaseExecution();
-            executor.setFunction(function);
-            executor.setMode(TestcaseExecution.IN_AUTOMATED_TESTDATA_GENERATION_MODE);
-
-            TestCase testCase= new TestCase();
-            testCase.setName(TestConfig.TESTCASE_NAME);
-            testCase.setFunctionNode(function);
-
-            executor.setTestCase(testCase);
-            executor.execute();
         }
+
+        IFunctionNode function;
+
+        String value = "";
+
+        if (cboSelectedFunction.getValue() == null)
+        {
+            JOptionPane.showMessageDialog(null, "Please click on [Get function list] button, then choose a function to generate test data", DSEConstants.PRODUCT_NAME, JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        value = cboSelectedFunction.getValue().toString();
+
+        function = (IFunctionNode) Search.searchNodes(projectNode, new FunctionNodeCondition(), value).get(0);
+
+        TestcaseExecution executor = new TestcaseExecution();
+        executor.setFunction(function);
+
+        INode realParent = function.getRealParent();
+        String sourceFile = realParent.getAbsolutePath();
+        String sourceFileName = realParent.getName();
+
+        executor.setMode(TestcaseExecution.IN_AUTOMATED_TESTDATA_GENERATION_MODE);
+
+        TestCase testCase = new TestCase();
+        testCase.setName(TestConfig.TESTCASE_NAME);
+        testCase.setFunctionNode(function);
+        testCase.setSourcecodeFile(sourceFile);
+        testCase.setRealParentSourceFileName(sourceFileName);
+
+        executor.setTestCase(testCase);
+        executor.execute();
     }
 
-    public static String getClonedFilePath(String origin) {
+    public static String getClonedFilePath(String origin)
+    {
         String originName = new File(origin).getName();
 
         int lastDotPos = originName.lastIndexOf(SpecialCharacter.DOT);

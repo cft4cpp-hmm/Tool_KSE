@@ -141,31 +141,17 @@ public abstract class TestDriverGeneration implements ITestDriverGeneration {
 
         return compiler;
     }
+    //include uetignore file
     protected String generateIncludePaths() {
         String includedPart = "";
+        String sourceFileName = ((TestCase) testCase).getRealParentSourceFileName();
+        sourceFileName = sourceFileName.substring(0, sourceFileName.lastIndexOf("."));
 
         if (testCase instanceof TestCase) {
-            String path = TestConfig.PROJECT_PATH;
+            String path = TestConfig.PROJECT_PATH + "\\" + sourceFileName + TestConfig.UET_IGNORE_FILE + TestConfig.CPP_EXTENTION;
             clonedFilePaths.add(path);
 
             includedPart += String.format("#include \"%s\"\n", path);
-
-            if (!isC()) {
-                IFunctionNode sut = ((TestCase) testCase).getFunctionNode();
-
-                if (sut instanceof AbstractFunctionNode) {
-                    INode realParent = ((AbstractFunctionNode) sut).getRealParent();
-                    if (realParent == null) realParent = sut.getParent();
-
-                    while (!(realParent instanceof SourcecodeFileNode)) {
-                        if (realParent instanceof NamespaceNode)
-                            break;
-
-                        realParent = realParent.getParent();
-                    }
-                }
-            }
-
         }
 
         return includedPart;

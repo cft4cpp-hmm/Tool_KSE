@@ -21,6 +21,8 @@ public abstract class AbstractTestCase implements ITestCase {
     // name of test case
     private String name;
 
+    private String realParentSourceFileName;
+
     // Not executed (by default)
     private String status = TestCase.STATUS_NA;
 
@@ -44,6 +46,7 @@ public abstract class AbstractTestCase implements ITestCase {
     private String executeLog;
 
     private double executedTime;
+
 
     public void setCreationDateTime(LocalDateTime creationDateTime) {
         this.creationDateTime = creationDateTime;
@@ -170,4 +173,13 @@ public abstract class AbstractTestCase implements ITestCase {
                 .replaceAll("[^a-zA-Z0-9_\\.]", "__");
     }
 
+    public String getRealParentSourceFileName()
+    {
+        return realParentSourceFileName;
+    }
+
+    public void setRealParentSourceFileName(String realParentSourceFileName)
+    {
+        this.realParentSourceFileName = realParentSourceFileName;
+    }
 }
