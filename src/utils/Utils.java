@@ -1447,7 +1447,8 @@ public class Utils implements IRegex {
 
 	public static void writeContentToFile(String content, String filePath) {
 		try {
-			Utils.createFolder(new File(filePath).getParent());
+			String folder = new File(filePath).getParent();
+			Utils.createFolder(folder);
 			PrintWriter out = new PrintWriter(filePath);
 			out.println(content);
 			out.close();

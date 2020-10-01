@@ -1,8 +1,11 @@
 package Common;
 
+import java.io.File;
+
 public class TestConfig
 {
     public static String PROJECT_PATH = "F:\\VietData\\GitLab\\bai10\\data-test\\Sample_for_R1_2";
+    public static String WORKSPACE = "Workspace";
     public static String EXE_PATH = PROJECT_PATH + "\\exe";
     public static String TEST_DRIVER_PATH = PROJECT_PATH + "\\TestDriver";
     public static String COMPILE_OUTPUT = PROJECT_PATH + "\\BuildOutput";
@@ -20,10 +23,13 @@ public class TestConfig
     public static void SetProjectPath(String projectPath)
     {
         PROJECT_PATH = projectPath;
-        EXE_PATH = PROJECT_PATH + "\\exe";
-        TEST_DRIVER_PATH = PROJECT_PATH + "\\TestDriver";
-        COMPILE_OUTPUT = PROJECT_PATH + "\\BuildOutput";
-        LINK_OUTPUT = PROJECT_PATH + "\\LinkOutput";
-        TESTPATH_FILE = PROJECT_PATH + "\\Testpath";
+        String parentPath = new File(PROJECT_PATH).getParent();
+
+        EXE_PATH = parentPath + "\\" + WORKSPACE + "\\exe";
+        TEST_DRIVER_PATH = parentPath + "\\" + WORKSPACE + "\\TestDriver";
+        COMPILE_OUTPUT = parentPath + "\\" + WORKSPACE + "\\BuildOutput";
+        LINK_OUTPUT = parentPath + "\\" + WORKSPACE + "\\LinkOutput";
+        TESTPATH_FILE = parentPath + "\\" + WORKSPACE + "\\Testpath";
+        INSTRUMENTED_CODE = parentPath + "\\" + WORKSPACE + "\\InstrumentedCode";
     }
 }

@@ -186,7 +186,7 @@ public class HybridTestGen extends Component
 
         String clonedName = originName.substring(0, lastDotPos) + ProjectClone.CLONED_FILE_EXTENSION + originName.substring(lastDotPos);
 
-        return origin.replace(originName, clonedName);
+        return TestConfig.INSTRUMENTED_CODE + "\\" + clonedName;
     }
 
     public Compiler getCompiler()
