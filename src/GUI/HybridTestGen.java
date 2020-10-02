@@ -106,19 +106,19 @@ public class HybridTestGen extends Component
     {
         System.out.println("btnRunTest_Clicked started");
 
-        String file = "F:\\VietData\\GitLab\\bai10\\data-test\\Sample_for_R1_2\\test.cpp";
-
-        Compiler c = getCompiler();
-
-        ICompileMessage message = c.compile(file);
-
-        if (message.getType() == ICompileMessage.MessageType.ERROR)
-        {
-            String error = "Source code file: "
-                    + "\nMESSSAGE:\n" + message.getMessage() + "\n----------------\n";
-            JOptionPane.showMessageDialog(null, "Error: " + error, DSEConstants.PRODUCT_NAME, JOptionPane.INFORMATION_MESSAGE);
-            return;
-        }
+//        String file = "F:\\VietData\\GitLab\\bai10\\data-test\\Sample_for_R1_2\\test.cpp";
+//
+//        Compiler c = getCompiler();
+//
+//        ICompileMessage message = c.compile(file);
+//
+//        if (message.getType() == ICompileMessage.MessageType.ERROR)
+//        {
+//            String error = "Source code file: "
+//                    + "\nMESSSAGE:\n" + message.getMessage() + "\n----------------\n";
+//            JOptionPane.showMessageDialog(null, "Error: " + error, DSEConstants.PRODUCT_NAME, JOptionPane.INFORMATION_MESSAGE);
+//            return;
+//        }
 
         TestConfig.SetProjectPath(txtSourceFolder.getText());
 

@@ -95,12 +95,19 @@ public abstract class AbstractTestcaseExecution implements ITestcaseExecution {
 
         String testCaseName = testCase.getName();
         String sourceFile = tc.getSourceCodeFile();
+        String sourceFileName = (new File(sourceFile)).getName();
+        String instrumentedFile = TestConfig.INSTRUMENTED_CODE + "\\" +
+                sourceFileName.substring(0, sourceFileName.lastIndexOf(".")) +
+                TestConfig.UET_IGNORE_FILE + TestConfig.CPP_EXTENTION;
+
         String outFile = TestConfig.COMPILE_OUTPUT + "\\" + testCaseName + ".out";
 
-        String compilationCommand = String.format(COMPILE_COMMAND_TEMPLATE, sourceFile, outFile);
 
         String exeFile = TestConfig.EXE_PATH + "\\" + testCaseName + ".exe";
-        String linkCommand = String.format(COMPILE_COMMAND_TEMPLATE, outFile, exeFile);
+
+        String compilationCommand = String.format(COMPILE_COMMAND_TEMPLATE, instrumentedFile, exeFile);
+
+        //String linkCommand = String.format(COMPILE_COMMAND_TEMPLATE, outFile, exeFile);
 
         String[] script = CompilerUtils.prepareForTerminal(getCompiler(), compilationCommand);
 
@@ -108,10 +115,10 @@ public abstract class AbstractTestcaseExecution implements ITestcaseExecution {
 
         output.append(response).append("\n");
 
-        String[] linkScript = CompilerUtils
-                .prepareForTerminal(getCompiler(), linkCommand);
-        String linkResponse = new Terminal(linkScript, TestConfig.LINK_OUTPUT).get();
-        output.append(linkResponse);
+//        String[] linkScript = CompilerUtils
+//                .prepareForTerminal(getCompiler(), linkCommand);
+//        String linkResponse = new Terminal(linkScript, TestConfig.LINK_OUTPUT).get();
+//        output.append(linkResponse);
 
         return output.toString().trim();
     }

@@ -569,7 +569,7 @@ public class Utils implements IRegex {
 	public static void createFolder(String path) {
 		File destDir = new File(path);
 		if (!destDir.exists())
-			destDir.mkdir();
+			destDir.mkdirs();
 	}
 
 	public static void deleteFileOrFolder(File path) {
