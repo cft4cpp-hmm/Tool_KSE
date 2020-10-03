@@ -148,7 +148,7 @@ public abstract class TestDriverGeneration implements ITestDriverGeneration {
         sourceFileName = sourceFileName.substring(0, sourceFileName.lastIndexOf("."));
 
         if (testCase instanceof TestCase) {
-            String path = TestConfig.PROJECT_PATH + "\\" + sourceFileName + TestConfig.UET_IGNORE_FILE + TestConfig.CPP_EXTENTION;
+            String path = TestConfig.INSTRUMENTED_CODE + "\\" + sourceFileName + TestConfig.UET_IGNORE_FILE + TestConfig.CPP_EXTENTION;
             clonedFilePaths.add(path);
 
             includedPart += String.format("#include \"%s\"\n", path);
@@ -159,7 +159,7 @@ public abstract class TestDriverGeneration implements ITestDriverGeneration {
 
     protected String generateBodyScript(TestCase testCase) throws Exception {
         // STEP 1: assign aka test case name
-        String testCaseNameAssign = String.format("%s=\"%s\";", "TestCase1", testCase.getName());
+        String testCaseNameAssign = String.format("%s=\"%s\";", TestConfig.UET_TEST_CASE_NAME, testCase.getName());
 
         // STEP 2: Generate initialization of variables
         String initialization = "";

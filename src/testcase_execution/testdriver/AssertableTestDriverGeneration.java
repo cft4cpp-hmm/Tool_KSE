@@ -1,7 +1,10 @@
 package testcase_execution.testdriver;
 
+import Common.TestConfig;
 import project_init.IGTestConstant;
 import testcase_manager.TestCase;
+import testdata.object.RootDataNode;
+import testdatagen.module.Search2;
 import tree.object.ConstructorNode;
 import utils.SpecialCharacter;
 
@@ -13,10 +16,10 @@ public abstract class AssertableTestDriverGeneration extends TestDriverGeneratio
 
     protected String generateBodyScript(TestCase testCase) throws Exception {
         // STEP 1: assign aka test case name
-        String testCaseNameAssign = String.format("%s=\"%s\";", "TestCase1", testCase.getName());
+        String testCaseNameAssign = String.format("%s=\"%s\";", TestConfig.UET_TEST_CASE_NAME, testCase.getName());
 
         // STEP 2: Generate initialization of variables
-        String initialization = "";// generateInitialization(testCase);
+        String initialization = "";//generateInitialization(testCase);
 
         // STEP 3: Generate full function call
         String functionCall = generateFunctionCall(testCase);
@@ -62,4 +65,6 @@ public abstract class AssertableTestDriverGeneration extends TestDriverGeneratio
 
         return singleScript;
     }
+
+
 }

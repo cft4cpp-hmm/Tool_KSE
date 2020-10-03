@@ -105,9 +105,9 @@ public abstract class AbstractTestcaseExecution implements ITestcaseExecution {
 
         String exeFile = TestConfig.EXE_PATH + "\\" + testCaseName + ".exe";
 
-        String compilationCommand = String.format(COMPILE_COMMAND_TEMPLATE, instrumentedFile, exeFile);
+        String compilationCommand = String.format(TestConfig.COMPILE_COMMAND_TEMPLATE, instrumentedFile, outFile);
 
-        //String linkCommand = String.format(COMPILE_COMMAND_TEMPLATE, outFile, exeFile);
+        String linkCommand = String.format(TestConfig.LINK_COMMAND_TEMPLATE, outFile, exeFile);
 
         String[] script = CompilerUtils.prepareForTerminal(getCompiler(), compilationCommand);
 
@@ -115,10 +115,10 @@ public abstract class AbstractTestcaseExecution implements ITestcaseExecution {
 
         output.append(response).append("\n");
 
-//        String[] linkScript = CompilerUtils
-//                .prepareForTerminal(getCompiler(), linkCommand);
-//        String linkResponse = new Terminal(linkScript, TestConfig.LINK_OUTPUT).get();
-//        output.append(linkResponse);
+        String[] linkScript = CompilerUtils
+                .prepareForTerminal(getCompiler(), linkCommand);
+        String linkResponse = new Terminal(linkScript, TestConfig.LINK_OUTPUT).get();
+        output.append(linkResponse);
 
         return output.toString().trim();
     }

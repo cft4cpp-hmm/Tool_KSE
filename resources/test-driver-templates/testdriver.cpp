@@ -43,9 +43,7 @@ int UET_mark(std::string append);
 //  BEGIN TEST RESULT SECTION         //
 ////////////////////////////////////////
 
-#define UET_EXEC_TRACE_FILE "{{INSERT_PATH_OF_EXE_RESULT_HERE}}"
-
-void UET_append_test_result(std::string content);
+//void UET_append_test_result(std::string content);
 
 void UET_assert_method
 (
@@ -116,27 +114,7 @@ int UET_assert_ptr
 //  END TEST RESULT SECTION           //
 ////////////////////////////////////////
 
-
-////////////////////////////////////////
-//  BEGIN SET UP - TEAR DOWN SECTION  //
-////////////////////////////////////////
-
-/*
- * This function call before main test driver
- */
-void UET_set_up();
-
-/*
- * This function call after main test driver
- */
-void UET_tear_down();
-
-////////////////////////////////////////
-//  END SET UP - TEAR DOWN SECTION    //
-////////////////////////////////////////
-
 // Some test cases need to include specific additional headers
-/*{{INSERT_ADDITIONAL_HEADER_HERE}}*/
 
 // Include uetignore file
 {{INSERT_CLONE_SOURCE_FILE_PATHS_HERE}}
@@ -156,16 +134,12 @@ void UET_tear_down();
  */
 int main()
 {
-    UET_set_up();
-
     /* Compound test case setup */
 
     /* add & run the tests */
-{{ADD_TESTS_STM}}
+    {{ADD_TESTS_STM}}
 
     /* Compound test case teardown */
-
-    UET_tear_down();
 
     return 0;
 }
@@ -193,13 +167,13 @@ void UET_append_test_path(std::string content)
     outfile.close();
 }
 
-void UET_append_test_result(std::string content)
-{
-    std::ofstream outfile;
-    outfile.open(UET_EXEC_TRACE_FILE, std::ios_base::app);
-    outfile << content;
-    outfile.close();
-}
+//void UET_append_test_result(std::string content)
+//{
+//    std::ofstream outfile;
+//    outfile.open(UET_EXEC_TRACE_FILE, std::ios_base::app);
+//    outfile << content;
+//    outfile.close();
+//}
 
 int UET_mark(std::string append)
 {
@@ -218,7 +192,7 @@ void UET_assert_method
 {
     std::string buf = "{\n";
 
-    buf.append("\"tag\": \"Aka function calls: ");
+    buf.append("\"tag\": \"UET function calls: ");
     char temp0[UET_BUFFER_SIZE];
     sprintf(temp0, "%d\",", UET_fCall);
     buf.append(temp0);
@@ -247,7 +221,7 @@ void UET_assert_method
     buf.append(temp2);
     buf.append("\n},\n");
 
-    UET_append_test_result(buf);
+//    UET_append_test_result(buf);
 }
 
 void UET_assert_double_method
@@ -259,7 +233,7 @@ void UET_assert_double_method
 {
     std::string buf = "{\n";
 
-    buf.append("\"tag\": \"Aka function calls: ");
+    buf.append("\"tag\": \"UET function calls: ");
     char temp0[UET_BUFFER_SIZE];
     sprintf(temp0, "%d\",", UET_fCall);
     buf.append(temp0);
@@ -290,7 +264,7 @@ void UET_assert_double_method
     buf.append(temp2);
     buf.append("\n},\n");
 
-    UET_append_test_result(buf);
+//    UET_append_test_result(buf);
 }
 
 void UET_assert_ptr_method
@@ -302,7 +276,7 @@ void UET_assert_ptr_method
 {
     std::string buf = "{\n";
 
-    buf.append("\"tag\": \"Aka function calls: ");
+    buf.append("\"tag\": \"UET function calls: ");
     char temp0[UET_BUFFER_SIZE];
     sprintf(temp0, "%d\",", UET_fCall);
     buf.append(temp0);
@@ -333,7 +307,7 @@ void UET_assert_ptr_method
     buf.append(temp2);
     buf.append("\n},\n");
 
-    UET_append_test_result(buf);
+//    UET_append_test_result(buf);
 }
 
 void UET_run_test(std::string name, UET_Test test, int iterator)
