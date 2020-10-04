@@ -2,6 +2,7 @@ package testcase_execution.testdriver;
 
 import Common.DSEConstants;
 import Common.TestConfig;
+import HybridAutoTestGen.TestData;
 import compiler.AvailableCompiler;
 import compiler.Compiler;
 import project_init.IGTestConstant;
@@ -15,6 +16,7 @@ import utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
+import javafx.util.Pair;
 
 public abstract class TestDriverGeneration implements ITestDriverGeneration {
 
@@ -162,7 +164,7 @@ public abstract class TestDriverGeneration implements ITestDriverGeneration {
         String testCaseNameAssign = String.format("%s=\"%s\";", TestConfig.UET_TEST_CASE_NAME, testCase.getName());
 
         // STEP 2: Generate initialization of variables
-        String initialization = "";
+        String initialization = generateInitialization(testCase);
 
         // STEP 3: Generate full function call
         String functionCall = generateFunctionCall(testCase);
@@ -206,6 +208,34 @@ public abstract class TestDriverGeneration implements ITestDriverGeneration {
         return singleScript;
     }
 
+    protected String generateInitialization(TestCase testCase) throws Exception {
+        String initialization = "";
+
+        TestData testData = testCase.getTestData();
+
+        if (testData != null) {
+            for (Pair<String, Object> child : testData.getTestData()) {
+                if (isC()
+                        && ((ValueDataNode) child).getCorrespondingVar() instanceof InstanceVariableNode) {
+                    continue;
+                }
+
+                initialization += child.getInputForGoogleTest();
+            }
+        }
+
+        if (sutRoot == null)
+            initialization = "/* error initialization */";
+        else
+            initialization += sutRoot.getInputForGoogleTest();
+
+        initialization = initialization.replace(DriverConstant.MARK + "(\"<<PRE-CALLING>>\");",
+                String.format(DriverConstant.MARK + "(\"<<PRE-CALLING>> Test %s\");", testCase.getName()));
+
+        initialization = initialization.replaceAll("\\bconst\\s+\\b", SpecialCharacter.EMPTY);
+
+        return initialization;
+    }
     protected String generateReturnMark(TestCase testCase) {
         IFunctionNode sut = testCase.getFunctionNode();
 
@@ -240,14 +270,13 @@ public abstract class TestDriverGeneration implements ITestDriverGeneration {
     protected String generateFunctionCall(TestCase testCase) {
         IFunctionNode functionNode = testCase.getFunctionNode();
 
-        String functionCall = "";
+        String functionCall;
 
         if (functionNode instanceof ConstructorNode) {
             return SpecialCharacter.EMPTY;
         }
 
-        String returnType = functionNode.getReturnType().trim();
-
+        functionCall = getFullFunctionCall(functionNode);
 
         functionCall = functionCall.replaceAll("\\bmain\\b", "UET_MAIN");
 
@@ -256,6 +285,36 @@ public abstract class TestDriverGeneration implements ITestDriverGeneration {
         return functionCall;
     }
 
+    public static String getFullFunctionCall(IFunctionNode functionNode) {
+        INode realParent = functionNode.getParent();
+
+        if (functionNode instanceof IFunctionNode) {
+            INode tmpRealParent = ((IFunctionNode) functionNode).getRealParent();
+            if (tmpRealParent != null)
+                realParent = tmpRealParent;
+        }
+
+        StringBuilder functionCall = new StringBuilder();
+
+        if (realParent instanceof SourcecodeFileNode) {
+            functionCall.append(functionNode.getSimpleName())
+                    .append(generateCallOfArguments(functionNode));
+
+        }
+
+        return functionCall.toString();
+    }
+    public static StringBuilder generateCallOfArguments(IFunctionNode functionNode){
+        StringBuilder functionCall = new StringBuilder();
+        functionCall.append("(");
+        for (IVariableNode v : functionNode.getArguments())
+        {
+            functionCall.append(v.getName()).append(",");
+        }
+        functionCall.append(")");
+        functionCall = new StringBuilder(functionCall.toString().replace(",)", ")") + SpecialCharacter.END_OF_STATEMENT);
+        return functionCall;
+    }
     @Override
     public String toString() {
         return "TestDriverGeneration: " + testDriver;

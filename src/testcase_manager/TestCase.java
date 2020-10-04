@@ -1,5 +1,6 @@
 package testcase_manager;
 
+import HybridAutoTestGen.TestData;
 import parser.projectparser.ICommonFunctionNode;
 import testdata.object.RootDataNode;
 import tree.object.IFunctionNode;
@@ -16,6 +17,8 @@ import java.util.stream.Collectors;
 public class TestCase extends AbstractTestCase {
     private RootDataNode rootDataNode;
     private IFunctionNode functionNode;
+
+    private TestData testData;
 
     public TestCase(IFunctionNode functionNode, String name) {
         setName(name);
@@ -52,5 +55,15 @@ public class TestCase extends AbstractTestCase {
 
     public IFunctionNode getFunctionNode() {
         return this.functionNode;
+    }
+
+    public TestData getTestData()
+    {
+        return testData;
+    }
+
+    public void setTestData(TestData testData)
+    {
+        this.testData = testData;
     }
 }
