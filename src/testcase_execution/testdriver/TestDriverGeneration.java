@@ -213,21 +213,21 @@ public abstract class TestDriverGeneration implements ITestDriverGeneration {
 
         TestData testData = testCase.getTestData();
 
+        IFunctionNode functionNode = testCase.getFunctionNode();
+
         if (testData != null) {
             for (Pair<String, Object> child : testData.getTestData()) {
-                if (isC()
-                        && ((ValueDataNode) child).getCorrespondingVar() instanceof InstanceVariableNode) {
-                    continue;
-                }
 
-                initialization += child.getInputForGoogleTest();
+                for (IVariableNode v : functionNode.getArguments())
+                {
+                    if (v.getName().equals(child.getKey()))
+                    {
+                        initialization += v.getRealType() + " " + v.getName() + " = " + child.getValue() + ";";
+                        break;
+                    }
+                }
             }
         }
-
-        if (sutRoot == null)
-            initialization = "/* error initialization */";
-        else
-            initialization += sutRoot.getInputForGoogleTest();
 
         initialization = initialization.replace(DriverConstant.MARK + "(\"<<PRE-CALLING>>\");",
                 String.format(DriverConstant.MARK + "(\"<<PRE-CALLING>> Test %s\");", testCase.getName()));

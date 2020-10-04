@@ -64,8 +64,8 @@ public class ProjectClone {
 
                 int index = redefines.indexOf(child);
 
-                if (child instanceof ICommonFunctionNode) {
-                    ICommonFunctionNode function = (ICommonFunctionNode) child;
+                if (child instanceof IFunctionNode) {
+                    IFunctionNode function = (IFunctionNode) child;
                     refactorFunction(function);
                 }
 
@@ -92,7 +92,7 @@ public class ProjectClone {
         return wrapInIncludeGuard(defineSourceCodeName, oldContent);
     }
 
-    private void refactorFunction(ICommonFunctionNode function) {
+    private void refactorFunction(IFunctionNode function) {
         if (function instanceof AbstractFunctionNode) {
             IASTNode functionAST = null;
             if (function.getName().contains("ArrayCmp"))
@@ -105,7 +105,7 @@ public class ProjectClone {
 
             // generate instrumented function content
             String newFunctionCode = "";
-            if (function instanceof DefinitionFunctionNode)
+            if (function instanceof IFunctionNode)
                 newFunctionCode = generateInstrumentedFunction((IFunctionNode) function);
 
             // change main function to AKA_MAIN
@@ -123,7 +123,7 @@ public class ProjectClone {
      * @param main       function node
      * @return new source code file
      */
-    private String refactorMain(ICommonFunctionNode main) {
+    private String refactorMain(IFunctionNode main) {
         String oldMain = "";
 
         if (main instanceof DefinitionFunctionNode) {

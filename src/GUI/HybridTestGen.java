@@ -1,5 +1,6 @@
 package GUI;
 
+import HybridAutoTestGen.TestData;
 import Common.TestConfig;
 import com.google.gson.JsonObject;
 import compiler.AvailableCompiler;
@@ -20,6 +21,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.util.Pair;
 import parser.projectparser.ICommonFunctionNode;
 import parser.projectparser.ProjectParser;
 import project_init.ProjectClone;
@@ -120,6 +122,7 @@ public class HybridTestGen extends Component
 //            return;
 //        }
 
+
         TestConfig.SetProjectPath(txtSourceFolder.getText());
 
         ProjectParser parser = new ProjectParser(new File(txtSourceFolder.getText()));
@@ -168,7 +171,12 @@ public class HybridTestGen extends Component
 
         executor.setMode(TestcaseExecution.IN_AUTOMATED_TESTDATA_GENERATION_MODE);
 
+
+        TestData testData = new TestData();
+        testData.add(new Pair<>("averageGrade", 333));
+
         TestCase testCase = new TestCase();
+        testCase.setTestData(testData);
         testCase.setName(TestConfig.TESTCASE_NAME);
         testCase.setFunctionNode(function);
         testCase.setSourcecodeFile(sourceFile);

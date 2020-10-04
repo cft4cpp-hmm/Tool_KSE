@@ -24,6 +24,8 @@ typedef void (*UET_Test)();
 
 void UET_run_test(std::string name, UET_Test test, int iterator);
 
+int main(int argc, char *argv[]);
+
 ////////////////////////////////////////
 //  BEGIN TEST PATH SECTION           //
 ////////////////////////////////////////
@@ -132,7 +134,7 @@ int UET_assert_ptr
 /*
  * The main() function for setting up and running the tests.
  */
-int main()
+int main(int argc, char *argv[])
 {
     /* Compound test case setup */
 
