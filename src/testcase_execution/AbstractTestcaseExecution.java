@@ -102,10 +102,12 @@ public abstract class AbstractTestcaseExecution implements ITestcaseExecution {
 
         String outFile = TestConfig.COMPILE_OUTPUT + "\\" + testCaseName + ".out";
 
+        String testDriverFile = TestConfig.TEST_DRIVER_PATH + "\\" +
+                testCaseName + TestConfig.CPP_EXTENTION;
 
         String exeFile = TestConfig.EXE_PATH + "\\" + testCaseName + ".exe";
 
-        String compilationCommand = String.format(TestConfig.COMPILE_COMMAND_TEMPLATE, instrumentedFile, outFile);
+        String compilationCommand = String.format(TestConfig.COMPILE_COMMAND_TEMPLATE, testDriverFile, outFile);
 
         String linkCommand = String.format(TestConfig.LINK_COMMAND_TEMPLATE, outFile, exeFile);
 

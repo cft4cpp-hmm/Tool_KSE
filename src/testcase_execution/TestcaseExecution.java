@@ -40,7 +40,7 @@ public class TestcaseExecution extends AbstractTestcaseExecution
             }
 
             String compileAndLinkMessage = compileAndLink();
-            String executableFile = "F:\\VietData\\GitLab\\bai10\\data-test\\Workspace\\exe\\TestCase1.exe";
+            String executableFile = TestConfig.EXE_PATH +  "\\" + testCase.getName() + TestConfig.EXE_EXTENTION;
 
             // Run the executable file
             if (new File(executableFile).exists()) {
