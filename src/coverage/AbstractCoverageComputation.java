@@ -60,9 +60,11 @@ public abstract class AbstractCoverageComputation implements ICoverageComputatio
                 // Find the function node
                 TestpathsOfAFunction testpathsOfAFunction = affectedFunctions.get(functionPath);
 
+                String functionName = functionPath.substring(functionPath.lastIndexOf("\\") + 1);
+
                 List<INode> functionNodes = Search.searchNodes(consideredSourcecodeNode, new AbstractFunctionNodeCondition(), PathUtils.toAbsolute(functionPath));
                 if (functionNodes.size() == 0)
-                    functionNodes = Search.searchNodes(consideredSourcecodeNode, new FunctionNodeCondition(), PathUtils.toAbsolute(functionPath));
+                    functionNodes = Search.searchNodes(consideredSourcecodeNode, new FunctionNodeCondition(), functionName);
 
                 if (functionNodes.size() != 1)
                     return ERROR;

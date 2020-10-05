@@ -6,6 +6,7 @@ import compiler.AvailableCompiler;
 import compiler.Compiler;
 import compiler.Terminal;
 import coverage.EnviroCoverageTypeNode;
+import coverage.FunctionCoverageComputation;
 import coverage.SourcecodeCoverageComputation;
 import coverage.TestPathUtils;
 import instrument.FunctionInstrumentationForStatementvsBranch_Markerv2;
@@ -214,11 +215,14 @@ public abstract class AbstractTestcaseExecution implements ITestcaseExecution {
 
         String tpContent = Utils.readFileContent(testPathFile);//testCase.getTestPathFile()
 
-        SourcecodeCoverageComputation computator = new SourcecodeCoverageComputation();
+        //SourcecodeCoverageComputation computator = new SourcecodeCoverageComputation();
+        FunctionCoverageComputation computator = new FunctionCoverageComputation();
+
         try {
             computator.setTestpathContent(tpContent);
             computator.setConsideredSourcecodeNode(srcNode);
             computator.setCoverage(EnviroCoverageTypeNode.BRANCH);
+            computator.setFunctionNode(testCase.getFunctionNode());
             computator.compute();
         }catch (Exception e){
             e.printStackTrace();

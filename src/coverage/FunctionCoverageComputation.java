@@ -20,7 +20,7 @@ import java.util.Map;
  */
 public class FunctionCoverageComputation extends AbstractCoverageComputation {
 
-    protected ICommonFunctionNode functionNode;
+    protected IFunctionNode functionNode;
 
     public static void main(String[] args) {
     }
@@ -93,11 +93,11 @@ public class FunctionCoverageComputation extends AbstractCoverageComputation {
     }
 
 
-    public void setFunctionNode(ICommonFunctionNode functionNode) {
+    public void setFunctionNode(IFunctionNode functionNode) {
         this.functionNode = functionNode;
     }
 
-    public ICommonFunctionNode getFunctionNode() {
+    public IFunctionNode getFunctionNode() {
         return functionNode;
     }
 }
