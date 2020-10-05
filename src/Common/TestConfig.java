@@ -22,6 +22,7 @@ public class TestConfig
     public static String C_EXTENTION = ".c";
     public static String CPP_EXTENTION = ".cpp";
     public static String EXE_EXTENTION = ".exe";
+    public static String TESTPATH_EXTENTION = ".tp";
     public static String UET_TEST_CASE_NAME = "UET_test_case_name";
 
     public static void SetProjectPath(String projectPath)

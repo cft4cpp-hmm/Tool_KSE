@@ -131,9 +131,11 @@ public abstract class AbstractTestcaseExecution implements ITestcaseExecution {
         int MAX_READ_FILE_NUMBER = 10;
         int countReadFile = 0;
 
+        String testPathFile = TestConfig.TESTPATH_FILE + "\\" + testCase.getName() + TestConfig.TESTPATH_EXTENTION;
+
         do {
             encodedTestpath.setEncodedTestpath(normalizeTestpathFromFile(
-                    Utils.readFileContent("")));//testCase.getTestPathFile()
+                    Utils.readFileContent(testPathFile)));//testCase.getTestPathFile()
 
             if (encodedTestpath.getEncodedTestpath().length() == 0) {
                 //initialization = "";
@@ -207,7 +209,10 @@ public abstract class AbstractTestcaseExecution implements ITestcaseExecution {
 
         // coverage computation
         ISourcecodeFileNode srcNode = Utils.getSourcecodeFile(testCase.getFunctionNode());
-        String tpContent = Utils.readFileContent("");//testCase.getTestPathFile()
+
+        String testPathFile = TestConfig.TESTPATH_FILE + "\\" + testCase.getName() + TestConfig.TESTPATH_EXTENTION;
+
+        String tpContent = Utils.readFileContent(testPathFile);//testCase.getTestPathFile()
 
         SourcecodeCoverageComputation computator = new SourcecodeCoverageComputation();
         try {

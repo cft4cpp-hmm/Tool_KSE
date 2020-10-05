@@ -3,6 +3,7 @@ package coverage;
 import coverage.AbstractCoverageComputation;
 import parser.projectparser.ProjectParser;
 import tree.object.INode;
+import tree.object.SourcecodeFileNode;
 
 import java.io.File;
 import java.util.List;
@@ -68,35 +69,35 @@ public class SourcecodeCoverageComputation extends AbstractCoverageComputation
     }
 
     public void compute() {
-//        if (consideredSourcecodeNode == null || !(new File(consideredSourcecodeNode.getAbsolutePath())).exists()
-//                || !(consideredSourcecodeNode instanceof SourcecodeFileNode)
-//                || testpathContent == null || testpathContent.length() == 0) {
-//            this.numberOfInstructions = getNumberOfInstructions(consideredSourcecodeNode, coverage);
-//            return;
+        if (consideredSourcecodeNode == null || !(new File(consideredSourcecodeNode.getAbsolutePath())).exists()
+                || !(consideredSourcecodeNode instanceof SourcecodeFileNode)
+                || testpathContent == null || testpathContent.length() == 0) {
+            this.numberOfInstructions = getNumberOfInstructions(consideredSourcecodeNode, coverage);
+            return;
+        }
+        if (coverage.equals(EnviroCoverageTypeNode.STATEMENT_AND_BRANCH) ||
+                coverage.equals(EnviroCoverageTypeNode.STATEMENT_AND_MCDC))
+            return;
+
+        Map<String, TestpathsOfAFunction> affectedFunctions = categoryTestpathByFunctionPath(testpathContent.split("\n"), coverage);
+        affectedFunctions = removeRedundantTestpath(affectedFunctions);
+
+        int nInstructions = getNumberOfInstructions(consideredSourcecodeNode, coverage);
+
+        int nVisitedInstructions;
+//        if (visitedCache.containsKey(testpathContent)) {
+//            logger.debug("[" + Thread.currentThread().getName() + "] " + "Coverage Computer Cache Hit");
+//            nVisitedInstructions = visitedCache.get(testpathContent);
+//            logger.debug("[" + Thread.currentThread().getName() + "] " + "Visited instructions: " + nVisitedInstructions);
+//        } else {
+//            logger.debug("[" + Thread.currentThread().getName() + "] " + "Coverage Computer Cache Miss");
+//            logger.debug("[" + Thread.currentThread().getName() + "] " + "Calculate visited instructions");
+        nVisitedInstructions = getNumberOfVisitedInstructions(affectedFunctions, coverage, consideredSourcecodeNode, allCFG);
+//            visitedCache.put(testpathContent, nVisitedInstructions);
 //        }
-//        if (coverage.equals(EnviroCoverageTypeNode.STATEMENT_AND_BRANCH) ||
-//                coverage.equals(EnviroCoverageTypeNode.STATEMENT_AND_MCDC))
-//            return;
-//
-//        Map<String, TestpathsOfAFunction> affectedFunctions = categoryTestpathByFunctionPath(testpathContent.split("\n"), coverage);
-//        affectedFunctions = removeRedundantTestpath(affectedFunctions);
-//
-//        int nInstructions = getNumberOfInstructions(consideredSourcecodeNode, coverage);
-//
-//        int nVisitedInstructions;
-////        if (visitedCache.containsKey(testpathContent)) {
-////            logger.debug("[" + Thread.currentThread().getName() + "] " + "Coverage Computer Cache Hit");
-////            nVisitedInstructions = visitedCache.get(testpathContent);
-////            logger.debug("[" + Thread.currentThread().getName() + "] " + "Visited instructions: " + nVisitedInstructions);
-////        } else {
-////            logger.debug("[" + Thread.currentThread().getName() + "] " + "Coverage Computer Cache Miss");
-////            logger.debug("[" + Thread.currentThread().getName() + "] " + "Calculate visited instructions");
-//        nVisitedInstructions = getNumberOfVisitedInstructions(affectedFunctions, coverage, consideredSourcecodeNode, allCFG);
-////            visitedCache.put(testpathContent, nVisitedInstructions);
-////        }
-//
-//        this.numberOfInstructions = nInstructions;
-//        this.numberOfVisitedInstructions = nVisitedInstructions;
+
+        this.numberOfInstructions = nInstructions;
+        this.numberOfVisitedInstructions = nVisitedInstructions;
     }
 
 //    protected Map<String, TestpathsOfAFunction>  removeRedundantTestpath(Map<String, TestpathsOfAFunction> affectedFunctions){
@@ -106,7 +107,7 @@ public class SourcecodeCoverageComputation extends AbstractCoverageComputation
     @Override
     protected Map<String, TestpathsOfAFunction> removeRedundantTestpath(Map<String, TestpathsOfAFunction> affectedFunctions)
     {
-        return null;
+        return affectedFunctions;
     }
 
     @Override

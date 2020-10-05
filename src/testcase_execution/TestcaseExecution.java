@@ -33,6 +33,10 @@ public class TestcaseExecution extends AbstractTestcaseExecution
 
         TestCase testCase = (TestCase) getTestCase();
 
+        //delete old execution result
+        String testPathFile = TestConfig.TESTPATH_FILE + "\\" + testCase.getName() + TestConfig.TESTPATH_EXTENTION;
+        utils.Utils.deleteFileOrFolder(new File(testPathFile));
+
         testDriverGen = generateTestDriver(testCase);
 
         if (testDriverGen != null) {
