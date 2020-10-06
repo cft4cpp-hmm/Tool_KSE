@@ -1,5 +1,6 @@
 package coverage;
 
+import cfg.CFGGenerationforBranchvsStatementCoverage;
 import cfg.CFGGenerationforSubConditionCoverage;
 import cfg.ICFG;
 import parser.projectparser.ICommonFunctionNode;
@@ -60,7 +61,8 @@ public class FunctionCoverageComputation extends AbstractCoverageComputation {
         if (functionNode instanceof AbstractFunctionNode) {
             try {
                 IFunctionNode clone = (IFunctionNode) functionNode.clone();
-                CFGGenerationforSubConditionCoverage cfgGen = new CFGGenerationforSubConditionCoverage(clone);
+                //CFGGenerationforSubConditionCoverage cfgGen = new CFGGenerationforSubConditionCoverage(clone);
+                CFGGenerationforBranchvsStatementCoverage cfgGen = new CFGGenerationforBranchvsStatementCoverage(clone);
 
                 ICFG cfg = cfgGen.generateCFG();
                 if (cfg != null) {

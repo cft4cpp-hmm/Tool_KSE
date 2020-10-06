@@ -173,7 +173,7 @@ public class HybridTestGen extends Component
 
 
         TestData testData = new TestData();
-        testData.add(new Pair<>("averageGrade", 333));
+        testData.add(new Pair<>("averageGrade", 95));
 
         TestCase testCase = new TestCase();
         testCase.setTestData(testData);
