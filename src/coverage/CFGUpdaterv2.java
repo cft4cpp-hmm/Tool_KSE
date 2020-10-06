@@ -124,6 +124,7 @@ public class CFGUpdaterv2 implements ICFGUpdater {
         for (ICfgNode node : nodes)
             if (node.getAstLocation() != null) {
                 String offsetInCFG = node.getAstLocation().getNodeOffset() - cfg.getFunctionNode().getAST().getFileLocation().getNodeOffset() + "";
+                //String offsetInCFG = node.getParent() - cfg.getFunctionNode().getAST().getFileLocation().getNodeOffset() + "";
                 if (visitedOffsets.contains(offsetInCFG)) {
                     node.setVisit(true);
                 }

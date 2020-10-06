@@ -111,11 +111,16 @@ public class CFGGenerationforBranchvsStatementCoverage implements ICFGGeneration
 
 	@Override
 	public ICFG generateCFG() throws Exception {
-		IFunctionNode normalizedFunction = (IFunctionNode) functionNode.clone();
-		normalizedFunction.setAST(functionNode.normalizedAST().getNormalizedAST());
+//		IFunctionNode normalizedFunction = (IFunctionNode) functionNode.clone();
+//		normalizedFunction.setAST(functionNode.normalizedAST().getNormalizedAST());
+//
+//		ICFG cfg = parse(normalizedFunction);
+//		cfg = setParentAgain(cfg);
+//		return cfg;
 
-		ICFG cfg = parse(normalizedFunction);
-		cfg = setParentAgain(cfg);
+		ICFG cfg = parse(functionNode);
+		setParentAgain(cfg);
+		cfg.setFunctionNode(functionNode);
 		return cfg;
 	}
 
