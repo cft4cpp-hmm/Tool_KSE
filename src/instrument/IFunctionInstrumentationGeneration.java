@@ -18,7 +18,7 @@ public interface IFunctionInstrumentationGeneration extends IGeneration {
 	String LINE_NUMBER_IN_FUNCTION = "lif";//"line-in-function";
 	String START_OFFSET_IN_SOURCE_CODE_FILE = "sois";//"start-offset-in-sourcecode";
 	String START_OFFSET_IN_FUNCTION = "soif";//"start-offset-in-function";
-	String END_OFFSET_IN_SOURCE_CODE_FILE = "sois";//"end-offset-in-sourcecode";
+	String END_OFFSET_IN_SOURCE_CODE_FILE = "eois";//"end-offset-in-sourcecode";
 	String END_OFFSET_IN_FUNCTION = "eoif";//"end-offset-in-function";
 	String STATEMENT = "statement";
 	String DELIMITER_BETWEEN_PROPERTIES = "###";

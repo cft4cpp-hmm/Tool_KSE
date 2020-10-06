@@ -416,7 +416,7 @@ public class FunctionInstrumentationForStatementvsBranch_Marker implements IFunc
 	public static final String OFFSET_IN_FUNCTION = "offset";
 	public static final String STATEMENT = "statement";
 	public static final String DELIMITER_BETWEEN_PROPERTIES = "###";
-	public static final String DELIMITER_BETWEEN_PROPERTY_AND_VALUE = "=";
+	public static final String DELIMITER_BETWEEN_PROPERTY_AND_VALUE = "===";
 	public static final String OPENNING_FUNCTION_SCOPE = "openning-function"; // {true, false}
 	public static final String IS_RECURSIVE = "is-recursive"; // {true, false}
 	// Beside the executed statements, we also add several additional codes to print

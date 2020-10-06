@@ -3,7 +3,7 @@ package testdata.object;
 import java.util.ArrayList;
 
 import cfg.testpath.ITestpathInCFG;
-import instrument.FunctionInstrumentationForStatementvsBranch_Marker;
+import instrument.FunctionInstrumentationForStatementvsBranch_Markerv2;
 
 /**
  * Represent a test path generated from the instrumented function by using
@@ -28,9 +28,9 @@ public class TestpathString_Marker implements ITestpathGeneratedFromExecutingFun
 		TestpathString_Marker normalize = new TestpathString_Marker();
 		normalize.setEncodedTestpath(testpath);
 		System.out.println(
-				normalize.getStandardTestpathByProperty(FunctionInstrumentationForStatementvsBranch_Marker.STATEMENT));
+				normalize.getStandardTestpathByProperty(FunctionInstrumentationForStatementvsBranch_Markerv2.STATEMENT));
 		System.out.println(normalize.getStandardTestpathByProperty(
-				FunctionInstrumentationForStatementvsBranch_Marker.LINE_NUMBER_IN_FUNCTION));
+				FunctionInstrumentationForStatementvsBranch_Markerv2.LINE_NUMBER_IN_FUNCTION));
 		System.out.println(normalize.getStandardTestpathByAllProperties());
 	}
 
@@ -88,17 +88,17 @@ public class TestpathString_Marker implements ITestpathGeneratedFromExecutingFun
 	 */
 	protected static StatementInTestpath_Mark lineExtractor(String line) {
 		StatementInTestpath_Mark properties = new StatementInTestpath_Mark();
-		String[] tokens = line.split(FunctionInstrumentationForStatementvsBranch_Marker.DELIMITER_BETWEEN_PROPERTIES);
+		String[] tokens = line.split(FunctionInstrumentationForStatementvsBranch_Markerv2.DELIMITER_BETWEEN_PROPERTIES);
 
 		for (String token : tokens)
 			if (token.indexOf(
-					FunctionInstrumentationForStatementvsBranch_Marker.DELIMITER_BETWEEN_PROPERTY_AND_VALUE) != -1) {
+					FunctionInstrumentationForStatementvsBranch_Markerv2.DELIMITER_BETWEEN_PROPERTY_AND_VALUE) != -1) {
 				String nameProperty = token.substring(0, token.indexOf(
-						FunctionInstrumentationForStatementvsBranch_Marker.DELIMITER_BETWEEN_PROPERTY_AND_VALUE));
+						FunctionInstrumentationForStatementvsBranch_Markerv2.DELIMITER_BETWEEN_PROPERTY_AND_VALUE));
 				String valueProperty = token.substring(token.indexOf(
-						FunctionInstrumentationForStatementvsBranch_Marker.DELIMITER_BETWEEN_PROPERTY_AND_VALUE)
+						FunctionInstrumentationForStatementvsBranch_Markerv2.DELIMITER_BETWEEN_PROPERTY_AND_VALUE)
 						+ new String(
-								FunctionInstrumentationForStatementvsBranch_Marker.DELIMITER_BETWEEN_PROPERTY_AND_VALUE)
+						FunctionInstrumentationForStatementvsBranch_Markerv2.DELIMITER_BETWEEN_PROPERTY_AND_VALUE)
 										.length());
 				properties.getProperties().add(new Property_Marker(nameProperty, valueProperty));
 			}
@@ -108,7 +108,7 @@ public class TestpathString_Marker implements ITestpathGeneratedFromExecutingFun
 
 	@Override
 	public String toString() {
-		return getStandardTestpathByProperty(FunctionInstrumentationForStatementvsBranch_Marker.STATEMENT).toString();
+		return getStandardTestpathByProperty(FunctionInstrumentationForStatementvsBranch_Markerv2.STATEMENT).toString();
 	}
 
 	public void appendAStatement(StatementInTestpath_Mark propertiesInNode) {
@@ -117,9 +117,9 @@ public class TestpathString_Marker implements ITestpathGeneratedFromExecutingFun
 
 		for (Property_Marker property : propertiesInNode.getProperties())
 			encodedTestpath += property.getKey()
-					+ FunctionInstrumentationForStatementvsBranch_Marker.DELIMITER_BETWEEN_PROPERTY_AND_VALUE
+					+ FunctionInstrumentationForStatementvsBranch_Markerv2.DELIMITER_BETWEEN_PROPERTY_AND_VALUE
 					+ property.getValue()
-					+ FunctionInstrumentationForStatementvsBranch_Marker.DELIMITER_BETWEEN_PROPERTIES;
+					+ FunctionInstrumentationForStatementvsBranch_Markerv2.DELIMITER_BETWEEN_PROPERTIES;
 
 		encodedTestpath = encodedTestpath.substring(0,
 				encodedTestpath.length() - ITestpathInCFG.SEPARATE_BETWEEN_NODES.length() - 1);
