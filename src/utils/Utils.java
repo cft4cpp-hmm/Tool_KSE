@@ -12,6 +12,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import cfg.ICFG;
+import compiler.AvailableCompiler;
+import compiler.Compiler;
 import org.apache.commons.io.FileDeleteStrategy;
 import org.apache.log4j.Logger;
 import org.eclipse.cdt.core.dom.ast.ASTVisitor;
@@ -1657,5 +1659,50 @@ public class Utils implements IRegex {
 			}
 			return output;
 		}
+	}
+
+	public static Compiler getCompiler()
+	{
+		Compiler compiler = createTemporaryCompiler("[GNU Native] C++ 11");
+
+		compiler.setCompileCommand(AvailableCompiler.CPP_11_GNU_NATIVE.COMPILE_CMD);
+		compiler.setPreprocessCommand(AvailableCompiler.CPP_11_GNU_NATIVE.PRE_PRECESS_CMD);
+		compiler.setLinkCommand(AvailableCompiler.CPP_11_GNU_NATIVE.LINK_CMD);
+		compiler.setDebugCommand(AvailableCompiler.CPP_11_GNU_NATIVE.DEBUG_CMD);
+		compiler.setIncludeFlag(AvailableCompiler.CPP_11_GNU_NATIVE.INCLUDE_FLAG);
+		compiler.setDefineFlag(AvailableCompiler.CPP_11_GNU_NATIVE.DEFINE_FLAG);
+		compiler.setOutputFlag(AvailableCompiler.CPP_11_GNU_NATIVE.OUTPUT_FLAG);
+		compiler.setDebugFlag(AvailableCompiler.CPP_11_GNU_NATIVE.DEBUG_FLAG);
+		compiler.setOutputExtension(AvailableCompiler.CPP_11_GNU_NATIVE.OUTPUT_EXTENSION);
+
+		return compiler;
+	}
+
+	private static Compiler createTemporaryCompiler(String opt)
+	{
+		if (opt != null)
+		{
+			for (Class<?> c : AvailableCompiler.class.getClasses())
+			{
+				try
+				{
+					String name = c.getField("NAME").get(null).toString();
+
+					if (name.equals(opt))
+					{
+						return new Compiler(c);
+					}
+				}
+				catch (Exception ex)
+				{
+				}
+			}
+		}
+
+		return null;
+	}
+
+	public static boolean isC() {
+		return !getCompiler().getName().contains("C++");
 	}
 }

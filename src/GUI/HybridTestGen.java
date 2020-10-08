@@ -15,6 +15,7 @@ import compiler.Compiler;
 import config.AbstractSetting;
 import config.Settingv2;
 import console.Console;
+import coverage.FunctionCoverageComputation;
 import coverage.IEnvironmentNode;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -45,6 +46,7 @@ import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 public class HybridTestGen extends Component
@@ -172,18 +174,39 @@ public class HybridTestGen extends Component
         executor.setMode(TestcaseExecution.IN_AUTOMATED_TESTDATA_GENERATION_MODE);
 
 
+        List<TestData> testDataList = new ArrayList<>();
         TestData testData = new TestData();
         testData.add(new Pair<>("averageGrade", 95));
 
-        TestCase testCase = new TestCase();
-        testCase.setTestData(testData);
-        testCase.setName(TestConfig.TESTCASE_NAME);
-        testCase.setFunctionNode(function);
-        testCase.setSourcecodeFile(sourceFile);
-        testCase.setRealParentSourceFileName(sourceFileName);
+        testDataList.add(testData);
 
-        executor.setTestCase(testCase);
-        executor.execute();
+
+        TestData testData1= new TestData();
+        testData1.add(new Pair<>("averageGrade", 63));
+
+        testDataList.add(testData1);
+
+        List<TestCase> testCaseList = new ArrayList<>();
+
+        int i = 0;
+
+        for (TestData testData0: testDataList)
+        {
+            i += 1;
+            TestCase testCase = new TestCase();
+            testCase.setTestData(testData0);
+            testCase.setName(TestConfig.TESTCASE_NAME + i);
+            testCase.setFunctionNode(function);
+            testCase.setSourcecodeFile(sourceFile);
+            testCase.setRealParentSourceFileName(sourceFileName);
+
+            testCaseList.add(testCase);
+        }
+
+        //executor.setTestCase(testCase);
+
+        executor.execute(testCaseList);
+        executor.computeCoverage(function, testCaseList);
     }
 
     public static String getClonedFilePath(String origin)
@@ -197,46 +220,6 @@ public class HybridTestGen extends Component
         return TestConfig.INSTRUMENTED_CODE + "\\" + clonedName;
     }
 
-    public Compiler getCompiler()
-    {
-        Compiler compiler = createTemporaryCompiler("[GNU Native] C++ 11");
-
-        compiler.setCompileCommand(AvailableCompiler.CPP_11_GNU_NATIVE.COMPILE_CMD);
-        compiler.setPreprocessCommand(AvailableCompiler.CPP_11_GNU_NATIVE.PRE_PRECESS_CMD);
-        compiler.setLinkCommand(AvailableCompiler.CPP_11_GNU_NATIVE.LINK_CMD);
-        compiler.setDebugCommand(AvailableCompiler.CPP_11_GNU_NATIVE.DEBUG_CMD);
-        compiler.setIncludeFlag(AvailableCompiler.CPP_11_GNU_NATIVE.INCLUDE_FLAG);
-        compiler.setDefineFlag(AvailableCompiler.CPP_11_GNU_NATIVE.DEFINE_FLAG);
-        compiler.setOutputFlag(AvailableCompiler.CPP_11_GNU_NATIVE.OUTPUT_FLAG);
-        compiler.setDebugFlag(AvailableCompiler.CPP_11_GNU_NATIVE.DEBUG_FLAG);
-        compiler.setOutputExtension(AvailableCompiler.CPP_11_GNU_NATIVE.OUTPUT_EXTENSION);
-
-        return compiler;
-    }
-
-    private Compiler createTemporaryCompiler(String opt)
-    {
-        if (opt != null)
-        {
-            for (Class<?> c : AvailableCompiler.class.getClasses())
-            {
-                try
-                {
-                    String name = c.getField("NAME").get(null).toString();
-
-                    if (name.equals(opt))
-                    {
-                        return new Compiler(c);
-                    }
-                }
-                catch (Exception ex)
-                {
-                }
-            }
-        }
-
-        return null;
-    }
 
     @FXML
     protected void btnBrowseInput_Clicked(ActionEvent event) throws Exception

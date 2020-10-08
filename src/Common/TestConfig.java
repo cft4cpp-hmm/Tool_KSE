@@ -15,7 +15,7 @@ public class TestConfig
     public static String TESTPATH_FILE = PROJECT_PATH + "\\Testpath";
     public static String INSTRUMENTED_CODE = PROJECT_PATH + "\\InstrumentedCode";
 
-    public static String TESTCASE_NAME = "TestCase1";
+    public static String TESTCASE_NAME = "TestCase";
     public static String COMPILE_COMMAND_TEMPLATE = "g++ -std\u003dc++14 \"%s\" -c -o\"%s\"  -lgtest_main  -lgtest -w ";
     public static String LINK_COMMAND_TEMPLATE = "g++ -std\u003dc++14 \"%s\" -o\"%s\" -lgtest_main  -lgtest -w ";
     public static String UET_IGNORE_FILE = ".uetignore";

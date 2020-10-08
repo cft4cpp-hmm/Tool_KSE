@@ -14,6 +14,7 @@ import testcase_execution.testdriver.TestDriverGeneration;
 import testcase_manager.ITestCase;
 import testcase_manager.TestCase;
 import testdata.object.TestpathString_Marker;
+import tree.object.IFunctionNode;
 import tree.object.ISourcecodeFileNode;
 import utils.*;
 
@@ -24,26 +25,31 @@ import java.util.concurrent.TimeUnit;
 
 import static Common.TestConfig.COMPILE_COMMAND_TEMPLATE;
 
-public abstract class AbstractTestcaseExecution implements ITestcaseExecution {
+public abstract class AbstractTestcaseExecution implements ITestcaseExecution
+{
     private int mode = IN_EXECUTION_WITH_FRAMEWORK_TESTING_MODE;
 
     private ITestCase testCase;
 
     protected TestDriverGeneration testDriverGen;
 
-    public int getMode() {
+    public int getMode()
+    {
         return mode;
     }
 
-    public void setMode(int mode) {
+    public void setMode(int mode)
+    {
         this.mode = mode;
     }
 
-    public ITestCase getTestCase() {
+    public ITestCase getTestCase()
+    {
         return testCase;
     }
 
-    public void setTestCase(ITestCase testcase) {
+    public void setTestCase(ITestCase testcase)
+    {
         this.testCase = testcase;
         //setTestCaseInfo();
     }
@@ -73,26 +79,11 @@ public abstract class AbstractTestcaseExecution implements ITestcaseExecution {
         return null;
     }
 
-    public Compiler getCompiler()
+    public String compileAndLink() throws IOException, InterruptedException
     {
-        Compiler compiler = createTemporaryCompiler("[GNU Native] C++ 11");
-
-        compiler.setCompileCommand(AvailableCompiler.CPP_11_GNU_NATIVE.COMPILE_CMD);
-        compiler.setPreprocessCommand(AvailableCompiler.CPP_11_GNU_NATIVE.PRE_PRECESS_CMD);
-        compiler.setLinkCommand(AvailableCompiler.CPP_11_GNU_NATIVE.LINK_CMD);
-        compiler.setDebugCommand(AvailableCompiler.CPP_11_GNU_NATIVE.DEBUG_CMD);
-        compiler.setIncludeFlag(AvailableCompiler.CPP_11_GNU_NATIVE.INCLUDE_FLAG);
-        compiler.setDefineFlag(AvailableCompiler.CPP_11_GNU_NATIVE.DEFINE_FLAG);
-        compiler.setOutputFlag(AvailableCompiler.CPP_11_GNU_NATIVE.OUTPUT_FLAG);
-        compiler.setDebugFlag(AvailableCompiler.CPP_11_GNU_NATIVE.DEBUG_FLAG);
-        compiler.setOutputExtension(AvailableCompiler.CPP_11_GNU_NATIVE.OUTPUT_EXTENSION);
-
-        return compiler;
-    }
-    public String compileAndLink() throws IOException, InterruptedException {
         StringBuilder output = new StringBuilder();
 
-        TestCase tc = (TestCase)testCase;
+        TestCase tc = (TestCase) testCase;
 
         String testCaseName = testCase.getName();
         String sourceFile = tc.getSourceCodeFile();
@@ -112,21 +103,58 @@ public abstract class AbstractTestcaseExecution implements ITestcaseExecution {
 
         String linkCommand = String.format(TestConfig.LINK_COMMAND_TEMPLATE, outFile, exeFile);
 
-        String[] script = CompilerUtils.prepareForTerminal(getCompiler(), compilationCommand);
+        String[] script = CompilerUtils.prepareForTerminal(Utils.getCompiler(), compilationCommand);
 
         String response = new Terminal(script, TestConfig.COMPILE_OUTPUT).get();
 
         output.append(response).append("\n");
 
         String[] linkScript = CompilerUtils
-                .prepareForTerminal(getCompiler(), linkCommand);
+                .prepareForTerminal(Utils.getCompiler(), linkCommand);
         String linkResponse = new Terminal(linkScript, TestConfig.LINK_OUTPUT).get();
         output.append(linkResponse);
 
         return output.toString().trim();
     }
 
-    protected TestpathString_Marker readTestpathFromFile(ITestCase testCase) throws InterruptedException {
+    public String compileAndLink(TestCase testCase) throws IOException, InterruptedException
+    {
+        StringBuilder output = new StringBuilder();
+
+        String testCaseName = testCase.getName();
+        String sourceFile = testCase.getSourceCodeFile();
+        String sourceFileName = (new File(sourceFile)).getName();
+        String instrumentedFile = TestConfig.INSTRUMENTED_CODE + "\\" +
+                sourceFileName.substring(0, sourceFileName.lastIndexOf(".")) +
+                TestConfig.UET_IGNORE_FILE + TestConfig.CPP_EXTENTION;
+
+        String outFile = TestConfig.COMPILE_OUTPUT + "\\" + testCaseName + ".out";
+
+        String testDriverFile = TestConfig.TEST_DRIVER_PATH + "\\" +
+                testCaseName + TestConfig.CPP_EXTENTION;
+
+        String exeFile = TestConfig.EXE_PATH + "\\" + testCaseName + ".exe";
+
+        String compilationCommand = String.format(TestConfig.COMPILE_COMMAND_TEMPLATE, testDriverFile, outFile);
+
+        String linkCommand = String.format(TestConfig.LINK_COMMAND_TEMPLATE, outFile, exeFile);
+
+        String[] script = CompilerUtils.prepareForTerminal(Utils.getCompiler(), compilationCommand);
+
+        String response = new Terminal(script, TestConfig.COMPILE_OUTPUT).get();
+
+        output.append(response).append("\n");
+
+        String[] linkScript = CompilerUtils
+                .prepareForTerminal(Utils.getCompiler(), linkCommand);
+        String linkResponse = new Terminal(linkScript, TestConfig.LINK_OUTPUT).get();
+        output.append(linkResponse);
+
+        return output.toString().trim();
+    }
+
+    protected TestpathString_Marker readTestpathFromFile(ITestCase testCase) throws InterruptedException
+    {
         TestpathString_Marker encodedTestpath = new TestpathString_Marker();
 
         int MAX_READ_FILE_NUMBER = 10;
@@ -134,52 +162,65 @@ public abstract class AbstractTestcaseExecution implements ITestcaseExecution {
 
         String testPathFile = TestConfig.TESTPATH_FILE + "\\" + testCase.getName() + TestConfig.TESTPATH_EXTENTION;
 
-        do {
+        do
+        {
             encodedTestpath.setEncodedTestpath(normalizeTestpathFromFile(
                     Utils.readFileContent(testPathFile)));//testCase.getTestPathFile()
 
-            if (encodedTestpath.getEncodedTestpath().length() == 0) {
+            if (encodedTestpath.getEncodedTestpath().length() == 0)
+            {
                 //initialization = "";
                 Thread.sleep(10);
             }
 
             countReadFile++;
-        } while (encodedTestpath.getEncodedTestpath().length() == 0 && countReadFile <= MAX_READ_FILE_NUMBER);
+        }
+        while (encodedTestpath.getEncodedTestpath().length() == 0 && countReadFile <= MAX_READ_FILE_NUMBER);
 
         return encodedTestpath;
     }
 
-    protected String normalizeTestpathFromFile(String testpath) {
+    protected String normalizeTestpathFromFile(String testpath)
+    {
         testpath = testpath.replace("\r\n", ITestpathInCFG.SEPARATE_BETWEEN_NODES)
                 .replace("\n\r", ITestpathInCFG.SEPARATE_BETWEEN_NODES)
                 .replace("\n", ITestpathInCFG.SEPARATE_BETWEEN_NODES)
                 .replace("\r", ITestpathInCFG.SEPARATE_BETWEEN_NODES);
         if (testpath.equals(ITestpathInCFG.SEPARATE_BETWEEN_NODES))
+        {
             testpath = "";
+        }
         return testpath;
     }
 
-    protected TestpathString_Marker shortenTestpath(TestpathString_Marker encodedTestpath) {
+    protected TestpathString_Marker shortenTestpath(TestpathString_Marker encodedTestpath)
+    {
         String[] executedStms = encodedTestpath.getEncodedTestpath().split(ITestpathInCFG.SEPARATE_BETWEEN_NODES);
-        if (executedStms.length > 0) {
+        if (executedStms.length > 0)
+        {
             int THRESHOLD = 200; // by default
-            if (executedStms.length >= THRESHOLD) {
+            if (executedStms.length >= THRESHOLD)
+            {
                 StringBuilder tmp_shortenTp = new StringBuilder();
 
-                for (int i = 0; i < THRESHOLD - 1; i++) {
+                for (int i = 0; i < THRESHOLD - 1; i++)
+                {
                     tmp_shortenTp.append(executedStms[i]).append(ITestpathInCFG.SEPARATE_BETWEEN_NODES);
                 }
 
                 tmp_shortenTp.append(executedStms[THRESHOLD - 1]);
                 encodedTestpath.setEncodedTestpath(tmp_shortenTp.toString());
-            } else {
+            }
+            else
+            {
             }
         }
         return encodedTestpath;
     }
 
 
-    protected boolean analyzeTestpathFile(TestCase testCase) throws Exception {
+    protected boolean analyzeTestpathFile(TestCase testCase) throws Exception
+    {
         // Read hard disk until the test path is written into file completely
         TestpathString_Marker encodedTestpath = readTestpathFromFile(testCase);
 
@@ -188,14 +229,18 @@ public abstract class AbstractTestcaseExecution implements ITestcaseExecution {
         // shorten test path if it is too long
         encodedTestpath = shortenTestpath(encodedTestpath);
 
-        if (encodedTestpath.getEncodedTestpath().length() > 0) {
+        if (encodedTestpath.getEncodedTestpath().length() > 0)
+        {
             // Only for logging
             success = computeCoverage(encodedTestpath, testCase);
 
-        } else {
+        }
+        else
+        {
             String msg = "The content of test path file is empty after execution";
             if (/*getMode() == IN_EXECUTION_WITHOUT_GTEST_MODE
-                    || */getMode() == IN_EXECUTION_WITH_FRAMEWORK_TESTING_MODE) {
+                    || */getMode() == IN_EXECUTION_WITH_FRAMEWORK_TESTING_MODE)
+            {
                 //testCase.setStatus(TestCase.STATUS_FAILED);
             }
             success = false;
@@ -205,7 +250,8 @@ public abstract class AbstractTestcaseExecution implements ITestcaseExecution {
         return success;
     }
 
-    protected boolean computeCoverage(TestpathString_Marker encodedTestpath, TestCase testCase) throws Exception {
+    protected boolean computeCoverage(TestpathString_Marker encodedTestpath, TestCase testCase) throws Exception
+    {
         // compute coverage
 
         // coverage computation
@@ -218,28 +264,38 @@ public abstract class AbstractTestcaseExecution implements ITestcaseExecution {
         //SourcecodeCoverageComputation computator = new SourcecodeCoverageComputation();
         FunctionCoverageComputation computator = new FunctionCoverageComputation();
 
-        try {
+        try
+        {
             computator.setTestpathContent(tpContent);
             computator.setConsideredSourcecodeNode(srcNode);
             computator.setCoverage(EnviroCoverageTypeNode.BRANCH);
             computator.setFunctionNode(testCase.getFunctionNode());
             computator.compute();
-        }catch (Exception e){
+        }
+        catch (Exception e)
+        {
             e.printStackTrace();
         }
 
         // log to details tab of the testcase
-        switch (getMode()) {
-            case IN_AUTOMATED_TESTDATA_GENERATION_MODE: {
+        switch (getMode())
+        {
+            case IN_AUTOMATED_TESTDATA_GENERATION_MODE:
+            {
                 // log to details tab of the testcase
                 StringBuilder tp = new StringBuilder();
                 List<String> stms = encodedTestpath
                         .getStandardTestpathByProperty(FunctionInstrumentationForStatementvsBranch_Markerv2.START_OFFSET_IN_FUNCTION);
-                if (stms.size() > 0) {
+                if (stms.size() > 0)
+                {
                     for (String stm : stms)
+                    {
                         tp.append(stm).append("=>");
+                    }
                     tp = new StringBuilder(tp.substring(0, tp.length() - 2));
-                } else{
+                }
+                else
+                {
                 }
                 break;
             }
@@ -248,8 +304,28 @@ public abstract class AbstractTestcaseExecution implements ITestcaseExecution {
         return tpContent.contains(TestPathUtils.END_TAG);
     }
 
+    public FunctionCoverageComputation computeCoverage(IFunctionNode functionNode, List<TestCase> testCases) throws Exception
+    {
+        // compute coverage
 
-    protected String runExecutableFile(String executableFile) throws IOException, InterruptedException {
+        // coverage computation
+        ISourcecodeFileNode srcNode = Utils.getSourcecodeFile(functionNode);
+
+        FunctionCoverageComputation computator = new FunctionCoverageComputation();
+        computator.setConsideredSourcecodeNode(srcNode);
+        computator.setCoverage(EnviroCoverageTypeNode.BRANCH);
+        computator.setFunctionNode(functionNode);
+
+        int nInstructions = computator.getNumberOfInstructions(functionNode, EnviroCoverageTypeNode.BRANCH);
+
+        int nvisitedInstructions = computator.getNumberOfVisitedInstructions(functionNode, EnviroCoverageTypeNode.BRANCH, testCases);
+
+        return computator;
+    }
+
+
+    protected String runExecutableFile(String executableFile) throws IOException, InterruptedException
+    {
 
         String directory = TestConfig.PROJECT_PATH;
 
@@ -260,7 +336,8 @@ public abstract class AbstractTestcaseExecution implements ITestcaseExecution {
         Process p = terminal.getProcess();
         p.waitFor(10, TimeUnit.SECONDS); // give it a chance to stop
 
-        if (p.isAlive()) {
+        if (p.isAlive())
+        {
             p.destroy(); // tell the process to stop
             p.waitFor(10, TimeUnit.SECONDS); // give it a chance to stop
             p.destroyForcibly(); // tell the OS to kill the process
@@ -269,14 +346,16 @@ public abstract class AbstractTestcaseExecution implements ITestcaseExecution {
 
         //testCase.setExecutedTime(terminal.getTime());
 
-        return  terminal.get();
+        return terminal.get();
     }
 
-    public TestDriverGeneration getTestDriverGeneration() {
+    public TestDriverGeneration getTestDriverGeneration()
+    {
         return testDriverGen;
     }
 
-    public void setTestDriverGeneration(TestDriverGeneration testDriverGeneration) {
+    public void setTestDriverGeneration(TestDriverGeneration testDriverGeneration)
+    {
         this.testDriverGen = testDriverGeneration;
     }
 }

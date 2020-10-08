@@ -1,9 +1,11 @@
 package coverage;
 
+import Common.TestConfig;
 import cfg.CFGGenerationforBranchvsStatementCoverage;
 import cfg.CFGGenerationforSubConditionCoverage;
 import cfg.ICFG;
 import instrument.IFunctionInstrumentationGeneration;
+import testcase_manager.TestCase;
 import testdata.object.TestpathString_Marker;
 import testdatagen.coverage.ICoverageComputation;
 import tree.object.AbstractFunctionNode;
@@ -32,14 +34,18 @@ public abstract class AbstractCoverageComputation implements ICoverageComputatio
 
     protected abstract Map<String, TestpathsOfAFunction> removeRedundantTestpath(Map<String, TestpathsOfAFunction> affectedFunctions);
 
-    protected int getNumberOfInstructions(INode consideredSourcecodeNode, String coverage) {
+    public int getNumberOfInstructions(INode consideredSourcecodeNode, String coverage)
+    {
         int nInstructions = 0;
-        switch (coverage) {
-            case EnviroCoverageTypeNode.STATEMENT: {
+        switch (coverage)
+        {
+            case EnviroCoverageTypeNode.STATEMENT:
+            {
                 nInstructions = getNumberofStatements(consideredSourcecodeNode);
                 break;
             }
-            case EnviroCoverageTypeNode.BRANCH: {
+            case EnviroCoverageTypeNode.BRANCH:
+            {
                 nInstructions = getNumberofBranches(consideredSourcecodeNode);
                 break;
             }
@@ -51,13 +57,16 @@ public abstract class AbstractCoverageComputation implements ICoverageComputatio
      * @return the number of visited instructions (>=0), return -1 if there is error happening
      */
     protected int getNumberOfVisitedInstructions(Map<String, TestpathsOfAFunction> affectedFunctions,
-                                               String coverage, INode consideredSourcecodeNode,
-                                               List<ICFG> allCFG) {
+                                                 String coverage, INode consideredSourcecodeNode,
+                                                 List<ICFG> allCFG)
+    {
         final int ERROR = -1;
         int nVisitedInstructions = 0;
         for (String functionPath : affectedFunctions.keySet())
-            // only consider functions in a specified source code file
-            if (functionPath.contains(consideredSourcecodeNode.getAbsolutePath())) {
+        // only consider functions in a specified source code file
+        {
+            if (functionPath.contains(consideredSourcecodeNode.getAbsolutePath()))
+            {
                 // Find the function node
                 TestpathsOfAFunction testpathsOfAFunction = affectedFunctions.get(functionPath);
 
@@ -65,20 +74,26 @@ public abstract class AbstractCoverageComputation implements ICoverageComputatio
 
                 List<INode> functionNodes = Search.searchNodes(consideredSourcecodeNode, new AbstractFunctionNodeCondition(), PathUtils.toAbsolute(functionPath));
                 if (functionNodes.size() == 0)
+                {
                     functionNodes = Search.searchNodes(consideredSourcecodeNode, new FunctionNodeCondition(), functionName);
+                }
 
                 if (functionNodes.size() != 1)
+                {
                     return ERROR;
+                }
 
                 // generate cfg of the function
                 INode functionNode = functionNodes.get(0);
-                try {
+                try
+                {
                     ICFG cfg = null;
-                        if (functionNode instanceof AbstractFunctionNode) {
+                    if (functionNode instanceof AbstractFunctionNode)
+                    {
 
-                            IFunctionNode clone = (IFunctionNode) functionNode.clone();
-                            //CFGGenerationforSubConditionCoverage cfgGen = new CFGGenerationforSubConditionCoverage(clone);
-                            CFGGenerationforBranchvsStatementCoverage cfgGen = new CFGGenerationforBranchvsStatementCoverage(clone);
+                        IFunctionNode clone = (IFunctionNode) functionNode.clone();
+                        //CFGGenerationforSubConditionCoverage cfgGen = new CFGGenerationforSubConditionCoverage(clone);
+                        CFGGenerationforBranchvsStatementCoverage cfgGen = new CFGGenerationforBranchvsStatementCoverage(clone);
 
                         cfg = cfgGen.generateCFG();
                         allCFG.add(cfg);
@@ -87,24 +102,33 @@ public abstract class AbstractCoverageComputation implements ICoverageComputatio
                     }
 
                     if (cfg == null)
+                    {
                         return ERROR;
+                    }
 
                     // compute coverage of a cfg
                     TestpathString_Marker testpath = new TestpathString_Marker();
 
                     if (testpathsOfAFunction != null && testpathsOfAFunction.getTestpathsInArray() != null)
+                    {
                         testpath.setEncodedTestpath(testpathsOfAFunction.getTestpathsInArray());
+                    }
                     else
+                    {
                         testpath.setEncodedTestpath(new String[]{});
+                    }
 
                     CFGUpdaterv2 cfgUpdaterv2 = new CFGUpdaterv2(testpath, cfg);
                     cfgUpdaterv2.updateVisitedNodes();
-                    switch (coverage) {
-                        case EnviroCoverageTypeNode.STATEMENT: {
+                    switch (coverage)
+                    {
+                        case EnviroCoverageTypeNode.STATEMENT:
+                        {
                             nVisitedInstructions += cfg.getVisitedStatements().size();
                             break;
                         }
-                        case EnviroCoverageTypeNode.BRANCH: {
+                        case EnviroCoverageTypeNode.BRANCH:
+                        {
                             nVisitedInstructions += cfg.getVisitedBranches().size();
                             break;
                         }
@@ -114,10 +138,87 @@ public abstract class AbstractCoverageComputation implements ICoverageComputatio
 //                            break;
 //                        }
                     }
-                } catch (Exception e) {
+                }
+                catch (Exception e)
+                {
                     e.printStackTrace();
                 }
             }
+        }
+        return nVisitedInstructions;
+    }
+
+
+    public int getNumberOfVisitedInstructions(IFunctionNode functionNode,
+                                              String coverage, List<TestCase> testCaseList)
+    {
+        final int ERROR = -1;
+        int nVisitedInstructions = 0;
+        // only consider functions in a specified source code file
+
+        // generate cfg of the function
+        try
+        {
+            ICFG cfg = null;
+            if (functionNode instanceof AbstractFunctionNode)
+            {
+                IFunctionNode clone = (IFunctionNode) functionNode.clone();
+                CFGGenerationforBranchvsStatementCoverage cfgGen = new CFGGenerationforBranchvsStatementCoverage(clone);
+
+                cfg = cfgGen.generateCFG();
+                allCFG.add(cfg);
+                cfg.setFunctionNode((IFunctionNode) functionNode);
+                cfg.resetVisitedStateOfNodes();
+            }
+
+            if (cfg == null)
+            {
+                return ERROR;
+            }
+
+            List<String> testPathList = new ArrayList<>();
+
+            for(TestCase testCase: testCaseList)
+            {
+                String testPathFile = TestConfig.TESTPATH_FILE + "\\" + testCase.getName() + TestConfig.TESTPATH_EXTENTION;
+
+                testPathList.add(testPathFile);
+            }
+
+            TestpathsOfAFunction testpathsOfAFunction = readTestpathByFunctionPath(testPathList, EnviroCoverageTypeNode.BRANCH);
+
+            // compute coverage of a cfg
+            TestpathString_Marker testpath = new TestpathString_Marker();
+
+            if (testpathsOfAFunction != null && testpathsOfAFunction.getTestpathsInArray() != null)
+            {
+                testpath.setEncodedTestpath(testpathsOfAFunction.getTestpathsInArray());
+            }
+            else
+            {
+                testpath.setEncodedTestpath(new String[]{});
+            }
+
+            CFGUpdaterv2 cfgUpdaterv2 = new CFGUpdaterv2(testpath, cfg);
+            cfgUpdaterv2.updateVisitedNodes();
+            switch (coverage)
+            {
+                case EnviroCoverageTypeNode.STATEMENT:
+                {
+                    nVisitedInstructions += cfg.getVisitedStatements().size();
+                    break;
+                }
+                case EnviroCoverageTypeNode.BRANCH:
+                {
+                    nVisitedInstructions += cfg.getVisitedBranches().size();
+                    break;
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
         return nVisitedInstructions;
     }
 
@@ -125,29 +226,36 @@ public abstract class AbstractCoverageComputation implements ICoverageComputatio
      * @return a hash map, where key is the path of function, value is a list.
      * Each item in list is corresponding to a test path.
      */
-    protected Map<String, TestpathsOfAFunction> categoryTestpathByFunctionPath(String[] testpaths, String coverage) {
+    protected Map<String, TestpathsOfAFunction> categoryTestpathByFunctionPath(String[] testpaths, String coverage)
+    {
         Map<String, TestpathsOfAFunction> tps = new HashMap<>();
 
-        for (String testpath : testpaths) {
+        for (String testpath : testpaths)
+        {
             String functionAddress = getValue(testpath, IFunctionInstrumentationGeneration.FUNCTION_ADDRESS);
 
-            if (functionAddress != null && functionAddress.length() > 0) {
+            if (functionAddress != null && functionAddress.length() > 0)
+            {
                 functionAddress = PathUtils.toAbsolute(functionAddress);
                 functionAddress = Utils.normalizePath(functionAddress);
 
-                switch (coverage) {
+                switch (coverage)
+                {
                     case EnviroCoverageTypeNode.BRANCH:
-                    case EnviroCoverageTypeNode.STATEMENT: {
+                    case EnviroCoverageTypeNode.STATEMENT:
+                    {
 //                        if (AbstractHighlighterForSourcecodeLevel.isSubCondition(testpath))
 //                            // ignore the test path which goes through subcondition
 //                            continue;
                         //else
-                            break;
+                        break;
                     }
                 }
 
                 if (!tps.containsKey(functionAddress))
+                {
                     tps.put(functionAddress, new TestpathsOfAFunction());
+                }
 
                 Offset offset = new Offset();
                 offset.startingOffsetInFunction = Utils.toInt(getValue(testpath, IFunctionInstrumentationGeneration.START_OFFSET_IN_FUNCTION));
@@ -161,13 +269,56 @@ public abstract class AbstractCoverageComputation implements ICoverageComputatio
         return tps;
     }
 
+    public TestpathsOfAFunction readTestpathByFunctionPath(List<String> testpaths, String coverage)
+    {
+        TestpathsOfAFunction testpathsOfAFunction = new TestpathsOfAFunction();
 
-    protected String getValue(String line, String property) {
-        if (line.contains(IFunctionInstrumentationGeneration.DELIMITER_BETWEEN_PROPERTIES)) {
+        for (String testpath : testpaths)
+        {
+            String functionAddress = getValue(testpath, IFunctionInstrumentationGeneration.FUNCTION_ADDRESS);
+
+            if (functionAddress != null && functionAddress.length() > 0)
+            {
+                switch (coverage)
+                {
+                    case EnviroCoverageTypeNode.BRANCH:
+                    case EnviroCoverageTypeNode.STATEMENT:
+                    {
+//                        if (AbstractHighlighterForSourcecodeLevel.isSubCondition(testpath))
+//                            // ignore the test path which goes through subcondition
+//                            continue;
+                        //else
+                        break;
+                    }
+                }
+
+                Offset offset = new Offset();
+                offset.startingOffsetInFunction = Utils.toInt(getValue(testpath, IFunctionInstrumentationGeneration.START_OFFSET_IN_FUNCTION));
+                offset.endOffsetInFunction = Utils.toInt(getValue(testpath, IFunctionInstrumentationGeneration.END_OFFSET_IN_FUNCTION));
+                offset.startingOffsetInSourcecodeFile = Utils.toInt(getValue(testpath, IFunctionInstrumentationGeneration.START_OFFSET_IN_SOURCE_CODE_FILE));
+                offset.endOffsetInSourcecodeFile = Utils.toInt(getValue(testpath, IFunctionInstrumentationGeneration.END_OFFSET_IN_SOURCE_CODE_FILE));
+                offset.testpath = testpath;
+                if (!testpathsOfAFunction.testpaths.contains(offset))
+                {
+                    testpathsOfAFunction.testpaths.add(offset);
+                }
+            }
+        }
+        return testpathsOfAFunction;
+    }
+
+    protected String getValue(String line, String property)
+    {
+        if (line.contains(IFunctionInstrumentationGeneration.DELIMITER_BETWEEN_PROPERTIES))
+        {
             String[] tokens = line.split(IFunctionInstrumentationGeneration.DELIMITER_BETWEEN_PROPERTIES);
             for (String token : tokens)
+            {
                 if (token.split(IFunctionInstrumentationGeneration.DELIMITER_BETWEEN_PROPERTY_AND_VALUE)[0].equals(property))
+                {
                     return token.split(IFunctionInstrumentationGeneration.DELIMITER_BETWEEN_PROPERTY_AND_VALUE)[1].trim();
+                }
+            }
         }
         return null;
     }
@@ -177,66 +328,82 @@ public abstract class AbstractCoverageComputation implements ICoverageComputatio
     protected abstract int getNumberofStatements(INode consideredSourcecodeNode);
 
 
-    public void setTestpathContent(String testpathContent) {
+    public void setTestpathContent(String testpathContent)
+    {
         this.testpathContent = testpathContent;
     }
 
-    public String getTestpathContent() {
+    public String getTestpathContent()
+    {
         return testpathContent;
     }
 
-    public void setConsideredSourcecodeNode(INode consideredSourcecodeNode) {
+    public void setConsideredSourcecodeNode(INode consideredSourcecodeNode)
+    {
         this.consideredSourcecodeNode = consideredSourcecodeNode;
     }
 
-    public INode getConsideredSourcecodeNode() {
+    public INode getConsideredSourcecodeNode()
+    {
         return consideredSourcecodeNode;
     }
 
-    public String getCoverage() {
+    public String getCoverage()
+    {
         return coverage;
     }
 
-    public void setCoverage(String coverage) {
+    public void setCoverage(String coverage)
+    {
         this.coverage = coverage;
     }
 
-    public int getNumberOfInstructions() {
+    public int getNumberOfInstructions()
+    {
         return numberOfInstructions;
     }
 
-    public void setNumberOfInstructions(int numberOfInstructions) {
+    public void setNumberOfInstructions(int numberOfInstructions)
+    {
         this.numberOfInstructions = numberOfInstructions;
     }
 
-    public int getNumberOfVisitedInstructions() {
+    public int getNumberOfVisitedInstructions()
+    {
         return numberOfVisitedInstructions;
     }
 
-    public void setNumberOfVisitedInstructions(int numberOfVisitedInstructions) {
+    public void setNumberOfVisitedInstructions(int numberOfVisitedInstructions)
+    {
         this.numberOfVisitedInstructions = numberOfVisitedInstructions;
     }
 
-    public List<ICFG> getAllCFG() {
+    public List<ICFG> getAllCFG()
+    {
         return allCFG;
     }
 
-    public void setAllCFG(List<ICFG> allCFG) {
+    public void setAllCFG(List<ICFG> allCFG)
+    {
         this.allCFG = allCFG;
     }
 
-    static class TestpathsOfAFunction {
+    static class TestpathsOfAFunction
+    {
         ArrayList<Offset> testpaths = new ArrayList<>();
 
         @Override
-        public String toString() {
+        public String toString()
+        {
             return testpaths.toString();
         }
 
-        String[] getTestpathsInArray() {
+        String[] getTestpathsInArray()
+        {
             String[] tpInArray = new String[testpaths.size()];
             int count = 0;
-            for (Offset offset : testpaths) {
+            for (Offset offset : testpaths)
+            {
                 tpInArray[count] = offset.testpath;
                 count++;
             }
@@ -244,7 +411,8 @@ public abstract class AbstractCoverageComputation implements ICoverageComputatio
         }
     }
 
-    static class Offset {
+    static class Offset
+    {
         int startingOffsetInSourcecodeFile;
         int endOffsetInSourcecodeFile;
         int startingOffsetInFunction;
@@ -252,7 +420,8 @@ public abstract class AbstractCoverageComputation implements ICoverageComputatio
         String testpath;
 
         @Override
-        public String toString() {
+        public String toString()
+        {
             return "offset in source code file = " + startingOffsetInSourcecodeFile + ":" + endOffsetInSourcecodeFile + ", offset in function = " + startingOffsetInFunction + ":" + endOffsetInFunction + "\n";
         }
     }

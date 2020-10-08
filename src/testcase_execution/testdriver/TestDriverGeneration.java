@@ -63,7 +63,7 @@ public abstract class TestDriverGeneration implements ITestDriverGeneration {
     public String generateTestScript(TestCase testCase) throws Exception {
         String body = generateBodyScript(testCase);
 
-        String testCaseName = TestConfig.TESTCASE_NAME;
+        String testCaseName = testCase.getName();
 
         return String.format("void " + UET_TEST_PREFIX + "%s(void) {\n%s\n}\n", testCaseName, body);
     }
