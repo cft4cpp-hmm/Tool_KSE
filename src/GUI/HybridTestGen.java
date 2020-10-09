@@ -110,6 +110,18 @@ public class HybridTestGen extends Component
     {
         System.out.println("btnRunTest_Clicked started");
 
+//        List<TestData> testDataList = new ArrayList<>();
+//        TestData testData = new TestData();
+//        testData.add(new Pair<>("averageGrade", 95));
+//
+//        testDataList.add(testData);
+//
+//
+//        TestData testData1= new TestData();
+//        testData1.add(new Pair<>("averageGrade", 63));
+//
+//        testDataList.add(testData1);
+
 //        String file = "F:\\VietData\\GitLab\\bai10\\data-test\\Sample_for_R1_2\\test.cpp";
 //
 //        Compiler c = getCompiler();
@@ -124,100 +136,15 @@ public class HybridTestGen extends Component
 //            return;
 //        }
 
-
-        TestConfig.SetProjectPath(txtSourceFolder.getText());
-
-        ProjectParser parser = new ProjectParser(new File(txtSourceFolder.getText()));
-
-        projectNode = parser.getRootTree();
-
-        config.Paths.DATA_GEN_TEST = txtSourceFolder.getText();
-
-        List<INode> sources = Search.searchNodes(projectNode, new SourcecodeFileNodeCondition());
-
-        for (INode sourceCode : sources)
-        {
-            ProjectClone clone = new ProjectClone();
-            String uetignoreFilePath = getClonedFilePath(sourceCode.getAbsolutePath());
-
-            try
-            {
-                String newContent = clone.generateFileContent(sourceCode);
-                Utils.writeContentToFile(newContent, uetignoreFilePath);
-            }
-            catch (InterruptedException e)
-            {
-                e.printStackTrace();
-            }
-        }
-
-        IFunctionNode function;
-
-        String value = "";
-
-        if (cboSelectedFunction.getValue() == null)
-        {
-            JOptionPane.showMessageDialog(null, "Please click on [Get function list] button, then choose a function to generate test data", DSEConstants.PRODUCT_NAME, JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        value = cboSelectedFunction.getValue().toString();
-
-        function = (IFunctionNode) Search.searchNodes(projectNode, new FunctionNodeCondition(), value).get(0);
-
-        TestcaseExecution executor = new TestcaseExecution();
-        executor.setFunction(function);
-
-        INode realParent = function.getRealParent();
-        String sourceFile = realParent.getAbsolutePath();
-        String sourceFileName = realParent.getName();
-
-        executor.setMode(TestcaseExecution.IN_AUTOMATED_TESTDATA_GENERATION_MODE);
-
-
-        List<TestData> testDataList = new ArrayList<>();
-        TestData testData = new TestData();
-        testData.add(new Pair<>("averageGrade", 95));
-
-        testDataList.add(testData);
-
-
-        TestData testData1= new TestData();
-        testData1.add(new Pair<>("averageGrade", 63));
-
-        testDataList.add(testData1);
-
-        List<TestCase> testCaseList = new ArrayList<>();
-
-        int i = 0;
-
-        for (TestData testData0: testDataList)
-        {
-            i += 1;
-            TestCase testCase = new TestCase();
-            testCase.setTestData(testData0);
-            testCase.setName(TestConfig.TESTCASE_NAME + i);
-            testCase.setFunctionNode(function);
-            testCase.setSourcecodeFile(sourceFile);
-            testCase.setRealParentSourceFileName(sourceFileName);
-
-            testCaseList.add(testCase);
-        }
-
-        //executor.setTestCase(testCase);
-
-        executor.execute(testCaseList);
-        executor.computeCoverage(function, testCaseList);
-    }
-
-    public static String getClonedFilePath(String origin)
-    {
-        String originName = new File(origin).getName();
-
-        int lastDotPos = originName.lastIndexOf(SpecialCharacter.DOT);
-
-        String clonedName = originName.substring(0, lastDotPos) + ProjectClone.CLONED_FILE_EXTENSION + originName.substring(lastDotPos);
-
-        return TestConfig.INSTRUMENTED_CODE + "\\" + clonedName;
+//        TestCase testCase = new TestCase();
+//        testCase.setTestData(testData);
+//        testCase.setName(TestConfig.TESTCASE_NAME + i);
+//        testCase.setFunctionNode(function);
+//        testCase.setSourcecodeFile(sourceFile);
+//        testCase.setRealParentSourceFileName(sourceFileName);
+//        executor.setTestCase(testCase);
+//
+//        executor.execute();
     }
 
 
@@ -429,6 +356,10 @@ public class HybridTestGen extends Component
         bGen.setSolvePathWhenGenBoundaryTestData(checked);
 
         bGen.generateTestData();
+
+        bGen.ExecuteTestCase(txtSourceFolder.getText(), value);
+
+        bGen.ExportReport();
 
         JOptionPane.showMessageDialog(null, "Finish generating data. Click on [View report] " +
                 "for the result.", DSEConstants.PRODUCT_NAME, JOptionPane.INFORMATION_MESSAGE);

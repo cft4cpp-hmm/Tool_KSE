@@ -17,10 +17,7 @@ import utils.search.AbstractFunctionNodeCondition;
 import utils.search.FunctionNodeCondition;
 import utils.search.Search;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public abstract class AbstractCoverageComputation implements ICoverageComputation
 {
@@ -182,7 +179,11 @@ public abstract class AbstractCoverageComputation implements ICoverageComputatio
             {
                 String testPathFile = TestConfig.TESTPATH_FILE + "\\" + testCase.getName() + TestConfig.TESTPATH_EXTENTION;
 
-                testPathList.add(testPathFile);
+                String tpContent = Utils.readFileContent(testPathFile);
+
+                String[] test = tpContent.split("\n");
+
+                testPathList.addAll(Arrays.asList(test));
             }
 
             TestpathsOfAFunction testpathsOfAFunction = readTestpathByFunctionPath(testPathList, EnviroCoverageTypeNode.BRANCH);

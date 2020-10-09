@@ -320,6 +320,9 @@ public abstract class AbstractTestcaseExecution implements ITestcaseExecution
 
         int nvisitedInstructions = computator.getNumberOfVisitedInstructions(functionNode, EnviroCoverageTypeNode.BRANCH, testCases);
 
+        computator.setNumberOfInstructions(nInstructions);
+        computator.setNumberOfVisitedInstructions(nvisitedInstructions);
+
         return computator;
     }
 

@@ -1,5 +1,7 @@
 package HybridAutoTestGen;
 
+import Common.DSEConstants;
+import Common.TestConfig;
 import cfg.CFG;
 import cfg.CFGGenerationforBranchvsStatementCoverage;
 import cfg.CFGGenerationforSubConditionCoverage;
@@ -9,11 +11,9 @@ import cfg.object.ConditionCfgNode;
 import cfg.object.EndFlagCfgNode;
 import cfg.object.ICfgNode;
 import cfg.testpath.*;
-import config.FunctionConfig;
-import config.ISettingv2;
-import config.ParameterBound;
-import config.Settingv2;
+import config.*;
 import constraints.checker.RelatedConstraintsChecker;
+import coverage.FunctionCoverageComputation;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.util.Pair;
@@ -22,6 +22,9 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.internal.utils.Convert;
 import org.junit.Test;
 import parser.projectparser.ProjectParser;
+import project_init.ProjectClone;
+import testcase_execution.TestcaseExecution;
+import testcase_manager.TestCase;
 import testdatagen.se.ISymbolicExecution;
 import testdatagen.se.Parameter;
 import testdatagen.se.PathConstraint;
@@ -31,6 +34,7 @@ import testdatagen.se.solver.RunZ3OnCMD;
 import testdatagen.se.solver.SmtLibGeneration;
 import testdatagen.se.solver.Z3SolutionParser;
 import tree.object.IFunctionNode;
+import tree.object.INode;
 import tree.object.IProjectNode;
 import tree.object.IVariableNode;
 import utils.ASTUtils;
@@ -38,8 +42,11 @@ import utils.SpecialCharacter;
 import utils.Utils;
 import utils.search.FunctionNodeCondition;
 import utils.search.Search;
+import utils.search.SourcecodeFileNodeCondition;
 
+import javax.swing.*;
 import java.io.File;
+import java.io.FileWriter;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -65,6 +72,11 @@ public class HybridAutoTestGen extends Application
     private List<IVariableNode> variables;
     private float boundStep = 1;
     private boolean solvePathWhenGenBoundaryTestData = false;
+
+    float durationTotal = 0;
+    WeightedGraph graph = null;
+
+    FunctionCoverageComputation functionCoverageComputation;
 
     public void setSolvePathWhenGenBoundaryTestData(boolean value)
     {
@@ -155,7 +167,7 @@ public class HybridAutoTestGen extends Application
         this.generateTestpaths();
 
         //create weighted test paths
-        WeightedGraph graph = new WeightedGraph(before, cfg, this.getPossibleTestpaths(),
+        graph = new WeightedGraph(before, cfg, this.getPossibleTestpaths(),
                 this.function, sourceFolder);
 
         //Generate test data
@@ -191,13 +203,179 @@ public class HybridAutoTestGen extends Application
         float diff2 = Math.abs((float) duration2.toMillis() / 1000);
 
 
-        float durationTotal = diff1 + diff2;
+        durationTotal = diff1 + diff2;
 
-        graph.computeBranchCoverNew();
-        graph.computeStatementCovNew();
+//        graph.computeBranchCoverNew();
+//        graph.computeStatementCovNew();
 
-        graph.exportReport(durationTotal, 0, 1, "Hybrid", testCases);
+    }
 
+
+    public void ExecuteTestCase(String sourceFolder, String functionName)  throws Exception
+    {
+        TestConfig.SetProjectPath(sourceFolder);
+
+        ProjectParser parser = new ProjectParser(new File(sourceFolder));
+
+        projectNode = parser.getRootTree();
+
+        config.Paths.DATA_GEN_TEST = sourceFolder;
+
+        List<INode> sources = Search.searchNodes(projectNode, new SourcecodeFileNodeCondition());
+
+        for (INode sourceCode : sources)
+        {
+            ProjectClone clone = new ProjectClone();
+            String uetignoreFilePath = getClonedFilePath(sourceCode.getAbsolutePath());
+
+            try
+            {
+                String newContent = clone.generateFileContent(sourceCode);
+                Utils.writeContentToFile(newContent, uetignoreFilePath);
+            }
+            catch (InterruptedException e)
+            {
+                e.printStackTrace();
+            }
+        }
+
+        IFunctionNode function;
+
+        function = (IFunctionNode) Search.searchNodes(projectNode, new FunctionNodeCondition(), functionName).get(0);
+
+        TestcaseExecution executor = new TestcaseExecution();
+        executor.setFunction(function);
+
+        INode realParent = function.getRealParent();
+        String sourceFile = realParent.getAbsolutePath();
+        String sourceFileName = realParent.getName();
+
+        executor.setMode(TestcaseExecution.IN_AUTOMATED_TESTDATA_GENERATION_MODE);
+
+        List<TestCase> testCaseList = new ArrayList<>();
+
+        int i = 0;
+
+        for (TestData testData0: testCases)
+        {
+            i += 1;
+            TestCase testCase = new TestCase();
+            testCase.setTestData(testData0);
+            testCase.setName(TestConfig.TESTCASE_NAME + i);
+            testCase.setFunctionNode(function);
+            testCase.setSourcecodeFile(sourceFile);
+            testCase.setRealParentSourceFileName(sourceFileName);
+
+            testCaseList.add(testCase);
+        }
+
+        executor.execute(testCaseList);
+        functionCoverageComputation = executor.computeCoverage(function, testCaseList);
+
+    }
+
+    public static String getClonedFilePath(String origin)
+    {
+        String originName = new File(origin).getName();
+
+        int lastDotPos = originName.lastIndexOf(SpecialCharacter.DOT);
+
+        String clonedName = originName.substring(0, lastDotPos) + ProjectClone.CLONED_FILE_EXTENSION + originName.substring(lastDotPos);
+
+        return TestConfig.INSTRUMENTED_CODE + "\\" + clonedName;
+    }
+
+    public void ExportReport() throws Exception
+    {
+        FileWriter csvWriter = new FileWriter(AbstractSetting.getValue("TEST_REPORT") + ".html", false);
+        String valueString = "<!DOCTYPE html>\r\n" +
+                "<html>\r\n" +
+                "\r\n" +
+                "<head> <link rel=\"stylesheet\" type=\"text/css\" href=\"hmm_report.css\">\r\n" +
+                "\r\n" +
+                "</head>\r\n" +
+                "\r\n" +
+                "<body>\r\n" +
+                "    <h2>HYBRID: TEST REPORT</h2>\r\n" +
+
+                "    <div class=\"table-wrapper\">\r\n" +
+                "        <table class=\"fl-table\">\r\n" +
+                "            <thead>\r\n" +
+                "                <tr>\r\n" +
+                "                    <th>PathNumber</th>\r\n" +
+                "                    <th style=\"width: 800px\">Test path</th>\r\n" +
+                "                    <th>CFG generated test data</th>\r\n" +
+                "                </tr>\r\n" +
+                "            </thead>\r\n" +
+                "            <tbody>";
+        for (WeightedTestPath testPath : graph.getFullWeightedTestPaths())
+        {
+            valueString += testPath.toStringForCFT4Cpp();
+        }
+        valueString += "            </tbody></table> </div><br/>";
+        valueString += "<div  class=\"table-wrapper\">" +
+                "        <table class=\"fl-table\">\r\n" +
+                "            <thead>\r\n" +
+                "                <tr>\r\n" +
+                "                    <th>All test data = CFG generated test data + boundary value test data</th>\r\n" +
+                "                </tr>\r\n" +
+                "            </thead>\r\n" +
+                "            <tbody>";
+        for (TestData testcase : testCases)
+        {
+            valueString += "<tr><td>" + testcase.toString() + "</td></tr>";
+        }
+        valueString += "            </tbody>";
+        valueString += "            </table>";
+        valueString += "</div> <br/>";
+
+        valueString += "<div  class=\"table-wrapper\">" +
+                "        <table class=\"fl-table\">\r\n" +
+                "            <thead>\r\n" +
+                "                <tr>\r\n" +
+                "                    <th>Coverage information</th>\r\n" +
+                "                </tr>\r\n" +
+                "            </thead>\r\n" +
+                "            <tbody>";
+        String loopString = "";
+
+        valueString += loopString;
+        float stateCov = 0;
+        float branchCov = ((float)functionCoverageComputation.getNumberOfVisitedInstructions()) / ((float)functionCoverageComputation.getNumberOfInstructions());
+
+        String coverInfo = "";
+        try
+        {
+            coverInfo =
+                    "   <tr><td> Statement coverage " + stateCov + "</td></tr>" +
+                            "        <tr><td>Branch coverage " + branchCov + "</td></tr>" +
+                            "        <tr><td>Number of test data: " + testCases.size() + "; Time: " + durationTotal + "s</td></tr>";
+        }
+        catch (Exception e)
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        valueString += coverInfo;
+        valueString += "   </tbody>\r\n" +
+                "        </table></div>\r\n" +
+                "<div  class=\"table-wrapper\">" +
+                "        <table class=\"fl-table\">\r\n" +
+                "            <thead>\r\n" +
+                "                <tr>\r\n" +
+                "                    <th>Function raw signature</th>\r\n" +
+                "                </tr>\r\n" +
+                "            </thead>\r\n" +
+                "            <tbody>" +
+                "<tr><td><pre>" + this.function.getAST().getRawSignature().toString() +
+
+                "</pre></tr></td>" +
+                "            </tbody></table></div>" +
+
+                "</body></html>";
+        csvWriter.append(valueString);
+        csvWriter.close();
     }
 
     public void generateTestpaths()
