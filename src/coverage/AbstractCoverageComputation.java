@@ -27,6 +27,8 @@ public abstract class AbstractCoverageComputation implements ICoverageComputatio
     protected String coverage;
     protected int numberOfVisitedInstructions; // depend on coverage, instruction is statement, condition, or sub-condition
     protected int numberOfInstructions;
+    protected int numberOfVisitedBranches; // depend on coverage, instruction is statement, condition, or sub-condition
+    protected int numberOfBranches;
     protected List<ICFG> allCFG = new ArrayList<>();
 
     protected abstract Map<String, TestpathsOfAFunction> removeRedundantTestpath(Map<String, TestpathsOfAFunction> affectedFunctions);
@@ -387,6 +389,26 @@ public abstract class AbstractCoverageComputation implements ICoverageComputatio
     public void setAllCFG(List<ICFG> allCFG)
     {
         this.allCFG = allCFG;
+    }
+
+    public int getNumberOfVisitedBranches()
+    {
+        return numberOfVisitedBranches;
+    }
+
+    public void setNumberOfVisitedBranches(int numberOfVisitedBranches)
+    {
+        this.numberOfVisitedBranches = numberOfVisitedBranches;
+    }
+
+    public int getNumberOfBranches()
+    {
+        return numberOfBranches;
+    }
+
+    public void setNumberOfBranches(int numberOfBranches)
+    {
+        this.numberOfBranches = numberOfBranches;
     }
 
     static class TestpathsOfAFunction

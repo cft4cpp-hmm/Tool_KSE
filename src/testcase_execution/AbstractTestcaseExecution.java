@@ -316,12 +316,19 @@ public abstract class AbstractTestcaseExecution implements ITestcaseExecution
         computator.setCoverage(EnviroCoverageTypeNode.BRANCH);
         computator.setFunctionNode(functionNode);
 
-        int nInstructions = computator.getNumberOfInstructions(functionNode, EnviroCoverageTypeNode.BRANCH);
+        int nInstructions = computator.getNumberOfInstructions(functionNode, EnviroCoverageTypeNode.STATEMENT);
 
-        int nvisitedInstructions = computator.getNumberOfVisitedInstructions(functionNode, EnviroCoverageTypeNode.BRANCH, testCases);
+        int nvisitedInstructions = computator.getNumberOfVisitedInstructions(functionNode, EnviroCoverageTypeNode.STATEMENT, testCases);
+
+        int nBranches = computator.getNumberOfInstructions(functionNode, EnviroCoverageTypeNode.BRANCH);
+
+        int nvisitedBranches = computator.getNumberOfVisitedInstructions(functionNode, EnviroCoverageTypeNode.BRANCH, testCases);
 
         computator.setNumberOfInstructions(nInstructions);
         computator.setNumberOfVisitedInstructions(nvisitedInstructions);
+
+        computator.setNumberOfBranches(nBranches);
+        computator.setNumberOfVisitedBranches(nvisitedBranches);
 
         return computator;
     }

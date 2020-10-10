@@ -14,7 +14,7 @@ public abstract class ConditionCfgNode extends NormalCfgNode {
 	}
 
 	public boolean isVisitedTrueBranch() {
-		return isVisitedTrueBranch;
+		return getTrueNode().isVisited();
 	}
 
 	public void setVisitedTrueBranch(boolean isVisitedTrueBranch) {
@@ -22,7 +22,7 @@ public abstract class ConditionCfgNode extends NormalCfgNode {
 	}
 
 	public boolean isVisitedFalseBranch() {
-		return isVisitedFalseBranch;
+		return getFalseNode().isVisited();
 	}
 
 	public void setVisitedFalseBranch(boolean isVisitedFalseBranch) {

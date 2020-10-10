@@ -357,7 +357,9 @@ public class HybridTestGen extends Component
 
         bGen.generateTestData();
 
-        bGen.ExecuteTestCase(txtSourceFolder.getText(), value);
+        FunctionCoverageComputation functionCoverageComputation = Utils.ExecuteTestCase(txtSourceFolder.getText(), value, bGen.testCases);
+
+        bGen.setFunctionCoverageComputation(functionCoverageComputation);
 
         bGen.ExportReport();
 

@@ -11,9 +11,12 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import Common.TestConfig;
+import HybridAutoTestGen.TestData;
 import cfg.ICFG;
 import compiler.AvailableCompiler;
 import compiler.Compiler;
+import coverage.FunctionCoverageComputation;
 import org.apache.commons.io.FileDeleteStrategy;
 import org.apache.log4j.Logger;
 import org.eclipse.cdt.core.dom.ast.ASTVisitor;
@@ -59,7 +62,11 @@ import config.AbstractSetting;
 import config.ISettingv2;
 import parser.makefile.CompilerFolderParser;
 import parser.projectparser.ProjectLoader;
+import parser.projectparser.ProjectParser;
 import parser.projectparser.SourcecodeFileParser;
+import project_init.ProjectClone;
+import testcase_execution.TestcaseExecution;
+import testcase_manager.TestCase;
 import testdatagen.se.ExpressionRewriterUtils;
 import testdatagen.se.memory.ISymbolicVariable;
 import testdatagen.se.memory.IVariableNodeTable;
@@ -1678,6 +1685,84 @@ public class Utils implements IRegex {
 		return compiler;
 	}
 
+	public static String getClonedFilePath(String origin)
+	{
+		String originName = new File(origin).getName();
+
+		int lastDotPos = originName.lastIndexOf(SpecialCharacter.DOT);
+
+		String clonedName = originName.substring(0, lastDotPos) + ProjectClone.CLONED_FILE_EXTENSION + originName.substring(lastDotPos);
+
+		return TestConfig.INSTRUMENTED_CODE + "\\" + clonedName;
+	}
+
+
+	public static FunctionCoverageComputation ExecuteTestCase(String sourceFolder, String functionName, List<TestData> testCases)  throws Exception
+	{
+		IProjectNode projectNode;
+
+		TestConfig.SetProjectPath(sourceFolder);
+
+		ProjectParser parser = new ProjectParser(new File(sourceFolder));
+
+		projectNode = parser.getRootTree();
+
+		config.Paths.DATA_GEN_TEST = sourceFolder;
+
+		List<INode> sources = Search.searchNodes(projectNode, new SourcecodeFileNodeCondition());
+
+		for (INode sourceCode : sources)
+		{
+			ProjectClone clone = new ProjectClone();
+			String uetignoreFilePath = Utils.getClonedFilePath(sourceCode.getAbsolutePath());
+
+			try
+			{
+				String newContent = clone.generateFileContent(sourceCode);
+				Utils.writeContentToFile(newContent, uetignoreFilePath);
+			}
+			catch (InterruptedException e)
+			{
+				e.printStackTrace();
+			}
+		}
+
+		IFunctionNode function;
+
+		function = (IFunctionNode) Search.searchNodes(projectNode, new FunctionNodeCondition(), functionName).get(0);
+
+		TestcaseExecution executor = new TestcaseExecution();
+		executor.setFunction(function);
+
+		INode realParent = function.getRealParent();
+		String sourceFile = realParent.getAbsolutePath();
+		String sourceFileName = realParent.getName();
+
+		executor.setMode(TestcaseExecution.IN_AUTOMATED_TESTDATA_GENERATION_MODE);
+
+		List<TestCase> testCaseList = new ArrayList<>();
+
+		int i = 0;
+
+		for (TestData testData0: testCases)
+		{
+			i += 1;
+			TestCase testCase = new TestCase();
+			testCase.setTestData(testData0);
+			testCase.setName(TestConfig.TESTCASE_NAME + i);
+			testCase.setFunctionNode(function);
+			testCase.setSourcecodeFile(sourceFile);
+			testCase.setRealParentSourceFileName(sourceFileName);
+
+			testCaseList.add(testCase);
+		}
+
+		executor.execute(testCaseList);
+		FunctionCoverageComputation functionCoverageComputation = executor.computeCoverage(function, testCaseList);
+
+		return functionCoverageComputation;
+
+	}
 	private static Compiler createTemporaryCompiler(String opt)
 	{
 		if (opt != null)

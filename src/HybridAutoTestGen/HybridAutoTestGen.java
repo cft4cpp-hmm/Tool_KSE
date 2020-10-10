@@ -1,9 +1,6 @@
 package HybridAutoTestGen;
 
-import Common.DSEConstants;
-import Common.TestConfig;
 import cfg.CFG;
-import cfg.CFGGenerationforBranchvsStatementCoverage;
 import cfg.CFGGenerationforSubConditionCoverage;
 import cfg.ICFG;
 import cfg.object.AbstractConditionLoopCfgNode;
@@ -19,12 +16,7 @@ import javafx.stage.Stage;
 import javafx.util.Pair;
 import normalizer.FunctionNormalizer;
 import org.apache.log4j.Logger;
-import org.eclipse.core.internal.utils.Convert;
-import org.junit.Test;
 import parser.projectparser.ProjectParser;
-import project_init.ProjectClone;
-import testcase_execution.TestcaseExecution;
-import testcase_manager.TestCase;
 import testdatagen.se.ISymbolicExecution;
 import testdatagen.se.Parameter;
 import testdatagen.se.PathConstraint;
@@ -34,7 +26,6 @@ import testdatagen.se.solver.RunZ3OnCMD;
 import testdatagen.se.solver.SmtLibGeneration;
 import testdatagen.se.solver.Z3SolutionParser;
 import tree.object.IFunctionNode;
-import tree.object.INode;
 import tree.object.IProjectNode;
 import tree.object.IVariableNode;
 import utils.ASTUtils;
@@ -42,9 +33,7 @@ import utils.SpecialCharacter;
 import utils.Utils;
 import utils.search.FunctionNodeCondition;
 import utils.search.Search;
-import utils.search.SourcecodeFileNodeCondition;
 
-import javax.swing.*;
 import java.io.File;
 import java.io.FileWriter;
 import java.time.Duration;
@@ -76,7 +65,7 @@ public class HybridAutoTestGen extends Application
     float durationTotal = 0;
     WeightedGraph graph = null;
 
-    FunctionCoverageComputation functionCoverageComputation;
+    protected FunctionCoverageComputation functionCoverageComputation;
 
     public void setSolvePathWhenGenBoundaryTestData(boolean value)
     {
@@ -211,79 +200,6 @@ public class HybridAutoTestGen extends Application
     }
 
 
-    public void ExecuteTestCase(String sourceFolder, String functionName)  throws Exception
-    {
-        TestConfig.SetProjectPath(sourceFolder);
-
-        ProjectParser parser = new ProjectParser(new File(sourceFolder));
-
-        projectNode = parser.getRootTree();
-
-        config.Paths.DATA_GEN_TEST = sourceFolder;
-
-        List<INode> sources = Search.searchNodes(projectNode, new SourcecodeFileNodeCondition());
-
-        for (INode sourceCode : sources)
-        {
-            ProjectClone clone = new ProjectClone();
-            String uetignoreFilePath = getClonedFilePath(sourceCode.getAbsolutePath());
-
-            try
-            {
-                String newContent = clone.generateFileContent(sourceCode);
-                Utils.writeContentToFile(newContent, uetignoreFilePath);
-            }
-            catch (InterruptedException e)
-            {
-                e.printStackTrace();
-            }
-        }
-
-        IFunctionNode function;
-
-        function = (IFunctionNode) Search.searchNodes(projectNode, new FunctionNodeCondition(), functionName).get(0);
-
-        TestcaseExecution executor = new TestcaseExecution();
-        executor.setFunction(function);
-
-        INode realParent = function.getRealParent();
-        String sourceFile = realParent.getAbsolutePath();
-        String sourceFileName = realParent.getName();
-
-        executor.setMode(TestcaseExecution.IN_AUTOMATED_TESTDATA_GENERATION_MODE);
-
-        List<TestCase> testCaseList = new ArrayList<>();
-
-        int i = 0;
-
-        for (TestData testData0: testCases)
-        {
-            i += 1;
-            TestCase testCase = new TestCase();
-            testCase.setTestData(testData0);
-            testCase.setName(TestConfig.TESTCASE_NAME + i);
-            testCase.setFunctionNode(function);
-            testCase.setSourcecodeFile(sourceFile);
-            testCase.setRealParentSourceFileName(sourceFileName);
-
-            testCaseList.add(testCase);
-        }
-
-        executor.execute(testCaseList);
-        functionCoverageComputation = executor.computeCoverage(function, testCaseList);
-
-    }
-
-    public static String getClonedFilePath(String origin)
-    {
-        String originName = new File(origin).getName();
-
-        int lastDotPos = originName.lastIndexOf(SpecialCharacter.DOT);
-
-        String clonedName = originName.substring(0, lastDotPos) + ProjectClone.CLONED_FILE_EXTENSION + originName.substring(lastDotPos);
-
-        return TestConfig.INSTRUMENTED_CODE + "\\" + clonedName;
-    }
 
     public void ExportReport() throws Exception
     {
@@ -340,8 +256,8 @@ public class HybridAutoTestGen extends Application
         String loopString = "";
 
         valueString += loopString;
-        float stateCov = 0;
-        float branchCov = ((float)functionCoverageComputation.getNumberOfVisitedInstructions()) / ((float)functionCoverageComputation.getNumberOfInstructions());
+        float stateCov = ((float) getFunctionCoverageComputation().getNumberOfVisitedInstructions()) / ((float) getFunctionCoverageComputation().getNumberOfInstructions());
+        float branchCov = ((float) getFunctionCoverageComputation().getNumberOfVisitedBranches()) / ((float) getFunctionCoverageComputation().getNumberOfBranches());
 
         String coverInfo = "";
         try
@@ -1029,5 +945,15 @@ public class HybridAutoTestGen extends Application
     public List<TestData> getTestCases()
     {
         return this.testCases;
+    }
+
+    public FunctionCoverageComputation getFunctionCoverageComputation()
+    {
+        return functionCoverageComputation;
+    }
+
+    public void setFunctionCoverageComputation(FunctionCoverageComputation functionCoverageComputation)
+    {
+        this.functionCoverageComputation = functionCoverageComputation;
     }
 }
