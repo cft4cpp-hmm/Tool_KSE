@@ -91,7 +91,7 @@ public class HybridAutoTestGen extends Application
     }
 
     //public void generateTestData(int maxloop, String functionName, String sourceFolder) throws Exception
-    public void generateTestData() throws Exception
+    public void generateTestData(float boundStep) throws Exception
     {
         ProjectParser parser = new ProjectParser(new File(sourceFolder));
 
@@ -121,7 +121,7 @@ public class HybridAutoTestGen extends Application
         this.variables = function.getArguments();
 
         LocalDateTime before1 = LocalDateTime.now();
-        this.generateTestpathsForBoundaryTestGen();
+        this.generateTestpathsForBoundaryTestGen(boundStep);
 
         LocalDateTime after1 = LocalDateTime.now();
 
@@ -316,11 +316,13 @@ public class HybridAutoTestGen extends Application
         possibleTestpaths = testpaths_;
     }
 
-    public void generateTestpathsForBoundaryTestGen() throws Exception
+    public void generateTestpathsForBoundaryTestGen(float boundStep) throws Exception
     {
         List<ICfgNode> list = cfg.getAllNodes();
 
         Map<String, List<String>> paramValueList = new HashMap<>();
+
+        Map<String, List<String>> paramMidValueList = new HashMap<>();
 
         for (ICfgNode node : list)
         {
@@ -355,10 +357,12 @@ public class HybridAutoTestGen extends Application
                     continue;
                 }
 
-                double val = 0;
+                double val = 0, val1 = 0, val2 = 0;
                 try
                 {
                     val = Double.parseDouble(value);
+//                    val1 = Double.parseDouble(value) - boundStep;
+//                    val2 = Double.parseDouble(value) + boundStep;
                 }
                 catch (Exception ex)
                 {
@@ -370,12 +374,16 @@ public class HybridAutoTestGen extends Application
                     if (!paramValueList.get(paramName).contains(Double.toString(val)))
                     {
                         paramValueList.get(paramName).add(Double.toString(val));
+//                        paramValueList.get(paramName).add(Double.toString(val1));
+//                        paramValueList.get(paramName).add(Double.toString(val2));
                     }
                 }
                 else
                 {
                     List<String> valueList = new ArrayList<>();
                     valueList.add(Double.toString(val));
+//                    valueList.add(Double.toString(val1));
+//                    valueList.add(Double.toString(val2));
 
                     paramValueList.put(paramName, valueList);
                 }
@@ -431,6 +439,31 @@ public class HybridAutoTestGen extends Application
                 paramValueList.put(paramName, valueList);
             }
 
+            Utils.sortValueList(paramValueList.get(paramName));
+            List<String> midValueList = Utils.createMidValueList(paramValueList.get(paramName));
+            paramMidValueList.put(paramName, midValueList);
+        }
+
+        List<TestData> testDataList = new ArrayList<>();
+
+        for (IVariableNode variableNode: this.variables)
+        {
+            List<String> listValue = paramValueList.get(variableNode.getName());
+
+            for (String value: listValue)
+            {
+                TestData testData = new TestData();
+
+                testData.add(new Pair<>(variableNode.getName(), value));
+
+                for (IVariableNode midValueNode: this.variables)
+                {
+                    if (!midValueNode.getName().equals(variableNode.getName()))
+                    {
+                        testData.add(new Pair<>(midValueNode.getName(), value));
+                    }
+                }
+            }
         }
 
     }

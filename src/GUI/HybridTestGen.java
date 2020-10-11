@@ -355,7 +355,9 @@ public class HybridTestGen extends Component
 
         bGen.setSolvePathWhenGenBoundaryTestData(checked);
 
-        bGen.generateTestData();
+        float boundStep = 1;
+
+        bGen.generateTestData(boundStep);
 
         FunctionCoverageComputation functionCoverageComputation = Utils.ExecuteTestCase(txtSourceFolder.getText(), value, bGen.testCases);
 
