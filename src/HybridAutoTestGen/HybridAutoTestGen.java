@@ -28,7 +28,6 @@ import testdatagen.se.solver.Z3SolutionParser;
 import tree.object.IFunctionNode;
 import tree.object.IProjectNode;
 import tree.object.IVariableNode;
-import utils.ASTUtils;
 import utils.SpecialCharacter;
 import utils.Utils;
 import utils.search.FunctionNodeCondition;
@@ -321,7 +320,7 @@ public class HybridAutoTestGen extends Application
     {
         List<ICfgNode> list = cfg.getAllNodes();
 
-        Map<String, List<String>> paramValueList = new HashMap<String, List<String>>();
+        Map<String, List<String>> paramValueList = new HashMap<>();
 
         for (ICfgNode node : list)
         {
@@ -341,15 +340,15 @@ public class HybridAutoTestGen extends Application
                 String paramName = "";
                 String value = "";
 
-                if (Utils.isContains(this.variables,varOrVal[0]))
+                if (Utils.contains(this.variables,varOrVal[0].trim()))
                 {
-                    paramName = varOrVal[0];
-                    value = varOrVal[1];
+                    paramName = varOrVal[0].trim();
+                    value = varOrVal[1].trim();
                 }
-                else if (Utils.isContains(this.variables,varOrVal[1]))
+                else if (Utils.contains(this.variables,varOrVal[1].trim()))
                 {
-                    paramName = varOrVal[1];
-                    value = varOrVal[0];
+                    paramName = varOrVal[1].trim();
+                    value = varOrVal[0].trim();
                 }
                 else
                 {
@@ -373,9 +372,70 @@ public class HybridAutoTestGen extends Application
                         paramValueList.get(paramName).add(Double.toString(val));
                     }
                 }
+                else
+                {
+                    List<String> valueList = new ArrayList<>();
+                    valueList.add(Double.toString(val));
+
+                    paramValueList.put(paramName, valueList);
+                }
             }
         }
+
+        for(IVariableNode variableNode: this.variables)
+        {
+            String max = "", min ="";
+            switch (variableNode.getRealType())
+            {
+                case "int":
+                    max = Integer.toString(Integer.MAX_VALUE);
+                    min = Integer.toString(Integer.MIN_VALUE);
+                    break;
+                case "long":
+                    max = Long.toString(Long.MAX_VALUE);
+                    min = Long.toString(Long.MIN_VALUE);
+                    break;
+                case "float":
+                    max = Float.toString(Float.MAX_VALUE);
+                    min = Float.toString(Float.MIN_VALUE);
+                    break;
+                case "double":
+                    max = Double.toString(Double.MAX_VALUE);
+                    min = Double.toString(Double.MIN_VALUE);
+                    break;
+                case "short":
+                    max = Short.toString(Short.MAX_VALUE);
+                    min = Short.toString(Short.MIN_VALUE);
+                    break;
+            }
+
+            String paramName = variableNode.getName();
+
+            if (paramValueList.containsKey(paramName))
+            {
+                if (!paramValueList.get(paramName).contains(max))
+                {
+                    paramValueList.get(paramName).add(max);
+                }
+                if (!paramValueList.get(paramName).contains(min))
+                {
+                    paramValueList.get(paramName).add(min);
+                }
+            }
+            else
+            {
+                List<String> valueList = new ArrayList<>();
+                valueList.add(max);
+                valueList.add(min);
+
+                paramValueList.put(paramName, valueList);
+            }
+
+        }
+
     }
+
+
 
 //    public void generateTestpathsForBoundaryTestGen() throws Exception
 //    {

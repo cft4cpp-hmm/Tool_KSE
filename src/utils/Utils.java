@@ -1791,7 +1791,7 @@ public class Utils implements IRegex {
 		return !getCompiler().getName().contains("C++");
 	}
 
-	public static boolean isContains(List<IVariableNode> variableNodeList, String paramName)
+	public static boolean contains(List<IVariableNode> variableNodeList, String paramName)
 	{
 		boolean found = false;
 		for (IVariableNode variableNode: variableNodeList)
@@ -1799,8 +1799,40 @@ public class Utils implements IRegex {
 			if (variableNode.getName().equals(paramName))
 			{
 				found = true;
+				break;
 			}
 		}
 		return found;
+	}
+	public static String getVariableType(List<IVariableNode> variableNodeList, String paramName)
+	{
+		for (IVariableNode variableNode: variableNodeList)
+		{
+			if (variableNode.getName().equals(paramName))
+			{
+				return variableNode.getRealType();
+			}
+		}
+		return "";
+	}
+	public static void shortValueList(List<String> list)
+	{
+		for (int i = 0; i < list.size(); i++)
+		{
+			for (int j = i + 1; j < list.size(); j++)
+			{
+				double iItem = Double.parseDouble(list.get(i));
+				double jItem = Double.parseDouble(list.get(j));
+				if (iItem > jItem)
+				{
+					String temp = list.get(i);
+					list.remove(i);
+					list.set(i, list.get(j));
+
+					list.remove(j);
+					list.set(j, temp);
+				}
+			}
+		}
 	}
 }
