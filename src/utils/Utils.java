@@ -1790,4 +1790,17 @@ public class Utils implements IRegex {
 	public static boolean isC() {
 		return !getCompiler().getName().contains("C++");
 	}
+
+	public static boolean isContains(List<IVariableNode> variableNodeList, String paramName)
+	{
+		boolean found = false;
+		for (IVariableNode variableNode: variableNodeList)
+		{
+			if (variableNode.getName().equals(paramName))
+			{
+				found = true;
+			}
+		}
+		return found;
+	}
 }

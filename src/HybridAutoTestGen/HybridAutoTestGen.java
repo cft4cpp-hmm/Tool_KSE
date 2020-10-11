@@ -168,7 +168,7 @@ public class HybridAutoTestGen extends Application
 
             String testcase = tpclone.getTestCase().replaceAll(";;", ";");
 
-            if(!testcase.equals(IStaticSolutionGeneration.NO_SOLUTION))
+            if (!testcase.equals(IStaticSolutionGeneration.NO_SOLUTION))
             {
                 TestData testData = TestData.parseString(testcase);
 
@@ -198,7 +198,6 @@ public class HybridAutoTestGen extends Application
 //        graph.computeStatementCovNew();
 
     }
-
 
 
     public void ExportReport() throws Exception
@@ -322,95 +321,155 @@ public class HybridAutoTestGen extends Application
     {
         List<ICfgNode> list = cfg.getAllNodes();
 
+        Map<String, List<String>> paramValueList = new HashMap<String, List<String>>();
+
         for (ICfgNode node : list)
         {
             if (node instanceof ConditionCfgNode && !(node instanceof AbstractConditionLoopCfgNode))
             {
-                ICfgNode trueNode = node.getTrueNode();
+                ConditionCfgNode stm1 = (ConditionCfgNode) node.clone();
 
-                FullTestpath tp11 = new FullTestpath();
+                String Content = stm1.getContent();
+                Content = Content.replaceAll("<=|>=|<|>|!=", "=");
 
-                if (solvePathWhenGenBoundaryTestData == true)
+                String[] varOrVal = Content.split("=");
+
+                if (varOrVal.length != 2)
                 {
-                    Random rand = new Random();
-                    for (float i = -boundStep; i <= boundStep; i += boundStep)
-                    {
-                        ConditionCfgNode stm1 = (ConditionCfgNode) node.clone();
+                    continue;
+                }
+                String paramName = "";
+                String value = "";
 
-                        stm1.setContent(stm1.getContent().replaceAll("<=|>=|<|>|!=", "=="));
-                        stm1.setAst(ASTUtils.convertToIAST(stm1.getContent() + "+" + i));
-                        tp11.add(stm1);
-
-                        String result = this.getSolution(tp11, true);
-
-                        for (IVariableNode variable : this.variables)
-                        {
-                            if (!result.contains(variable.toString()) && !result.equals(IStaticSolutionGeneration.NO_SOLUTION))
-                            {
-                                result += variable.toString() + "=" + rand.nextInt(100) + ";";
-                            }
-                        }
-                        result = result.replaceAll(";;", ";");
-
-                        if (!result.equals(IStaticSolutionGeneration.NO_SOLUTION))
-                        {
-                            TestData testData = TestData.parseString(result);
-
-                            if (!testCases.contains(testData))
-                            {
-                                testCases.add(testData);
-                            }
-                        }
-                    }
+                if (Utils.isContains(this.variables,varOrVal[0]))
+                {
+                    paramName = varOrVal[0];
+                    value = varOrVal[1];
+                }
+                else if (Utils.isContains(this.variables,varOrVal[1]))
+                {
+                    paramName = varOrVal[1];
+                    value = varOrVal[0];
                 }
                 else
                 {
-                    Random rand = new Random();
+                    continue;
+                }
 
-                    ConditionCfgNode stm1 = (ConditionCfgNode) node.clone();
+                double val = 0;
+                try
+                {
+                    val = Double.parseDouble(value);
+                }
+                catch (Exception ex)
+                {
+                    continue;
+                }
 
-                    String Content = stm1.getContent();
-                    Content = Content.replaceAll("<=|>=|<|>|!=", "==");
-
-                    stm1.setContent(Content);
-                    stm1.setAst(ASTUtils.convertToIAST(stm1.getContent()));
-                    tp11.add(stm1);
-//                        tp11.add(trueNode);
-
-                    String result = this.getSolution(tp11, true);
-
-                    List<IVariableNode> listVarInResult = new ArrayList<>();
-
-                    List<TestData> resultList = new ArrayList<>();
-
-                    if (!result.trim().equals(IStaticSolutionGeneration.NO_SOLUTION))
+                if (paramValueList.containsKey(paramName))
+                {
+                    if (!paramValueList.get(paramName).contains(Double.toString(val)))
                     {
-                        String[] solutionList = result.split(";");
-
-                        //solutionList is in form of: [x=3][y=4]
-
-                        resultList = solutionListAnalysis(solutionList);
-
-                        for (TestData testData : resultList)
-                        {
-                            for (IVariableNode variable : this.variables)
-                            {
-                                if (!testData.isExist(variable.toString()))
-                                {
-                                    testData.add(new Pair<>(variable.toString(),rand.nextInt(100)));
-                                }
-                            }
-
-                            if (!testCases.contains(testData))
-                            {
-                                testCases.add(testData);
-                            }
-                        }
+                        paramValueList.get(paramName).add(Double.toString(val));
                     }
                 }
             }
         }
     }
+
+//    public void generateTestpathsForBoundaryTestGen() throws Exception
+//    {
+//        List<ICfgNode> list = cfg.getAllNodes();
+//
+//        for (ICfgNode node : list)
+//        {
+//            if (node instanceof ConditionCfgNode && !(node instanceof AbstractConditionLoopCfgNode))
+//            {
+//                ICfgNode trueNode = node.getTrueNode();
+//
+//                FullTestpath tp11 = new FullTestpath();
+//
+//                if (solvePathWhenGenBoundaryTestData == true)
+//                {
+//                    Random rand = new Random();
+//                    for (float i = -boundStep; i <= boundStep; i += boundStep)
+//                    {
+//                        ConditionCfgNode stm1 = (ConditionCfgNode) node.clone();
+//
+//                        stm1.setContent(stm1.getContent().replaceAll("<=|>=|<|>|!=", "=="));
+//                        stm1.setAst(ASTUtils.convertToIAST(stm1.getContent() + "+" + i));
+//                        tp11.add(stm1);
+//
+//                        String result = this.getSolution(tp11, true);
+//
+//                        for (IVariableNode variable : this.variables)
+//                        {
+//                            if (!result.contains(variable.toString()) && !result.equals(IStaticSolutionGeneration.NO_SOLUTION))
+//                            {
+//                                result += variable.toString() + "=" + rand.nextInt(100) + ";";
+//                            }
+//                        }
+//                        result = result.replaceAll(";;", ";");
+//
+//                        if (!result.equals(IStaticSolutionGeneration.NO_SOLUTION))
+//                        {
+//                            TestData testData = TestData.parseString(result);
+//
+//                            if (!testCases.contains(testData))
+//                            {
+//                                testCases.add(testData);
+//                            }
+//                        }
+//                    }
+//                }
+//                else
+//                {
+//                    Random rand = new Random();
+//
+//                    ConditionCfgNode stm1 = (ConditionCfgNode) node.clone();
+//
+//                    String Content = stm1.getContent();
+//                    Content = Content.replaceAll("<=|>=|<|>|!=", "==");
+//
+//                    stm1.setContent(Content);
+//                    stm1.setAst(ASTUtils.convertToIAST(stm1.getContent()));
+//                    tp11.add(stm1);
+////                        tp11.add(trueNode);
+//
+//                    String result = this.getSolution(tp11, true);
+//
+//                    List<IVariableNode> listVarInResult = new ArrayList<>();
+//
+//                    List<TestData> resultList = new ArrayList<>();
+//
+//                    if (!result.trim().equals(IStaticSolutionGeneration.NO_SOLUTION))
+//                    {
+//                        String[] solutionList = result.split(";");
+//
+//                        //solutionList is in form of: [x=3][y=4]
+//
+//                        resultList = solutionListAnalysis(solutionList);
+//
+//                        for (TestData testData : resultList)
+//                        {
+//                            for (IVariableNode variable : this.variables)
+//                            {
+//                                if (!testData.isExist(variable.toString()))
+//                                {
+//                                    testData.add(new Pair<>(variable.toString(),rand.nextInt(100)));
+//                                }
+//                            }
+//
+//                            if (!testCases.contains(testData))
+//                            {
+//                                testCases.add(testData);
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }
 
     /*
     solutionList is in form of [x=3][y=4]...
