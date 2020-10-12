@@ -448,6 +448,26 @@ public class HybridAutoTestGen extends Application
 
         for (IVariableNode variableNode: this.variables)
         {
+            //get list of mid value
+
+            Map<String, List<String>> otherVarMidValueList = new HashMap<>();
+
+            for (IVariableNode midValueNode: this.variables)
+            {
+                if (!midValueNode.getName().equals(variableNode.getName()))
+                {
+                    otherVarMidValueList.put(midValueNode.getName(), paramMidValueList.get(midValueNode.getName()))
+                }
+            }
+
+            for(Map.Entry<String, List<String>> entry : otherVarMidValueList.entrySet())
+            {
+                List<TestData> testDataList1 = new ArrayList<>();
+                for (String midValue : entry.getValue())
+                {
+                }
+            }
+
             List<String> listValue = paramValueList.get(variableNode.getName());
 
             for (String value: listValue)
@@ -456,13 +476,7 @@ public class HybridAutoTestGen extends Application
 
                 testData.add(new Pair<>(variableNode.getName(), value));
 
-                for (IVariableNode midValueNode: this.variables)
-                {
-                    if (!midValueNode.getName().equals(variableNode.getName()))
-                    {
-                        testData.add(new Pair<>(midValueNode.getName(), value));
-                    }
-                }
+
             }
         }
 
