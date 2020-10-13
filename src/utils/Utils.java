@@ -2273,18 +2273,66 @@ public class Utils implements IRegex
         }
     }
 
-    public static List<String> createMidValueList(List<String> list)
+    public static List<String> createMidValueList(List<String> list, String paramType)
     {
         List<String> midValueList = new ArrayList<>();
         for (int i = 0; i < list.size() - 1; i++)
         {
             String siItem = list.get(i);
+            String siiItem = list.get(i + 1);
             double iItem = Double.parseDouble(siItem);
-            double iiItem = Double.parseDouble(siItem);
+            double iiItem = Double.parseDouble(siiItem);
 
-            midValueList.add(Double.toString((iItem + iiItem)/2));
+
+            switch (paramType)
+            {
+                case "int":
+                    if (iItem + 1 >= iiItem)
+                        continue;
+
+                    int mid = (int)((iItem + iiItem)/2);
+
+                    midValueList.add(Integer.toString(mid));
+                    break;
+                case "long":
+                    if (iItem + 1 >= iiItem)
+                        continue;
+
+                    long midLong = (long)((iItem + iiItem)/2);
+
+                    midValueList.add(Long.toString(midLong));
+                    break;
+                case "short":
+                    if (iItem + 1 >= iiItem)
+                        continue;
+
+                    short midshort = (short)((iItem + iiItem)/2);
+
+                    midValueList.add(Short.toString(midshort));
+                    break;
+                case "float":
+                    float midfloat = (float)((iItem + iiItem)/2);
+                    midValueList.add(Float.toString(midfloat));
+                    break;
+                case "double":
+                    double middouble = (double)((iItem + iiItem)/2);
+                    midValueList.add(Double.toString(middouble));
+                    break;
+            }
         }
 
         return midValueList;
+    }
+
+    public static List<String> CloneStringList(List<String> list)
+    {
+        List<String> returnList = new ArrayList<>();
+
+        for(String str: list)
+        {
+            returnList.add(str);
+        }
+
+        return returnList;
     }
 }

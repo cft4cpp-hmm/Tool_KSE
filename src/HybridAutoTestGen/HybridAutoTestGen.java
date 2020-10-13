@@ -121,7 +121,9 @@ public class HybridAutoTestGen extends Application
         this.variables = function.getArguments();
 
         LocalDateTime before1 = LocalDateTime.now();
-        this.generateTestpathsForBoundaryTestGen(boundStep);
+        List<TestData> boundTestDataList = this.generateTestpathsForBoundaryTestGen();
+
+        testCases.addAll(boundTestDataList);
 
         LocalDateTime after1 = LocalDateTime.now();
 
@@ -316,7 +318,7 @@ public class HybridAutoTestGen extends Application
         possibleTestpaths = testpaths_;
     }
 
-    public void generateTestpathsForBoundaryTestGen(float boundStep) throws Exception
+    public List<TestData> generateTestpathsForBoundaryTestGen() throws Exception
     {
         List<ICfgNode> list = cfg.getAllNodes();
 
@@ -440,7 +442,7 @@ public class HybridAutoTestGen extends Application
             }
 
             Utils.sortValueList(paramValueList.get(paramName));
-            List<String> midValueList = Utils.createMidValueList(paramValueList.get(paramName));
+            List<String> midValueList = Utils.createMidValueList(paramValueList.get(paramName), variableNode.getRealType());
             paramMidValueList.put(paramName, midValueList);
         }
 
@@ -456,19 +458,13 @@ public class HybridAutoTestGen extends Application
             {
                 if (!midValueNode.getName().equals(variableNode.getName()))
                 {
-                    otherVarMidValueList.put(midValueNode.getName(), paramMidValueList.get(midValueNode.getName()))
-                }
-            }
-
-            for(Map.Entry<String, List<String>> entry : otherVarMidValueList.entrySet())
-            {
-                List<TestData> testDataList1 = new ArrayList<>();
-                for (String midValue : entry.getValue())
-                {
+                    otherVarMidValueList.put(midValueNode.getName(), paramMidValueList.get(midValueNode.getName()));
                 }
             }
 
             List<String> listValue = paramValueList.get(variableNode.getName());
+
+            List<TestData> testDataListforBoundValue = new ArrayList<>();
 
             for (String value: listValue)
             {
@@ -476,12 +472,45 @@ public class HybridAutoTestGen extends Application
 
                 testData.add(new Pair<>(variableNode.getName(), value));
 
-
+                testDataListforBoundValue.add(testData);
             }
+
+            for (Map.Entry entry : otherVarMidValueList.entrySet()) {
+                List<TestData> newList = new ArrayList<>();
+
+                newList = CombineTestDataList(testDataListforBoundValue, entry.getKey().toString(), Utils.CloneStringList ((List<String>)entry.getValue()));
+
+                testDataListforBoundValue = newList;
+            }
+
+            testDataList.addAll(testDataListforBoundValue);
         }
 
+        return testDataList;
     }
 
+    public List<TestData> CombineTestDataList(List<TestData> testDataList, String paramName, List<String> valueList)
+    {
+        List<TestData> returnList = new ArrayList<>();
+
+        for (TestData testData: testDataList)
+        {
+            List<TestData> newList = new ArrayList<>();
+
+            for (String value: valueList)
+            {
+                TestData testData1 = testData.clone();
+
+                testData1.add(new Pair<>(paramName, value));
+
+                newList.add(testData1);
+            }
+
+            returnList.addAll(newList);
+        }
+
+        return returnList;
+    }
 
 
 //    public void generateTestpathsForBoundaryTestGen() throws Exception

@@ -1,6 +1,7 @@
 package HybridAutoTestGen;
 
 import javafx.util.Pair;
+import utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +25,24 @@ public class TestData
     public List<Pair<String, Object>> getTestData()
     {
         return testData;
+    }
+
+    public TestData clone()
+    {
+        TestData ret = new TestData();
+
+        List<Pair<String, Object>> newTestData = new ArrayList<>();
+
+        for (Pair<String, Object> pair: testData)
+        {
+            Pair<String, Object> newPair = new Pair<>(pair.getKey(), pair.getValue());
+
+            newTestData.add(newPair);
+        }
+        ret.testData = newTestData;
+
+        return ret;
+
     }
 
     public void add(Pair<String, Object> pair)
