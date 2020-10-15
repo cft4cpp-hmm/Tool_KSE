@@ -1,4 +1,6 @@
 (set-option :timeout 5000)
-(declare-fun tvw_averageGrade () Int)
-(assert (and  (>  tvw_averageGrade   95 )   (<  tvw_averageGrade   100 ) ) )
+(declare-fun tvw_i () Real)
+(declare-fun tvw_j () Real)
+(declare-fun tvw_k () Real)
+(assert (or  (or  (<  tvw_i   0 )   (<  tvw_j   0 ) )   (<  tvw_k   0 ) ) )
 (check-sat)(get-model)

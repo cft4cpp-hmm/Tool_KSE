@@ -128,7 +128,7 @@ public abstract class AbstractCoverageComputation implements ICoverageComputatio
                         }
                         case EnviroCoverageTypeNode.BRANCH:
                         {
-                            nVisitedInstructions += cfg.getVisitedBranches().size();
+                            nVisitedInstructions += cfg.countVisitedBranches();
                             break;
                         }
 //                        case EnviroCoverageTypeNode.STATEMENT_AND_BRANCH: {

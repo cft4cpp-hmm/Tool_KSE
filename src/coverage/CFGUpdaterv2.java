@@ -84,13 +84,11 @@ public class CFGUpdaterv2 implements ICFGUpdater {
         String visitedStatementInStr = " ";
         for (String offset : testpath.getStandardTestpathByProperty(FunctionInstrumentationForStatementvsBranch_Markerv2.START_OFFSET_IN_FUNCTION))
             visitedStatementInStr += offset + " ";
-//        logger.debug("visitedStatementInStr = " + visitedStatementInStr);
 
         int offsetOfFunctionInSourcecodeFile = cfg.getFunctionNode().getAST().getFileLocation().getNodeOffset();
         for (ICfgNode visitedNode : cfg.getVisitedStatements()) {
             if (visitedNode instanceof ConditionCfgNode) { // condition
                 int tmp = (visitedNode.getAstLocation().getNodeOffset() - offsetOfFunctionInSourcecodeFile);
-//                logger.debug("consider node " + tmp + " ; content  = " + ((ConditionCfgNode) visitedNode).getAst().getRawSignature());
 
                 // analyze the true branch
                 ICfgNode trueBranchNode = visitedNode.getTrueNode();

@@ -87,6 +87,7 @@ public interface ICFG {
 	 * @return
 	 */
 	List<ICfgNode> getVisitedStatements();
+	int countVisitedBranches();
 
 	/**
 	 * Get the number of unsited statements in CFG

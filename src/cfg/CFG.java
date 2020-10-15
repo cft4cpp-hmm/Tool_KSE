@@ -356,6 +356,20 @@ public class CFG implements ICFG {
 		return visitedBranches;
 	}
 
+	public int countVisitedBranches() {
+		int count = 0;
+		for (ICfgNode node : getAllNodes())
+			if (node.isVisited() && node instanceof ConditionCfgNode) {
+				if (((ConditionCfgNode) node).isVisitedFalseBranch()) {
+					count += 1;
+				}
+				if (((ConditionCfgNode) node).isVisitedTrueBranch()) {
+					count += 1;
+				}
+			}
+		return count;
+	}
+
 	@Override
 	public PartialTestpaths getPartialTestpathcontainingUnCoveredBranches_Strategy1() {
 		PartialTestpaths uncoveredTestpaths = new PartialTestpaths();
