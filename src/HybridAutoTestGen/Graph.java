@@ -82,7 +82,7 @@ public class Graph
             for (int i = 0; i < fullCfgNodes.size(); i++)
             {
                 if (fullCfgNodes.get(i).toString().contains("{") || fullCfgNodes.get(i).toString().contains("}")
-						|| fullCfgNodes.get(i).toString().indexOf("[") == 0)
+                        || fullCfgNodes.get(i).toString().indexOf("[") == 0)
                 {
                     fullCfgNodes.remove(i);
                     i = i - 1;
@@ -184,7 +184,7 @@ public class Graph
                     {
                         visitedBranch += 1;
                     }
-                    if(getStatementFalseNode(stm).isVisited() == true)
+                    if (getStatementFalseNode(stm).isVisited() == true)
                     {
                         visitedBranch += 1;
                     }
@@ -209,23 +209,25 @@ public class Graph
     private ICfgNode getStatementTrueNode(ICfgNode stm)
     {
         ICfgNode trueNode = stm.getTrueNode();
-        while(trueNode instanceof ScopeCfgNode)
+        while (trueNode instanceof ScopeCfgNode)
         {
             trueNode = trueNode.getTrueNode();
         }
 
         return trueNode;
     }
+
     private ICfgNode getStatementFalseNode(ICfgNode stm)
     {
         ICfgNode falseNode = stm.getFalseNode();
-        while(falseNode instanceof ScopeCfgNode)
+        while (falseNode instanceof ScopeCfgNode)
         {
             falseNode = falseNode.getFalseNode();
         }
 
         return falseNode;
     }
+
     public float computeBranchCover() throws Exception
     {
         Set<Edge> setEdges = new HashSet<Edge>();
@@ -400,14 +402,14 @@ public class Graph
     public void addConstraint() throws Exception
     {
         Parameter paramaters = new Parameter();
-		for (INode n : ((FunctionNode) this.functionNode).getArguments())
-		{
-			paramaters.add(n);
-		}
-		for (INode n : ((FunctionNode) this.functionNode).getReducedExternalVariables())
-		{
-			paramaters.add(n);
-		}
+        for (INode n : ((FunctionNode) this.functionNode).getArguments())
+        {
+            paramaters.add(n);
+        }
+        for (INode n : ((FunctionNode) this.functionNode).getReducedExternalVariables())
+        {
+            paramaters.add(n);
+        }
         for (IFullTestpath fullTestpath : this.getFullPossibleFullTestpaths())
         {
             ISymbolicExecution se = new SymbolicExecution(fullTestpath, paramaters, this.functionNode);
@@ -457,7 +459,7 @@ public class Graph
 
         }
 
-        valueString +="    <div class=\"table-wrapper\">\r\n" +
+        valueString += "    <div class=\"table-wrapper\">\r\n" +
                 "        <table class=\"fl-table\">\r\n" +
                 "            <thead>\r\n" +
                 "                <tr>\r\n" +
@@ -469,17 +471,16 @@ public class Graph
                 "            <tbody>";
         for (ProbTestPath testPath : this.getFullProbTestPaths())
         {
-//            if (!testPath.getTestCase().equals(IStaticSolutionGeneration.NO_SOLUTION))
-//            {
-                if (toolName == "WCFT4Cpp")
-                {
-                    valueString += testPath.toString();
-                }
-                else
-                {
-                    valueString += testPath.toStringForCFT4Cpp();
-                }
-//            }
+            if (toolName == "WCFT4Cpp")
+            {
+                String temp = testPath.toString();
+                valueString += temp;
+            }
+            else
+            {
+                String temp = testPath.toStringForCFT4Cpp();
+                valueString += temp;
+            }
         }
         valueString += "</tbody></table></div>";
 
@@ -502,8 +503,8 @@ public class Graph
         {
             coverInfo =
 //                    "        <tr><td>C2 Coverage: " + this.computeStatementCov() + "</td></tr>\r\n"+
-            "        <tr><td>stateCov: " + stateCov + "</td></tr>\r\n"+
-            "        <tr><td>branchCov: " + branchCov + "</td></tr>\r\n"+
+                    "        <tr><td>stateCov: " + stateCov + "</td></tr>\r\n" +
+                            "        <tr><td>branchCov: " + branchCov + "</td></tr>\r\n" +
                             "        <tr><td>Time: " + diff + "s</td></tr>\r\n";
         }
         catch (Exception e)
@@ -524,7 +525,7 @@ public class Graph
                 "                    <th>Function raw signature</th>\r\n" +
                 "                </tr>\r\n" +
                 "            </thead>\r\n" +
-                "            <tbody>"+
+                "            <tbody>" +
                 "<tr><td><pre>" + this.functionNode.getAST().getRawSignature().toString() +
 
                 "</pre></td></tr></tbody></table></div>" +
@@ -615,6 +616,7 @@ public class Graph
     {
         return this.fullProbTestPaths;
     }
+
     public int getEpoches()
     {
         return epoches;

@@ -16,19 +16,19 @@
                     <th>CFG generated test data</th>
                 </tr>
             </thead>
-            <tbody><tr><td>0</td><td>( int trityp = 0;) <font> => </font>return trityp;</td><td>k=3.0;i=2.0;j=2.0;</td></tr><tr><td>1</td><td>( int trityp = 0;) <font> => </font>( trityp = 2;) <font> => </font>return trityp;</td><td>k=3.0;i=2.0;j=2.0;</td></tr><tr><td>2</td><td>( int trityp = 0;) <font> => </font>( trityp = trityp + 1;) <font> => </font>return trityp;</td><td>k=2.0;i=1.0;j=2.0;</td></tr><tr><td>3</td><td>( int trityp = 0;) <font> => </font>( trityp = trityp + 1;) <font> => </font>( trityp = 2;) <font> => </font>return trityp;</td><td>k=2.0;i=1.0;j=2.0;</td></tr><tr><td>4</td><td>( int trityp = 0;) <font> => </font>( trityp = trityp + 1;) <font> => </font>return trityp;</td><td>k=1.0;i=1.0;j=2.0;</td></tr><tr><td>5</td><td>( int trityp = 0;) <font> => </font>( trityp = trityp + 1;) <font> => </font>( trityp = 2;) <font> => </font>return trityp;</td><td>k=1.0;i=1.0;j=2.0;</td></tr><tr><td>6</td><td>( int trityp = 0;) <font> => </font>( trityp = trityp + 1;) <font> => </font>( trityp = trityp + 1;) <font> => </font>return trityp;</td><td>k=1.0;i=1.0;j=1.0;</td></tr><tr><td>7</td><td>( int trityp = 0;) <font> => </font>( trityp = trityp + 1;) <font> => </font>( trityp = trityp + 1;) <font> => </font>( trityp = 2;) <font> => </font>return trityp;</td><td>k=1.0;i=1.0;j=1.0;</td></tr><tr><td>8</td><td>( int trityp = 0;) <font> => </font>( trityp = trityp + 1;) <font> => </font>return trityp;</td><td>k=4.0;i=3.0;j=2.0;</td></tr><tr><td>9</td><td>( int trityp = 0;) <font> => </font>( trityp = trityp + 1;) <font> => </font>( trityp = 2;) <font> => </font>return trityp;</td><td>k=4.0;i=3.0;j=2.0;</td></tr><tr><td>10</td><td>( int trityp = 0;) <font> => </font>( trityp = trityp + 1;) <font> => </font>( trityp = trityp + 1;) <font> => </font>return trityp;</td><td>k=1.0;i=2.0;j=1.0;</td></tr><tr><td>11</td><td>( int trityp = 0;) <font> => </font>( trityp = trityp + 1;) <font> => </font>( trityp = trityp + 1;) <font> => </font>( trityp = 2;) <font> => </font>return trityp;</td><td>k=1.0;i=2.0;j=1.0;</td></tr><tr><td>12</td><td>( int trityp = 0;) <font> => </font>( trityp = trityp + 1;) <font> => </font>( trityp = trityp + 1;) <font> => </font>return trityp;</td><td>k=2.0;i=2.0;j=1.0;</td></tr><tr><td>13</td><td>( int trityp = 0;) <font> => </font>( trityp = trityp + 1;) <font> => </font>( trityp = trityp + 1;) <font> => </font>( trityp = 2;) <font> => </font>return trityp;</td><td>k=2.0;i=2.0;j=1.0;</td></tr><tr><td>14</td><td>( int trityp = 0;) <font> => </font>( trityp = trityp + 1;) <font> => </font>( trityp = trityp + 1;) <font> => </font>( trityp = trityp + 1;) <font> => </font>return trityp;</td><td></td></tr><tr><td>15</td><td>( int trityp = 0;) <font> => </font>( trityp = trityp + 1;) <font> => </font>( trityp = trityp + 1;) <font> => </font>( trityp = trityp + 1;) <font> => </font>( trityp = 2;) <font> => </font>return trityp;</td><td></td></tr><tr><td>16</td><td>( int trityp = 0;) <font> => </font>return 3;</td><td>k=0.0;i=1.0;j=0.0;</td></tr><tr><td>17</td><td>( int trityp = 0;) <font> => </font>return 3;</td><td>k=-1;i=-1;j=-1;</td></tr>            </tbody></table> </div><br/><div  class="table-wrapper">        <table class="fl-table">
+            <tbody><tr><td>0</td><td><td>0</td><td></td><td>n=1;</td></tr><tr><td>1</td><td>( int i, j, min_idx;) <font> => </font>( i = 0;) <font> => </font>( min_idx = i;) <font> => </font>( j = i+1;) <font> => </font>( swap(&arr[min_idx], &arr[i]);) <font> => </font>( i++) <font> => </font>} [19]</td><td></td></tr><tr><td>2</td><td>( int i, j, min_idx;) <font> => </font>( i = 0;) <font> => </font>( min_idx = i;) <font> => </font>( j = i+1;) <font> => </font>( j++) <font> => </font>( swap(&arr[min_idx], &arr[i]);) <font> => </font>( i++) <font> => </font>} [19]</td><td>n=2;arr[1]=0;arr[0]=0;</td></tr><tr><td>3</td><td>( int i, j, min_idx;) <font> => </font>( i = 0;) <font> => </font>( min_idx = i;) <font> => </font>( j = i+1;) <font> => </font>( min_idx = j;) <font> => </font>( j++) <font> => </font>( swap(&arr[min_idx], &arr[i]);) <font> => </font>( i++) <font> => </font>} [19]</td><td>n=2;arr[1]=0;arr[0]=1;</td></tr>            </tbody></table> </div><br/><div  class="table-wrapper">        <table class="fl-table">
             <thead>
                 <tr>
                     <th>All test data = CFG generated test data + boundary value test data</th>
                 </tr>
             </thead>
-            <tbody><tr><td>i=0.0;j=0.0;k=0.0;</td></tr><tr><td>i=0.0;j=0.0;k=8.988465674311579E307;</td></tr><tr><td>i=0.0;j=8.988465674311579E307;k=0.0;</td></tr><tr><td>i=0.0;j=8.988465674311579E307;k=8.988465674311579E307;</td></tr><tr><td>i=4.9E-324;j=0.0;k=0.0;</td></tr><tr><td>i=4.9E-324;j=0.0;k=8.988465674311579E307;</td></tr><tr><td>i=4.9E-324;j=8.988465674311579E307;k=0.0;</td></tr><tr><td>i=4.9E-324;j=8.988465674311579E307;k=8.988465674311579E307;</td></tr><tr><td>i=1.7976931348623157E308;j=0.0;k=0.0;</td></tr><tr><td>i=1.7976931348623157E308;j=0.0;k=8.988465674311579E307;</td></tr><tr><td>i=1.7976931348623157E308;j=8.988465674311579E307;k=0.0;</td></tr><tr><td>i=1.7976931348623157E308;j=8.988465674311579E307;k=8.988465674311579E307;</td></tr><tr><td>j=0.0;i=0.0;k=0.0;</td></tr><tr><td>j=0.0;i=0.0;k=8.988465674311579E307;</td></tr><tr><td>j=0.0;i=8.988465674311579E307;k=0.0;</td></tr><tr><td>j=0.0;i=8.988465674311579E307;k=8.988465674311579E307;</td></tr><tr><td>j=4.9E-324;i=0.0;k=0.0;</td></tr><tr><td>j=4.9E-324;i=0.0;k=8.988465674311579E307;</td></tr><tr><td>j=4.9E-324;i=8.988465674311579E307;k=0.0;</td></tr><tr><td>j=4.9E-324;i=8.988465674311579E307;k=8.988465674311579E307;</td></tr><tr><td>j=1.7976931348623157E308;i=0.0;k=0.0;</td></tr><tr><td>j=1.7976931348623157E308;i=0.0;k=8.988465674311579E307;</td></tr><tr><td>j=1.7976931348623157E308;i=8.988465674311579E307;k=0.0;</td></tr><tr><td>j=1.7976931348623157E308;i=8.988465674311579E307;k=8.988465674311579E307;</td></tr><tr><td>k=0.0;i=0.0;j=0.0;</td></tr><tr><td>k=0.0;i=0.0;j=8.988465674311579E307;</td></tr><tr><td>k=0.0;i=8.988465674311579E307;j=0.0;</td></tr><tr><td>k=0.0;i=8.988465674311579E307;j=8.988465674311579E307;</td></tr><tr><td>k=4.9E-324;i=0.0;j=0.0;</td></tr><tr><td>k=4.9E-324;i=0.0;j=8.988465674311579E307;</td></tr><tr><td>k=4.9E-324;i=8.988465674311579E307;j=0.0;</td></tr><tr><td>k=4.9E-324;i=8.988465674311579E307;j=8.988465674311579E307;</td></tr><tr><td>k=1.7976931348623157E308;i=0.0;j=0.0;</td></tr><tr><td>k=1.7976931348623157E308;i=0.0;j=8.988465674311579E307;</td></tr><tr><td>k=1.7976931348623157E308;i=8.988465674311579E307;j=0.0;</td></tr><tr><td>k=1.7976931348623157E308;i=8.988465674311579E307;j=8.988465674311579E307;</td></tr><tr><td>k=3.0;i=2.0;j=2.0;</td></tr><tr><td>k=2.0;i=1.0;j=2.0;</td></tr><tr><td>k=1.0;i=1.0;j=2.0;</td></tr><tr><td>k=1.0;i=1.0;j=1.0;</td></tr><tr><td>k=4.0;i=3.0;j=2.0;</td></tr><tr><td>k=1.0;i=2.0;j=1.0;</td></tr><tr><td>k=2.0;i=2.0;j=1.0;</td></tr><tr><td>k=0.0;i=1.0;j=0.0;</td></tr><tr><td>k=-1.0;i=-1.0;j=-1.0;</td></tr>            </tbody>            </table></div> <br/><div  class="table-wrapper">        <table class="fl-table">
+            <tbody><tr><td>n=1.0;</td></tr><tr><td>n=2.0;arr[1]=0.0;arr[0]=0.0;</td></tr><tr><td>n=2.0;arr[1]=0.0;arr[0]=1.0;</td></tr>            </tbody>            </table></div> <br/><div  class="table-wrapper">        <table class="fl-table">
             <thead>
                 <tr>
                     <th>Coverage information</th>
                 </tr>
             </thead>
-            <tbody>   <tr><td> Statement coverage 1.0</td></tr>        <tr><td>Branch coverage 1.0</td></tr>        <tr><td>Number of test data: 45; Time: 6.0389996s</td></tr>   </tbody>
+            <tbody>   <tr><td> Statement coverage 0.0</td></tr>        <tr><td>Branch coverage 0.0</td></tr>        <tr><td>Number of test data: 3; Time: 2.77s</td></tr>   </tbody>
         </table></div>
 <div  class="table-wrapper">        <table class="fl-table">
             <thead>
@@ -36,16 +36,20 @@
                     <th>Function raw signature</th>
                 </tr>
             </thead>
-            <tbody><tr><td><pre>int Tritype(double i,double j,double k){ 		// line 1
- int trityp = 0;								// line 2
- if (i < 0.0 || j < 0.0 || k < 0.0)   			// line 3
- 	return 3;									// line 4
- if (i + j <= k || j + k < i || k + i < j) 		// line 5
- 	return 3;									// line 6
- if (i > j) trityp = trityp + 1; 				// line 7
- if (i == k) trityp = trityp + 1; 				// line 8
- if (j == k) trityp = trityp + 1; 				// line 9
- if (trityp >=2) 								// line 10
- 	trityp = 2;									// line 11
- return trityp;									// line 12
+            <tbody><tr><td><pre>void selectionSort(int arr[],int n)
+{
+    int i, j, min_idx;
+
+    // One by one move boundary of unsorted subarray
+    for (i = 0; i < n-1; i++)
+    {
+        // Find the minimum element in unsorted array
+        min_idx = i;
+        for (j = i+1; j < n; j++)
+        if (arr[j] < arr[min_idx])
+            min_idx = j;
+
+        // Swap the found minimum element with the first element
+        swap(&arr[min_idx], &arr[i]);
+    }
 }</pre></tr></td>            </tbody></table></div></body></html>

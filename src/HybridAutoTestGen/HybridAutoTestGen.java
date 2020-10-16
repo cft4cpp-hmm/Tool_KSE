@@ -435,8 +435,14 @@ public class HybridAutoTestGen extends Application
             else
             {
                 List<String> valueList = new ArrayList<>();
-                valueList.add(max);
-                valueList.add(min);
+                if (!"".equals(max))
+                {
+                    valueList.add(max);
+                }
+                if (!"".equals(min))
+                {
+                    valueList.add(min);
+                }
 
                 paramValueList.put(paramName, valueList);
             }

@@ -200,7 +200,7 @@ public class HybridTestGen extends Component
 
             weightedCFGTestGEn.setFunctionCoverageComputation(functionCoverageComputation);
 
-            weightedCFGTestGEn.ExportReport("WCFT4Cpp");
+            //weightedCFGTestGEn.ExportReport("WCFT4Cpp");
 
             JOptionPane.showMessageDialog(null, "Finish generating data. Click on [View report] " +
                     "for the result.", DSEConstants.PRODUCT_NAME, JOptionPane.INFORMATION_MESSAGE);

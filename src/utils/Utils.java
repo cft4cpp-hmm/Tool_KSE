@@ -713,6 +713,28 @@ public class Utils implements IRegex
         }
     }
 
+
+    public static void deleteFilesInFolder(File folderPath)
+    {
+        try
+        {
+            if (!folderPath.exists())
+            {
+                return;
+            }
+
+            String files[] = folderPath.list();
+
+            for (String file : files)
+            {
+                FileDeleteStrategy.FORCE.delete(new File(file));
+            }
+        }
+        catch (IOException e)
+        {
+        }
+    }
+
     /**
      * Delete all main() functions in project and update the project.
      *
@@ -2139,6 +2161,8 @@ public class Utils implements IRegex
         projectNode = parser.getRootTree();
 
         config.Paths.DATA_GEN_TEST = sourceFolder;
+
+        Utils.deleteFilesInFolder(new File(TestConfig.TEST_DRIVER_PATH));
 
         List<INode> sources = Search.searchNodes(projectNode, new SourcecodeFileNodeCondition());
 

@@ -156,7 +156,7 @@ public class WeightedCFGTestGEn
 
                 probTestPathList = graph.getFullProbTestPaths();
 
-//                graph.toHtml(afterGenForC, coverage, (float) duration.toMillis() / 1000, "WCFT4Cpp");
+                graph.toHtml(afterGenForC, coverage, (float) duration.toMillis() / 1000, "WCFT4Cpp");
 //                timesList.add(graph.getDuration());
 
             }

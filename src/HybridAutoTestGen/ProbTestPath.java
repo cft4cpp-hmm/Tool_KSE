@@ -109,7 +109,10 @@ public class ProbTestPath
                 newString += newLiStrings.get(i) + " " + "<font>" + df2.format(this.proList.get(0)) + "</font> ";
                 this.proList.remove(0);
             }
-            newString += newLiStrings.get(newLiStrings.size() - 1);
+            if (newLiStrings.size() > 0)
+            {
+                newString += newLiStrings.get(newLiStrings.size() - 1);
+            }
 
 //            if (!"".equals(this.getTestCase()))
 //            {
