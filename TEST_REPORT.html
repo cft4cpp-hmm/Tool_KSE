@@ -16,19 +16,19 @@
                     <th>CFG generated test data</th>
                 </tr>
             </thead>
-            <tbody><tr><td>0</td><td><td>0</td><td></td><td>n=1;</td></tr><tr><td>1</td><td>( int i, j, min_idx;) <font> => </font>( i = 0;) <font> => </font>( min_idx = i;) <font> => </font>( j = i+1;) <font> => </font>( swap(&arr[min_idx], &arr[i]);) <font> => </font>( i++) <font> => </font>} [19]</td><td></td></tr><tr><td>2</td><td>( int i, j, min_idx;) <font> => </font>( i = 0;) <font> => </font>( min_idx = i;) <font> => </font>( j = i+1;) <font> => </font>( j++) <font> => </font>( swap(&arr[min_idx], &arr[i]);) <font> => </font>( i++) <font> => </font>} [19]</td><td>n=2;arr[1]=0;arr[0]=0;</td></tr><tr><td>3</td><td>( int i, j, min_idx;) <font> => </font>( i = 0;) <font> => </font>( min_idx = i;) <font> => </font>( j = i+1;) <font> => </font>( min_idx = j;) <font> => </font>( j++) <font> => </font>( swap(&arr[min_idx], &arr[i]);) <font> => </font>( i++) <font> => </font>} [19]</td><td>n=2;arr[1]=0;arr[0]=1;</td></tr>            </tbody></table> </div><br/><div  class="table-wrapper">        <table class="fl-table">
+            <tbody><tr><td>0</td><td>( int i, j, min_idx;) <font> => </font>( i = 0;) <font> => </font>} [19]</td><td>n=1;</td></tr><tr><td>1</td><td>( int i, j, min_idx;) <font> => </font>( i = 0;) <font> => </font>( min_idx = i;) <font> => </font>( j = i+1;) <font> => </font>( swap(&arr[min_idx], &arr[i]);) <font> => </font>( i++) <font> => </font>} [19]</td><td></td></tr><tr><td>2</td><td>( int i, j, min_idx;) <font> => </font>( i = 0;) <font> => </font>( min_idx = i;) <font> => </font>( j = i+1;) <font> => </font>( j++) <font> => </font>( swap(&arr[min_idx], &arr[i]);) <font> => </font>( i++) <font> => </font>} [19]</td><td>n=2;arr[1]=0;arr[0]=0;</td></tr><tr><td>3</td><td>( int i, j, min_idx;) <font> => </font>( i = 0;) <font> => </font>( min_idx = i;) <font> => </font>( j = i+1;) <font> => </font>( min_idx = j;) <font> => </font>( j++) <font> => </font>( swap(&arr[min_idx], &arr[i]);) <font> => </font>( i++) <font> => </font>} [19]</td><td>n=2;arr[1]=0;arr[0]=1;</td></tr>            </tbody></table> </div><br/><div  class="table-wrapper">        <table class="fl-table">
             <thead>
                 <tr>
                     <th>All test data = CFG generated test data + boundary value test data</th>
                 </tr>
             </thead>
-            <tbody><tr><td>n=1.0;</td></tr><tr><td>n=2.0;arr[1]=0.0;arr[0]=0.0;</td></tr><tr><td>n=2.0;arr[1]=0.0;arr[0]=1.0;</td></tr>            </tbody>            </table></div> <br/><div  class="table-wrapper">        <table class="fl-table">
+            <tbody><tr><td>n=2.0;arr[1]=0.0;arr[0]=0.0;</td></tr><tr><td>n=2.0;arr[1]=0.0;arr[0]=1.0;</td></tr>            </tbody>            </table></div> <br/><div  class="table-wrapper">        <table class="fl-table">
             <thead>
                 <tr>
                     <th>Coverage information</th>
                 </tr>
             </thead>
-            <tbody>   <tr><td> Statement coverage 0.0</td></tr>        <tr><td>Branch coverage 0.0</td></tr>        <tr><td>Number of test data: 3; Time: 2.77s</td></tr>   </tbody>
+            <tbody>   <tr><td> Statement coverage 0.18181819</td></tr>        <tr><td>Branch coverage 0.0</td></tr>        <tr><td>Number of test data: 2; Time: 1.394s</td></tr>   </tbody>
         </table></div>
 <div  class="table-wrapper">        <table class="fl-table">
             <thead>

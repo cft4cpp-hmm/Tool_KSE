@@ -76,54 +76,7 @@ public class ProbTestPath
 
     public String toString()
     {
-        if (!this.toString.equals(""))
-        {
-            this.toString = this.toString.substring(4, this.toString.length());
-            this.toString = this.toString.replace("{", "");
-            this.toString = this.toString.replace("}", "");
-            this.toString = this.toString.replace("  ", "");
-
-            String[] listStrings = this.toString.split("=>|=> =>");
-
-            String newString = "<tr><td>" + pathNumber + "</td><td>";
-
-            List<String> newLiStrings = new ArrayList<String>();
-
-            for (int i = 0; i < listStrings.length; i++)
-            {
-                if (!listStrings[i].equals(" ") && !listStrings[i].equals("  ") && !listStrings[i].contains("["))
-                {
-                    newLiStrings.add(listStrings[i]);
-                }
-            }
-            for (int i = 0; i < newLiStrings.size() - 1; i++)
-            {
-				if (newLiStrings.get(i).contains("["))
-				{
-					continue;
-				}
-				if (this.proList.size() == 0)
-				{
-					break;
-				}
-                newString += newLiStrings.get(i) + " " + "<font>" + df2.format(this.proList.get(0)) + "</font> ";
-                this.proList.remove(0);
-            }
-            if (newLiStrings.size() > 0)
-            {
-                newString += newLiStrings.get(newLiStrings.size() - 1);
-            }
-
-//            if (!"".equals(this.getTestCase()))
-//            {
-                newString += "</td>" + "<td>" + this.getTestCase() + "</td></tr>";
-//            }
-//            else
-//            {
-//                newString += "</td>" + "<td>" +  "not have test data" + "</td></tr>";
-//            }
-            return newString;
-        }
+        String returnString = "";
 
         List<PathConstraint> constraints = new ArrayList<PathConstraint>();
         Pattern pattern = Pattern.compile("=|<|>");
@@ -143,11 +96,10 @@ public class ProbTestPath
             // TODO: handle exception
         }
 
-        this.toString = "<tr><td>" + pathNumber + "</td><td>";
+        returnString = "<tr><td>" + pathNumber + "</td><td>";
         int temp = 0;
         for (int i = 0; i < this.getFullCfgNode().size() - 1; i++)
         {
-//			System.out.println(temp);
             ICfgNode node = this.getFullCfgNode().get(i);
             if (node.toString().contains("{") || node.toString().contains("}"))
             {
@@ -157,13 +109,13 @@ public class ProbTestPath
             {
                 if (constraints.size() > 0 && constraints.get(0).toString().replace(" ", "").indexOf("!") == 0)
                 {
-					if (this.proList.get(0) == 1 && temp == 1)
+					if (this.proList.size() > 0 && this.proList.get(0) == 1 && temp == 1)
 					{
-						toString += "<font class = \"redColor\">!( " + node.toString() + ")</font> <font>" + df2.format(this.proList.get(0)) + "</font>";
+                        returnString += "<font class = \"redColor\">!( " + node.toString() + ")</font> <font>" + df2.format(this.proList.get(0)) + "</font>";
 					}
 					else
 					{
-						toString += "!( " + node.toString() + ") <font>" + df2.format(this.proList.get(0)) + "</font>";
+                        returnString += "!( " + node.toString() + ") <font>" + df2.format(this.proList.get(0)) + "</font>";
 					}
                     temp = Integer.parseInt(df2.format(this.proList.get(0)).toString().replace(".", ""));
                     constraints.remove(0);
@@ -171,13 +123,13 @@ public class ProbTestPath
                 }
                 else if (constraints.size() > 0)
                 {
-					if (this.proList.get(0) == 1 && temp == 1)
+					if (this.proList.size() > 0 && this.proList.get(0) == 1 && temp == 1)
 					{
-						toString += "<font class = \"redColor\">!( " + node.toString() + ")</font> <font>" + df2.format(this.proList.get(0)) + "</font>";
+                        returnString += "<font class = \"redColor\">!( " + node.toString() + ")</font> <font>" + df2.format(this.proList.get(0)) + "</font>";
 					}
 					else
 					{
-						toString += " (" + node.toString() + ") <font>" + df2.format(this.proList.get(0)) + "</font>";
+                        returnString += " (" + node.toString() + ") <font>" + df2.format(this.proList.get(0)) + "</font>";
 					}
                     temp = Integer.parseInt(df2.format(this.proList.get(0)).toString().replace(".", ""));
                     constraints.remove(0);
@@ -187,13 +139,13 @@ public class ProbTestPath
 
             else
             {
-				if (this.proList.get(0) == 1 && temp == 1)
+				if (this.proList.size() > 0 && this.proList.get(0) == 1 && temp == 1)
 				{
-					toString += "<font class = \"redColor\">( " + node.toString() + ")</font> <font>" + df2.format(this.proList.get(0)) + "</font>";
+                    returnString += "<font class = \"redColor\">( " + node.toString() + ")</font> <font>" + df2.format(this.proList.get(0)) + "</font>";
 				}
 				else
 				{
-					toString += "( " + node.toString() + ") <font>" + df2.format(this.proList.get(0)) + "</font>";
+                    returnString += "( " + node.toString() + ") <font>" + df2.format(this.proList.get(0)) + "</font>";
 				}
                 temp = Integer.parseInt(df2.format(this.proList.get(0)).toString().replace(".", ""));
                 this.proList.remove(0);
@@ -201,9 +153,9 @@ public class ProbTestPath
 
         }
 
-        this.toString += this.getFullCfgNode().get(this.getFullCfgNode().size() - 1);
-        this.toString += "</td>" + "<td>" + this.getTestCase() + "</td></tr>";
-        return this.toString;
+        returnString += this.getFullCfgNode().get(this.getFullCfgNode().size() - 1);
+        returnString += "</td>" + "<td>" + this.getTestCase() + "</td></tr>";
+        return returnString;
 
     }
 

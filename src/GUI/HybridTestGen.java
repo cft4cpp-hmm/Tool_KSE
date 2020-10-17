@@ -194,13 +194,11 @@ public class HybridTestGen extends Component
             WeightedCFGTestGEn weightedCFGTestGEn = new WeightedCFGTestGEn(value, maxloop, txtSourceFolder.getText());
             weightedCFGTestGEn.run();
 
-
-
             FunctionCoverageComputation functionCoverageComputation = Utils.ExecuteTestCase(txtSourceFolder.getText(), value, weightedCFGTestGEn.getTestDataList());
 
             weightedCFGTestGEn.setFunctionCoverageComputation(functionCoverageComputation);
 
-            //weightedCFGTestGEn.ExportReport("WCFT4Cpp");
+            weightedCFGTestGEn.ExportReport("WCFT4Cpp");
 
             JOptionPane.showMessageDialog(null, "Finish generating data. Click on [View report] " +
                     "for the result.", DSEConstants.PRODUCT_NAME, JOptionPane.INFORMATION_MESSAGE);
@@ -366,8 +364,6 @@ public class HybridTestGen extends Component
         float boundStep = 1;
 
         bGen.generateTestData(boundStep);
-
-
 
         FunctionCoverageComputation functionCoverageComputation = Utils.ExecuteTestCase(txtSourceFolder.getText(), value, bGen.testCases);
 

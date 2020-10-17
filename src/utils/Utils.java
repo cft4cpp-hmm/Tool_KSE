@@ -727,7 +727,7 @@ public class Utils implements IRegex
 
             for (String file : files)
             {
-                FileDeleteStrategy.FORCE.delete(new File(file));
+                FileDeleteStrategy.FORCE.delete(new File(folderPath + "\\" + file));
             }
         }
         catch (IOException e)
@@ -2138,6 +2138,40 @@ public class Utils implements IRegex
         return compiler;
     }
 
+    public static boolean isSolutionValid(List<IVariableNode> paramList, String solution)
+    {
+        solution = solution.replace(";;", ";");
+        String[] paramNValue = solution.split(";");
+
+        List<String> paramSolNameList = new ArrayList<>();
+
+        for (String temp : paramNValue)
+        {
+            String paramName = temp.substring(0, temp.indexOf("="));
+
+            if (paramName.indexOf("[") > 0)
+            {
+                paramName = paramName.substring(0, paramName.indexOf("["));
+            }
+
+            if (!paramSolNameList.contains(paramName))
+            {
+                paramSolNameList.add(paramName);
+            }
+        }
+        boolean isValid = true;
+
+        for (IVariableNode variableNode: paramList)
+        {
+            if (!paramSolNameList.contains(variableNode.getName()))
+            {
+                isValid = false;
+                break;
+            }
+        }
+        return isValid;
+    }
+
     public static String getClonedFilePath(String origin)
     {
         String originName = new File(origin).getName();
@@ -2163,6 +2197,7 @@ public class Utils implements IRegex
         config.Paths.DATA_GEN_TEST = sourceFolder;
 
         Utils.deleteFilesInFolder(new File(TestConfig.TEST_DRIVER_PATH));
+        Utils.deleteFilesInFolder(new File(TestConfig.EXE_PATH));
 
         List<INode> sources = Search.searchNodes(projectNode, new SourcecodeFileNodeCondition());
 
@@ -2312,34 +2347,40 @@ public class Utils implements IRegex
             {
                 case "int":
                     if (iItem + 1 >= iiItem)
+                    {
                         continue;
+                    }
 
-                    int mid = (int)((iItem + iiItem)/2);
+                    int mid = (int) ((iItem + iiItem) / 2);
 
                     midValueList.add(Integer.toString(mid));
                     break;
                 case "long":
                     if (iItem + 1 >= iiItem)
+                    {
                         continue;
+                    }
 
-                    long midLong = (long)((iItem + iiItem)/2);
+                    long midLong = (long) ((iItem + iiItem) / 2);
 
                     midValueList.add(Long.toString(midLong));
                     break;
                 case "short":
                     if (iItem + 1 >= iiItem)
+                    {
                         continue;
+                    }
 
-                    short midshort = (short)((iItem + iiItem)/2);
+                    short midshort = (short) ((iItem + iiItem) / 2);
 
                     midValueList.add(Short.toString(midshort));
                     break;
                 case "float":
-                    float midfloat = (float)((iItem + iiItem)/2);
+                    float midfloat = (float) ((iItem + iiItem) / 2);
                     midValueList.add(Float.toString(midfloat));
                     break;
                 case "double":
-                    double middouble = (double)((iItem + iiItem)/2);
+                    double middouble = (double) ((iItem + iiItem) / 2);
                     midValueList.add(Double.toString(middouble));
                     break;
             }
@@ -2352,7 +2393,7 @@ public class Utils implements IRegex
     {
         List<String> returnList = new ArrayList<>();
 
-        for(String str: list)
+        for (String str : list)
         {
             returnList.add(str);
         }

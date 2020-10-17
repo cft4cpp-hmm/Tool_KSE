@@ -173,7 +173,7 @@ public class HybridAutoTestGen extends Application
             {
                 TestData testData = TestData.parseString(testcase);
 
-                if (!testCases.contains(testData))
+                if (!testCases.contains(testData) && Utils.isSolutionValid(this.variables, testcase))
                 {
                     testCases.add(testData);
                 }

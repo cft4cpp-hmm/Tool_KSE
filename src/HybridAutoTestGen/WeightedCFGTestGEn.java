@@ -156,7 +156,7 @@ public class WeightedCFGTestGEn
 
                 probTestPathList = graph.getFullProbTestPaths();
 
-                graph.toHtml(afterGenForC, coverage, (float) duration.toMillis() / 1000, "WCFT4Cpp");
+                //graph.toHtml(afterGenForC, coverage, (float) duration.toMillis() / 1000, "WCFT4Cpp");
 //                timesList.add(graph.getDuration());
 
             }
@@ -287,8 +287,12 @@ public class WeightedCFGTestGEn
         List<TestData> testDataList = new ArrayList<>();
         for (ProbTestPath testPath : probTestPathList)
         {
-            TestData testData = TestData.parseString(testPath.getTestCase());
-            testDataList.add(testData);
+            String solution = testPath.getTestCase();
+            if (!"".equals(solution) && Utils.isSolutionValid(this.functionNode.getPassingVariables(), solution))
+            {
+                TestData testData = TestData.parseString(testPath.getTestCase());
+                testDataList.add(testData);
+            }
         }
 
         return testDataList;

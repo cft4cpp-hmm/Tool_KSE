@@ -287,7 +287,6 @@ public interface IFunctionNode extends ISourceNavigable, INode {
 	 */
 	String getSingleSimpleName();
 
-	@Override
 	INode clone();
 
 	FunctionNormalizer getGeneralNormalizationFunction();
