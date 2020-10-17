@@ -14,9 +14,13 @@ import java.util.regex.Pattern;
 import Common.TestConfig;
 import HybridAutoTestGen.TestData;
 import cfg.ICFG;
+import cfg.object.AbstractConditionLoopCfgNode;
+import cfg.object.ConditionCfgNode;
+import cfg.object.ICfgNode;
 import compiler.AvailableCompiler;
 import compiler.Compiler;
 import coverage.FunctionCoverageComputation;
+import javafx.util.Pair;
 import org.apache.commons.io.FileDeleteStrategy;
 import org.apache.log4j.Logger;
 import org.eclipse.cdt.core.dom.ast.ASTVisitor;
@@ -2396,6 +2400,243 @@ public class Utils implements IRegex
         for (String str : list)
         {
             returnList.add(str);
+        }
+
+        return returnList;
+    }
+
+    public static List<TestData> generateTestpathsForBoundaryTestGen(ICFG cfg,
+                                                                     List<IVariableNode> variables,
+                                                                     float boundStep) throws Exception
+    {
+        List<ICfgNode> list = cfg.getAllNodes();
+
+        //paramValueList chứa các giá trị biên của các biến đầu vào
+        Map<String, List<String>> paramValueList = new HashMap<>();
+
+        //paramMidValueList chứa các giá trị cận trên và dưới cho mỗi biên
+        Map<String, List<String>> upNDownParamValueList = new HashMap<>();
+
+        //paramMidValueList chứa các giá trị norm (trung bình) của các khoảng giá trị cho mỗi biến
+        Map<String, List<String>> paramMidValueList = new HashMap<>();
+
+        for (ICfgNode node : list)
+        {
+            if (node instanceof ConditionCfgNode && !(node instanceof AbstractConditionLoopCfgNode))
+            {
+                ConditionCfgNode stm1 = (ConditionCfgNode) node.clone();
+
+                String Content = stm1.getContent();
+                Content = Content.replaceAll("<=|>=|<|>|!=", "=");
+
+                String[] varOrVal = Content.split("=");
+
+                if (varOrVal.length != 2)
+                {
+                    continue;
+                }
+                String paramName = "";
+                String value = "";
+
+                if (Utils.contains(variables,varOrVal[0].trim()))
+                {
+                    paramName = varOrVal[0].trim();
+                    value = varOrVal[1].trim();
+                }
+                else if (Utils.contains(variables,varOrVal[1].trim()))
+                {
+                    paramName = varOrVal[1].trim();
+                    value = varOrVal[0].trim();
+                }
+                else
+                {
+                    continue;
+                }
+
+                double val = 0, val1 = 0, val2 = 0;
+                try
+                {
+                    val = Double.parseDouble(value);
+                    val1 = Double.parseDouble(value) - boundStep;
+                    val2 = Double.parseDouble(value) + boundStep;
+                }
+                catch (Exception ex)
+                {
+                    continue;
+                }
+
+                if (paramValueList.containsKey(paramName))
+                {
+                    if (!paramValueList.get(paramName).contains(Double.toString(val)))
+                    {
+                        paramValueList.get(paramName).add(Double.toString(val));
+                    }
+                }
+                else
+                {
+                    List<String> valueList = new ArrayList<>();
+                    valueList.add(Double.toString(val));
+
+                    paramValueList.put(paramName, valueList);
+                }
+
+                if (upNDownParamValueList.containsKey(paramName))
+                {
+                    if (!upNDownParamValueList.get(paramName).contains(Double.toString(val1)))
+                    {
+                        upNDownParamValueList.get(paramName).add(Double.toString(val1));
+                    }
+                    if (!upNDownParamValueList.get(paramName).contains(Double.toString(val2)))
+                    {
+                        upNDownParamValueList.get(paramName).add(Double.toString(val2));
+                    }
+                }
+                else
+                {
+                    List<String> valueList = new ArrayList<>();
+                    valueList.add(Double.toString(val1));
+                    valueList.add(Double.toString(val2));
+
+                    upNDownParamValueList.put(paramName, valueList);
+                }
+            }
+        }
+
+        for(IVariableNode variableNode: variables)
+        {
+            String max = "", min ="";
+            switch (variableNode.getRealType())
+            {
+                case "int":
+                    max = Integer.toString(Integer.MAX_VALUE);
+                    min = Integer.toString(Integer.MIN_VALUE);
+                    break;
+                case "long":
+                    max = Long.toString(Long.MAX_VALUE);
+                    min = Long.toString(Long.MIN_VALUE);
+                    break;
+                case "float":
+                    max = Float.toString(Float.MAX_VALUE);
+                    min = Float.toString(Float.MIN_VALUE);
+                    break;
+                case "double":
+                    max = Double.toString(Double.MAX_VALUE);
+                    min = Double.toString(Double.MIN_VALUE);
+                    break;
+                case "short":
+                    max = Short.toString(Short.MAX_VALUE);
+                    min = Short.toString(Short.MIN_VALUE);
+                    break;
+            }
+
+            String paramName = variableNode.getName();
+
+            if (paramValueList.containsKey(paramName))
+            {
+                if (!paramValueList.get(paramName).contains(max))
+                {
+                    paramValueList.get(paramName).add(max);
+                }
+                if (!paramValueList.get(paramName).contains(min))
+                {
+                    paramValueList.get(paramName).add(min);
+                }
+            }
+            else
+            {
+                List<String> valueList = new ArrayList<>();
+                if (!"".equals(max))
+                {
+                    valueList.add(max);
+                }
+                if (!"".equals(min))
+                {
+                    valueList.add(min);
+                }
+
+                paramValueList.put(paramName, valueList);
+            }
+
+            Utils.sortValueList(paramValueList.get(paramName));
+            List<String> midValueList = Utils.createMidValueList(paramValueList.get(paramName), variableNode.getRealType());
+            paramMidValueList.put(paramName, midValueList);
+        }
+
+        //merge 2 danh sach nay lai: paramValueList, upNDownParamValueList
+
+        for (Map.Entry entry : paramValueList.entrySet())
+        {
+            List<String> valueList = (List<String>)entry.getValue();
+            List<String> upNDownValueList = upNDownParamValueList.get(entry.getKey());
+            if (upNDownValueList != null)
+            {
+                valueList.addAll(upNDownValueList);
+            }
+
+            Utils.sortValueList((List<String>)entry.getValue());
+        }
+
+        List<TestData> testDataList = new ArrayList<>();
+
+        for (IVariableNode variableNode: variables)
+        {
+            //get list of mid value
+
+            Map<String, List<String>> otherVarMidValueList = new HashMap<>();
+
+            for (IVariableNode midValueNode: variables)
+            {
+                if (!midValueNode.getName().equals(variableNode.getName()))
+                {
+                    otherVarMidValueList.put(midValueNode.getName(), paramMidValueList.get(midValueNode.getName()));
+                }
+            }
+
+            List<String> listValue = paramValueList.get(variableNode.getName());
+
+            List<TestData> testDataListforBoundValue = new ArrayList<>();
+
+            for (String value: listValue)
+            {
+                TestData testData = new TestData();
+
+                testData.add(new Pair<>(variableNode.getName(), value));
+
+                testDataListforBoundValue.add(testData);
+            }
+
+            for (Map.Entry entry : otherVarMidValueList.entrySet()) {
+                List<TestData> newList = new ArrayList<>();
+
+                newList = CombineTestDataList(testDataListforBoundValue, entry.getKey().toString(), Utils.CloneStringList ((List<String>)entry.getValue()));
+
+                testDataListforBoundValue = newList;
+            }
+
+            testDataList.addAll(testDataListforBoundValue);
+        }
+
+        return testDataList;
+    }
+
+    public static List<TestData> CombineTestDataList(List<TestData> testDataList, String paramName, List<String> valueList)
+    {
+        List<TestData> returnList = new ArrayList<>();
+
+        for (TestData testData: testDataList)
+        {
+            List<TestData> newList = new ArrayList<>();
+
+            for (String value: valueList)
+            {
+                TestData testData1 = testData.clone();
+
+                testData1.add(new Pair<>(paramName, value));
+
+                newList.add(testData1);
+            }
+
+            returnList.addAll(newList);
         }
 
         return returnList;

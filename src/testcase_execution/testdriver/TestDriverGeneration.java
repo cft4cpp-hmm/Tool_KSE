@@ -215,14 +215,54 @@ public abstract class TestDriverGeneration implements ITestDriverGeneration {
 
         IFunctionNode functionNode = testCase.getFunctionNode();
 
+        List<String> declaredArrayName = new ArrayList<>();
+
         if (testData != null) {
             for (Pair<String, Object> child : testData.getTestData()) {
 
                 for (IVariableNode v : functionNode.getArguments())
                 {
-                    if (v.getName().equals(child.getKey()))
+                    String key = child.getKey();
+
+                    boolean isArray = false;
+                    String arrayName = "";
+                    int elementCount = 0;
+
+                    if (key.contains("["))
                     {
-                        initialization += v.getRealType() + " " + v.getName() + " = " + child.getValue() + ";";
+                        //array type
+                        key = key.substring(0, key.indexOf("["));
+                        isArray = true;
+                        arrayName = key;
+
+                        //search in testdata list to count the number of element of the array
+                        for (Pair<String, Object> td : testData.getTestData())
+                        {
+                            String tempKey =td.getKey();
+                            if (tempKey.contains("[") && key.equals(tempKey.substring(0,tempKey.indexOf("["))))
+                            {
+                                elementCount += 1;
+                            }
+                        }
+
+                    }
+
+                    if (v.getName().equals(key))
+                    {
+                        if (!isArray)
+                        {
+                            initialization += v.getCoreType() + " " + v.getName() + " = " + child.getValue() + ";";
+                        }
+                        else
+                        {
+                            if (!declaredArrayName.contains(key))
+                            {
+                                initialization += v.getCoreType() + " " + key + "[" + elementCount + "];";
+                                declaredArrayName.add(key);
+                            }
+                            initialization += child.getKey() + " = " + child.getValue() + ";";
+                        }
+
                         break;
                     }
                 }

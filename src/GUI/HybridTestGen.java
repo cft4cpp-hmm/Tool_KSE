@@ -270,9 +270,15 @@ public class HybridTestGen extends Component
             }
             value = cboSelectedFunction.getValue().toString();
 
-            FullBoundedTestGen bGen = new FullBoundedTestGen(null, maxloop, value, txtSourceFolder.getText());
+            FullBoundedTestGen bGen = new FullBoundedTestGen(maxloop, value, txtSourceFolder.getText());
 
             bGen.boundaryValueTestGen();
+
+            FunctionCoverageComputation functionCoverageComputation = Utils.ExecuteTestCase(txtSourceFolder.getText(), value, bGen.getTestCases());
+
+            bGen.setFunctionCoverageComputation(functionCoverageComputation);
+
+            bGen.ExportReport();
 
             JOptionPane.showMessageDialog(null, "Finish generating data. Click on [View report] " +
                     "for the result.", DSEConstants.PRODUCT_NAME, JOptionPane.INFORMATION_MESSAGE);

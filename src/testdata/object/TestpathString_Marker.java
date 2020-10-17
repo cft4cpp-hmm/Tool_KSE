@@ -47,7 +47,10 @@ public class TestpathString_Marker implements ITestpathGeneratedFromExecutingFun
 	public void setEncodedTestpath(String[] encodedTestpath) {
 		for (int i = 0; i < encodedTestpath.length - 1; i++)
 			this.encodedTestpath += encodedTestpath[i] + ITestpathInCFG.SEPARATE_BETWEEN_NODES;
-		this.encodedTestpath += encodedTestpath[encodedTestpath.length - 1];
+		if (encodedTestpath.length > 0)
+		{
+			this.encodedTestpath += encodedTestpath[encodedTestpath.length - 1];
+		}
 	}
 
 	/**

@@ -16,19 +16,19 @@
                     <th>CFG generated test data</th>
                 </tr>
             </thead>
-            <tbody><tr><td>0</td><td>( int i, j, min_idx;) <font> => </font>( i = 0;) <font> => </font>} [19]</td><td>n=1;</td></tr><tr><td>1</td><td>( int i, j, min_idx;) <font> => </font>( i = 0;) <font> => </font>( min_idx = i;) <font> => </font>( j = i+1;) <font> => </font>( swap(&arr[min_idx], &arr[i]);) <font> => </font>( i++) <font> => </font>} [19]</td><td></td></tr><tr><td>2</td><td>( int i, j, min_idx;) <font> => </font>( i = 0;) <font> => </font>( min_idx = i;) <font> => </font>( j = i+1;) <font> => </font>( j++) <font> => </font>( swap(&arr[min_idx], &arr[i]);) <font> => </font>( i++) <font> => </font>} [19]</td><td>n=2;arr[1]=0;arr[0]=0;</td></tr><tr><td>3</td><td>( int i, j, min_idx;) <font> => </font>( i = 0;) <font> => </font>( min_idx = i;) <font> => </font>( j = i+1;) <font> => </font>( min_idx = j;) <font> => </font>( j++) <font> => </font>( swap(&arr[min_idx], &arr[i]);) <font> => </font>( i++) <font> => </font>} [19]</td><td>n=2;arr[1]=0;arr[0]=1;</td></tr>            </tbody></table> </div><br/><div  class="table-wrapper">        <table class="fl-table">
+            <tbody><tr><td>0</td><td>return 'I';</td><td>averageGrade=0;</td></tr><tr><td>1</td><td>return 'F';</td><td>averageGrade=2;</td></tr><tr><td>2</td><td>return 'D';</td><td>averageGrade=61;</td></tr><tr><td>3</td><td>return 'C';</td><td>averageGrade=71;</td></tr><tr><td>4</td><td>return 'B';</td><td>averageGrade=81;</td></tr><tr><td>5</td><td>return 'A';</td><td>averageGrade=96;</td></tr>            </tbody></table> </div><br/><div  class="table-wrapper">        <table class="fl-table">
             <thead>
                 <tr>
                     <th>All test data = CFG generated test data + boundary value test data</th>
                 </tr>
             </thead>
-            <tbody><tr><td>n=2.0;arr[1]=0.0;arr[0]=0.0;</td></tr><tr><td>n=2.0;arr[1]=0.0;arr[0]=1.0;</td></tr>            </tbody>            </table></div> <br/><div  class="table-wrapper">        <table class="fl-table">
+            <tbody><tr><td>averageGrade=-2147483648;</td></tr><tr><td>averageGrade=-1.0;</td></tr><tr><td>averageGrade=0.0;</td></tr><tr><td>averageGrade=1.0;</td></tr><tr><td>averageGrade=59.0;</td></tr><tr><td>averageGrade=60.0;</td></tr><tr><td>averageGrade=61.0;</td></tr><tr><td>averageGrade=69.0;</td></tr><tr><td>averageGrade=70.0;</td></tr><tr><td>averageGrade=71.0;</td></tr><tr><td>averageGrade=79.0;</td></tr><tr><td>averageGrade=80.0;</td></tr><tr><td>averageGrade=81.0;</td></tr><tr><td>averageGrade=89.0;</td></tr><tr><td>averageGrade=90.0;</td></tr><tr><td>averageGrade=91.0;</td></tr><tr><td>averageGrade=94.0;</td></tr><tr><td>averageGrade=95.0;</td></tr><tr><td>averageGrade=96.0;</td></tr><tr><td>averageGrade=99.0;</td></tr><tr><td>averageGrade=100.0;</td></tr><tr><td>averageGrade=101.0;</td></tr><tr><td>averageGrade=2147483647;</td></tr><tr><td>averageGrade=0.0;</td></tr><tr><td>averageGrade=2.0;</td></tr><tr><td>averageGrade=61.0;</td></tr><tr><td>averageGrade=71.0;</td></tr><tr><td>averageGrade=81.0;</td></tr><tr><td>averageGrade=96.0;</td></tr>            </tbody>            </table></div> <br/><div  class="table-wrapper">        <table class="fl-table">
             <thead>
                 <tr>
                     <th>Coverage information</th>
                 </tr>
             </thead>
-            <tbody>   <tr><td> Statement coverage 0.18181819</td></tr>        <tr><td>Branch coverage 0.0</td></tr>        <tr><td>Number of test data: 2; Time: 1.394s</td></tr>   </tbody>
+            <tbody>   <tr><td> Statement coverage 1.0</td></tr>        <tr><td>Branch coverage 1.0</td></tr>        <tr><td>Number of test data: 29; Time: 9.629s</td></tr>   </tbody>
         </table></div>
 <div  class="table-wrapper">        <table class="fl-table">
             <thead>
@@ -36,20 +36,16 @@
                     <th>Function raw signature</th>
                 </tr>
             </thead>
-            <tbody><tr><td><pre>void selectionSort(int arr[],int n)
-{
-    int i, j, min_idx;
-
-    // One by one move boundary of unsorted subarray
-    for (i = 0; i < n-1; i++)
-    {
-        // Find the minimum element in unsorted array
-        min_idx = i;
-        for (j = i+1; j < n; j++)
-        if (arr[j] < arr[min_idx])
-            min_idx = j;
-
-        // Swap the found minimum element with the first element
-        swap(&arr[min_idx], &arr[i]);
-    }
+            <tbody><tr><td><pre>char grade(int averageGrade){
+	if(averageGrade>95 && averageGrade <100)
+		return 'A';
+	else if(averageGrade>80 && averageGrade<90)
+		return 'B';
+	else if(averageGrade>70 && averageGrade<80)
+		return 'C';
+	else if(averageGrade>60 && averageGrade<70)
+		return 'D';
+	else if(averageGrade>0 && averageGrade < 60)
+		return 'F';
+	return 'I';
 }</pre></tr></td>            </tbody></table></div></body></html>

@@ -21,16 +21,15 @@
                         <Button fx:id="btnBrowseInput" layoutX="487.0" layoutY="14.0" mnemonicParsing="false" onAction="#btnBrowseInput_Clicked" prefHeight="25.0" prefWidth="106.0" text="Browse" />
                         <Label layoutX="22.0" layoutY="111.0" text="Max loop" />
                         <TextField fx:id="txtMaxLoop" layoutX="120.0" layoutY="107.0" prefHeight="25.0" prefWidth="37.0" text="1" />
-                        <Button fx:id="btnGenerateTestData" layoutX="306.0" layoutY="298.0" mnemonicParsing="false" onAction="#btnHybrid_Clicked" prefHeight="40.0" prefWidth="78.0" text="Hybrid" AnchorPane.leftAnchor="306.0" AnchorPane.topAnchor="298.0" />
+                        <Button fx:id="btnGenerateTestData" layoutX="383.0" layoutY="298.0" mnemonicParsing="false" onAction="#btnHybrid_Clicked" prefHeight="40.0" prefWidth="78.0" text="Hybrid" AnchorPane.leftAnchor="383.0" AnchorPane.topAnchor="298.0" />
                         <Button fx:id="btnViewReport" layoutX="502.0" layoutY="298.0" mnemonicParsing="false" onAction="#btnViewReport_Clicked" prefHeight="40.0" prefWidth="78.0" text="View report" />
                   <Label layoutX="22.0" layoutY="58.0" text="Choose function" />
                   <ComboBox fx:id="cboSelectedFunction" layoutX="120.0" layoutY="54.0" prefHeight="25.0" prefWidth="363.0" />
                   <Button fx:id="btnGetFunctionList" layoutX="488.0" layoutY="54.0" mnemonicParsing="false" onAction="#btnGetFunctionList_Clicked" prefHeight="25.0" prefWidth="106.0" text="Get function list" />
-                  <Button fx:id="btnBVTG" layoutX="200.0" layoutY="298.0" mnemonicParsing="false" onAction="#btnBVTG_Clicked" prefHeight="40.0" prefWidth="87.0" text="BVTG" />
+                  <Button fx:id="btnBVTG" layoutX="251.0" layoutY="298.0" mnemonicParsing="false" onAction="#btnBVTG_Clicked" prefHeight="40.0" prefWidth="87.0" text="BVTG" />
                   <Button fx:id="btnSTCFG" layoutX="14.0" layoutY="298.0" mnemonicParsing="false" onAction="#btnSTCFG_Clicked" prefHeight="40.0" prefWidth="71.0" text="STCFG" />
-                  <Button fx:id="btnWCFT" layoutX="110.0" layoutY="298.0" mnemonicParsing="false" onAction="#btnWCFT_Clicked" prefHeight="40.0" prefWidth="71.0" text="WCFT" />
+                  <Button fx:id="btnWCFT" layoutX="132.0" layoutY="298.0" mnemonicParsing="false" onAction="#btnWCFT_Clicked" prefHeight="40.0" prefWidth="71.0" text="WCFT" />
                   <CheckBox fx:id="chkSolvePathWhenGenBoundaryTestData" layoutX="121.0" layoutY="152.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="357.0" text="Solve test path" />
-                  <Button fx:id="btnRunTest" layoutX="406.0" layoutY="298.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="78.0" text="Run test" onAction="#btnRunTest_Clicked" />
                     </children>
                 </AnchorPane>
             </children>
