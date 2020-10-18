@@ -239,6 +239,12 @@ public class HybridTestGen extends Component
 
             cft4cpp.run();
 
+            FunctionCoverageComputation functionCoverageComputation = Utils.ExecuteTestCase(txtSourceFolder.getText(), value, cft4cpp.getTestDataList());
+
+            cft4cpp.setCoverageComputation(functionCoverageComputation);
+
+            cft4cpp.ExportReport("WCFT4Cpp");
+
             JOptionPane.showMessageDialog(null, "Finish generating data. Click on [View report] " +
                     "for the result.", DSEConstants.PRODUCT_NAME, JOptionPane.INFORMATION_MESSAGE);
         }

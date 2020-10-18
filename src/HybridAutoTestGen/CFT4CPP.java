@@ -10,6 +10,7 @@ import cfg.object.ICfgNode;
 import cfg.testpath.*;
 import config.*;
 import constraints.checker.RelatedConstraintsChecker;
+import coverage.FunctionCoverageComputation;
 import normalizer.FunctionNormalizer;
 import org.apache.log4j.Logger;
 import parser.projectparser.ProjectParser;
@@ -29,6 +30,9 @@ import utils.search.FunctionNodeCondition;
 import utils.search.Search;
 
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,6 +55,11 @@ public class CFT4CPP
     private FullTestpaths possibleTestpaths = new FullTestpaths();
     public List<String> testCases;
     public IFunctionNode function;
+
+    private List<ProbTestPath> fullProbTestPaths;
+    private FunctionCoverageComputation coverageComputation;
+    private LocalDateTime startDateTime;
+    private float testDataGenerationTime;
 
 
     public CFT4CPP(ICFG cfg1, int maxloop, String projectPath, String functionName) throws Exception
@@ -122,6 +131,7 @@ public class CFT4CPP
 
     public void run() throws Exception
     {
+        startDateTime = LocalDateTime.now();
         LocalDateTime before = LocalDateTime.now();
         this.generateTestpaths(this.function);
 //		LocalDateTime after = LocalDateTime.now();
@@ -154,11 +164,142 @@ public class CFT4CPP
             }
         }
 
+        graph.createProbabilityForTestPath(hmmGraph);
+
+        LocalDateTime afterGenForC = LocalDateTime.now();
+
+        Duration duration = Duration.between(startDateTime, afterGenForC);
+
+        testDataGenerationTime = (float) duration.toSeconds();
+
+        fullProbTestPaths = graph.getFullProbTestPaths();
+        function = graph.getFunctionNode();
+
         graph.computeStatementCovNew();
         graph.computeBranchCoverNew();
 
         graph.toHtml(LocalDateTime.now(), 0, 1, "CFT4Cpp");
 
+    }
+
+    public void ExportReport(String toolName) throws IOException
+    {
+        FileWriter csvWriter = new FileWriter(AbstractSetting.getValue("TEST_REPORT") + ".html", false);
+        String valueString = "<!DOCTYPE html>\r\n" +
+                "<html>\r\n" +
+                "\r\n" +
+                "<head> <link rel=\"stylesheet\" type=\"text/css\" href=\"hmm_report.css\">\r\n" +
+                "\r\n" +
+                "</head>\r\n" +
+                "\r\n" +
+                "<body>\r\n";
+
+        if (toolName == "WCFT4Cpp")
+        {
+            valueString +=
+                    "    <h2>WCFT4CPP: TEST REPORT</h2>\r\n";
+        }
+        else if (toolName == "CFT4Cpp")
+        {
+            valueString +=
+                    "    <h2>CFT4CPP: TEST REPORT</h2>\r\n";
+        }
+        else
+        {
+            valueString +=
+                    "    <h2>Concolic: TEST REPORT</h2>\r\n";
+
+        }
+
+        valueString += "    <div class=\"table-wrapper\">\r\n" +
+                "        <table class=\"fl-table\">\r\n" +
+                "            <thead>\r\n" +
+                "                <tr>\r\n" +
+                "                    <th>PathNumber</th>\r\n" +
+                "                    <th style=\"width: 800px\">Test path</th>\r\n" +
+                "                    <th>Test Data</th>\r\n" +
+                "                </tr>\r\n" +
+                "            </thead>\r\n" +
+                "            <tbody>";
+        for (ProbTestPath testPath : this.fullProbTestPaths)
+        {
+            if (toolName == "WCFT4Cpp")
+            {
+                valueString += testPath.toString();
+            }
+            else
+            {
+                valueString += testPath.toStringForCFT4Cpp();
+            }
+        }
+        valueString += "</tbody></table></div>";
+
+        String loopString = "";
+
+        valueString += "    <div class=\"table-wrapper\">\r\n" +
+                "        <table class=\"fl-table\">\r\n" +
+                "            <thead>\r\n" +
+                "                <tr>\r\n" +
+                "                    <th>Coverage information</th>\r\n" +
+                "                </tr>\r\n" +
+                "            </thead>\r\n" +
+                "            <tbody>";
+
+        float stateCov = ((float) coverageComputation.getNumberOfVisitedInstructions()) / ((float) coverageComputation.getNumberOfInstructions());
+        float branchCov = ((float) coverageComputation.getNumberOfVisitedBranches()) / ((float) coverageComputation.getNumberOfBranches());
+
+
+        String coverInfo = "";
+        try
+        {
+            coverInfo =
+                    "        <tr><td>stateCov: " + stateCov + "</td></tr>\r\n" +
+                            "        <tr><td>branchCov: " + branchCov + "</td></tr>\r\n" +
+                            "        <tr><td>Time: " + testDataGenerationTime + "s</td></tr>\r\n";
+        }
+        catch (Exception e)
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        valueString += coverInfo;
+        valueString += "   </tbody>\r\n" +
+                "        </table></div>\r\n";
+
+
+        valueString += "    <div class=\"table-wrapper\">\r\n" +
+                "        <table class=\"fl-table\">\r\n" +
+                "            <thead>\r\n" +
+                "                <tr>\r\n" +
+                "                    <th>Function raw signature</th>\r\n" +
+                "                </tr>\r\n" +
+                "            </thead>\r\n" +
+                "            <tbody>" +
+                "<tr><td><pre>" + this.function.getAST().getRawSignature().toString() +
+
+                "</pre></td></tr></tbody></table></div>" +
+
+                "</body></html>";
+        csvWriter.append(valueString);
+        csvWriter.close();
+
+    }
+
+    public List<TestData> getTestDataList()
+    {
+        List<TestData> testDataList = new ArrayList<>();
+        for (ProbTestPath testPath : fullProbTestPaths)
+        {
+            String solution = testPath.getTestCase();
+            if (!"".equals(solution) && Utils.isSolutionValid(this.function.getPassingVariables(), solution))
+            {
+                TestData testData = TestData.parseString(testPath.getTestCase());
+                testDataList.add(testData);
+            }
+        }
+
+        return testDataList;
     }
 
     public void generateTestpaths(IFunctionNode function)
@@ -405,5 +546,15 @@ public class CFT4CPP
     public List<String> getTestCases()
     {
         return this.testCases;
+    }
+
+    public FunctionCoverageComputation getCoverageComputation()
+    {
+        return coverageComputation;
+    }
+
+    public void setCoverageComputation(FunctionCoverageComputation coverageComputation)
+    {
+        this.coverageComputation = coverageComputation;
     }
 }
