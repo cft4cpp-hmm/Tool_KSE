@@ -338,7 +338,8 @@ public class CFT4CPP
         if (stm instanceof EndFlagCfgNode)
         {
             FullTestpath tpclone = (FullTestpath) tp.clone();
-            tpclone.setTestCase(this.solveTestpath(function, tp));
+            String solution = this.solveTestpath(function, tp);
+            tpclone.setTestCase(solution);
             testpaths.add(tpclone);
             testCases.add(tpclone.getTestCase());
 
@@ -476,7 +477,8 @@ public class CFT4CPP
                 RunZ3OnCMD z3 = new RunZ3OnCMD(Z3, CONSTRAINTS_FILE);
                 z3.execute();
                 logger.debug("solving done");
-                String staticSolution = new Z3SolutionParser().getSolution(z3.getSolution());
+                String solution = z3.getSolution();
+                String staticSolution = new Z3SolutionParser().getSolution(solution);
 
                 if (staticSolution.equals(IStaticSolutionGeneration.NO_SOLUTION))
                 {

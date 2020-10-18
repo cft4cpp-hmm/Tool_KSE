@@ -13,7 +13,7 @@ import utils.Utils;
  *
  * @author ducanhnguyen
  */
-public class TestDriverGenerationForCpp extends AssertableTestDriverGeneration {
+public class TestDriverGenerationForCpp extends TestDriverGeneration {
 
     @Override
     public String getTestDriverTemplate() {

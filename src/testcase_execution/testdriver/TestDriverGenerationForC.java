@@ -9,7 +9,7 @@ import utils.Utils;
  *
  * @author ducanhnguyen
  */
-public class TestDriverGenerationForC extends AssertableTestDriverGeneration {
+public class TestDriverGenerationForC extends TestDriverGeneration {
 
     @Override
     public String getTestDriverTemplate() {

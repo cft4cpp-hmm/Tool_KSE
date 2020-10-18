@@ -117,6 +117,7 @@ public class TestData
             {
                 String param = solution.split("=")[0];
                 String value = solution.split("=")[1];
+                value = value.replace("(", "").replace(")", "").replace(" ","").trim();
 
                 Random rand = new Random();
                 double val = 0;

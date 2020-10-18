@@ -179,31 +179,18 @@ public abstract class TestDriverGeneration implements ITestDriverGeneration {
 
         // STEP 5: Repeat iterator
         String singleScript = String.format(
-                    "{\n" +
-                        "%s\n" +
-                        "%s\n" +
+                "{\n" +
                         "%s\n" +
                         "%s\n" +
                         "%s\n" +
                         "%s\n" +
                     "}",
                 testCaseNameAssign,
-                //testCase.getTestCaseUserCode().getSetUpContent(),
                 initialization,
                 functionCall,
                 increaseFcall
-                //testCase.getTestCaseUserCode().getTearDownContent()
         );
 
-//        StringBuilder script = new StringBuilder();
-//        for (int i = 0; i < iterator; i++)
-//            script.append(singleScript).append(SpecialCharacter.LINE_BREAK);
-
-        // STEP 6: mark beginning and end of test case
-//        script = new StringBuilder(wrapScriptInMark(testCase, script.toString()));
-//        script = new StringBuilder(wrapScriptInTryCatch(script.toString()));
-//
-//        return script.toString();
         singleScript = wrapScriptInTryCatch(singleScript);
         return singleScript;
     }
