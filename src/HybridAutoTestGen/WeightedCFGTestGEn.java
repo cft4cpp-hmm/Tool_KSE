@@ -150,7 +150,7 @@ public class WeightedCFGTestGEn
 
                 Duration duration = Duration.between(startDateTime, afterGenForC);
 
-                testDataGenerationTime = (float) duration.toSeconds();
+                testDataGenerationTime = ((float) duration.toMillis()/1000);
 
                 hmmGraph.recomputeProbability();
 
@@ -188,12 +188,12 @@ public class WeightedCFGTestGEn
         if (toolName == "WCFT4Cpp")
         {
             valueString +=
-                    "    <h2>WCFT4CPP: TEST REPORT</h2>\r\n";
+                    "    <h2>WCFT: TEST REPORT</h2>\r\n";
         }
         else if (toolName == "CFT4Cpp")
         {
             valueString +=
-                    "    <h2>CFT4CPP: TEST REPORT</h2>\r\n";
+                    "    <h2>WCFT: TEST REPORT</h2>\r\n";
         }
         else
         {
@@ -246,7 +246,7 @@ public class WeightedCFGTestGEn
             coverInfo =
                     "        <tr><td>stateCov: " + stateCov + "</td></tr>\r\n" +
                             "        <tr><td>branchCov: " + branchCov + "</td></tr>\r\n" +
-                            "        <tr><td>Time: " + testDataGenerationTime + "s</td></tr>\r\n";
+                            "        <tr><td>Time: " + testDataGenerationTime + " s</td></tr>\r\n";
         }
         catch (Exception e)
         {

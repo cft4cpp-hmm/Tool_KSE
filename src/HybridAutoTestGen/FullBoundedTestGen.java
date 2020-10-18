@@ -137,7 +137,7 @@ public class FullBoundedTestGen
             valueString += "<tr><td>" + testcase.toString() + "</td></tr>";
         }
 
-        valueString += "        <tr><td>Number of test data: " + getTestCases().size() + "; Elapsed time: " + diff + "</td></tr>";
+        valueString += "        <tr><td>Number of test data: " + getTestCases().size() + "; Elapsed time: " + diff + " s</td></tr>";
 
         valueString += "            </tbody></table></div>";
 

@@ -170,15 +170,15 @@ public class CFT4CPP
 
         Duration duration = Duration.between(startDateTime, afterGenForC);
 
-        testDataGenerationTime = (float) duration.toSeconds();
+        testDataGenerationTime =  ((float)duration.toMillis()/1000);
 
         fullProbTestPaths = graph.getFullProbTestPaths();
         function = graph.getFunctionNode();
 
-        graph.computeStatementCovNew();
-        graph.computeBranchCoverNew();
-
-        graph.toHtml(LocalDateTime.now(), 0, 1, "CFT4Cpp");
+//        graph.computeStatementCovNew();
+//        graph.computeBranchCoverNew();
+//
+//        graph.toHtml(LocalDateTime.now(), 0, 1, "CFT4Cpp");
 
     }
 
@@ -197,12 +197,12 @@ public class CFT4CPP
         if (toolName == "WCFT4Cpp")
         {
             valueString +=
-                    "    <h2>WCFT4CPP: TEST REPORT</h2>\r\n";
+                    "    <h2>STCFG: TEST REPORT</h2>\r\n";
         }
         else if (toolName == "CFT4Cpp")
         {
             valueString +=
-                    "    <h2>CFT4CPP: TEST REPORT</h2>\r\n";
+                    "    <h2>STCFG: TEST REPORT</h2>\r\n";
         }
         else
         {
@@ -255,7 +255,7 @@ public class CFT4CPP
             coverInfo =
                     "        <tr><td>stateCov: " + stateCov + "</td></tr>\r\n" +
                             "        <tr><td>branchCov: " + branchCov + "</td></tr>\r\n" +
-                            "        <tr><td>Time: " + testDataGenerationTime + "s</td></tr>\r\n";
+                            "        <tr><td>Time: " + testDataGenerationTime + " s</td></tr>\r\n";
         }
         catch (Exception e)
         {

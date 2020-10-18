@@ -1,12 +1,7 @@
 package utils;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Queue;
-import java.util.Stack;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -2391,7 +2386,23 @@ public class Utils implements IRegex
             }
         }
 
-        return midValueList;
+        //chỉ lấy random 1 giá trị
+        Random random = new Random();
+        List<String> newMidValueList = new ArrayList<>();
+
+        if (midValueList.size() > 0)
+        {
+            int index = random.nextInt(midValueList.size());
+
+            if (index >= midValueList.size())
+            {
+                index = midValueList.size() - 1;
+            }
+
+            newMidValueList.add(midValueList.get(index));
+        }
+
+        return newMidValueList;
     }
 
     public static List<String> CloneStringList(List<String> list)
@@ -2571,7 +2582,13 @@ public class Utils implements IRegex
             List<String> upNDownValueList = upNDownParamValueList.get(entry.getKey());
             if (upNDownValueList != null)
             {
-                valueList.addAll(upNDownValueList);
+                for (String newValue : upNDownValueList)
+                {
+                    if (!valueList.contains(newValue))
+                    {
+                        valueList.add(newValue);
+                    }
+                }
             }
 
             Utils.sortValueList((List<String>)entry.getValue());

@@ -265,7 +265,7 @@ public class HybridAutoTestGen extends Application
             coverInfo =
                     "   <tr><td> Statement coverage " + stateCov + "</td></tr>" +
                             "        <tr><td>Branch coverage " + branchCov + "</td></tr>" +
-                            "        <tr><td>Number of test data: " + testCases.size() + "; Time: " + durationTotal + "s</td></tr>";
+                            "        <tr><td>Number of test data: " + testCases.size() + "; Time: " + durationTotal + " s</td></tr>";
         }
         catch (Exception e)
         {

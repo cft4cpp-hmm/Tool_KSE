@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+
+<head> <link rel="stylesheet" type="text/css" href="hmm_report.css">
+
+</head>
+
+<body>
+    <h2>STCFG: TEST REPORT</h2>
+    <div class="table-wrapper">
+        <table class="fl-table">
+            <thead>
+                <tr>
+                    <th>PathNumber</th>
+                    <th style="width: 800px">Test path</th>
+                    <th>Test Data</th>
+                </tr>
+            </thead>
+            <tbody><tr><td>0</td><td>( int i, j;) <font>4</font>( i = 0;) <font>4</font>i < n-1</td><td>n=1;</td></tr><tr><td>1</td><td>( int i, j;) <font>4</font>( i = 0;) <font>4</font>( j = 0;) <font>3</font>( i++) <font>3</font>i < n-1</td><td></td></tr><tr><td>2</td><td>( int i, j;) <font>4</font>( i = 0;) <font>4</font>( j = 0;) <font>3</font>( j++) <font>3</font>( i++) <font>3</font>i < n-1</td><td>n=2;arr[0]=0;arr[1]=0;</td></tr><tr><td>3</td><td>( int i, j;) <font>4</font>( i = 0;) <font>4</font>( j = 0;) <font>3</font>( swap(&arr[j], &arr[j+1]);) <font>3</font>( j++) <font>3</font>( i++) <font>2</font>i < n-1</td><td>n=2;arr[0]=0;arr[1]=(-1);</td></tr></tbody></table></div>    <div class="table-wrapper">
+        <table class="fl-table">
+            <thead>
+                <tr>
+                    <th>Coverage information</th>
+                </tr>
+            </thead>
+            <tbody>        <tr><td>stateCov: 0.8888889</td></tr>
+        <tr><td>branchCov: 0.6666667</td></tr>
+        <tr><td>Time: 3.302 s</td></tr>
+   </tbody>
+        </table></div>
+    <div class="table-wrapper">
+        <table class="fl-table">
+            <thead>
+                <tr>
+                    <th>Function raw signature</th>
+                </tr>
+            </thead>
+            <tbody><tr><td><pre>void bubbleSort(int arr[], int n)
+{
+   int i, j;
+   for (i = 0; i < n-1; i++)
+
+       // Last i elements are already in place
+       for (j = 0; j < n-i-1; j++)
+           if (arr[j] > arr[j+1])
+              swap(&arr[j], &arr[j+1]);
+}</pre></td></tr></tbody></table></div></body></html>

@@ -193,14 +193,22 @@ public class HybridTestGen extends Component
             }
             value = cboSelectedFunction.getValue().toString();
 
+            VNUDSE.getStage().setTitle("Start generating test data...");
+
             WeightedCFGTestGEn weightedCFGTestGEn = new WeightedCFGTestGEn(value, maxloop, txtSourceFolder.getText());
             weightedCFGTestGEn.run();
+
+            VNUDSE.getStage().setTitle("Running test cases and calculating coverage...");
 
             FunctionCoverageComputation functionCoverageComputation = Utils.ExecuteTestCase(txtSourceFolder.getText(), value, weightedCFGTestGEn.getTestDataList());
 
             weightedCFGTestGEn.setFunctionCoverageComputation(functionCoverageComputation);
 
+            VNUDSE.getStage().setTitle("Exporting test report...");
+
             weightedCFGTestGEn.ExportReport("WCFT4Cpp");
+
+            VNUDSE.getStage().setTitle(TestConfig.TOOL_TITLE);
 
             JOptionPane.showMessageDialog(null, "Finish generating data. Click on [View report] " +
                     "for the result.", DSEConstants.PRODUCT_NAME, JOptionPane.INFORMATION_MESSAGE);
@@ -235,15 +243,23 @@ public class HybridTestGen extends Component
             }
             value = cboSelectedFunction.getValue().toString();
 
+            VNUDSE.getStage().setTitle("Start generating test data...");
+
             CFT4CPP cft4cpp = new CFT4CPP(null, maxloop, txtSourceFolder.getText(), value);
 
             cft4cpp.run();
+
+            VNUDSE.getStage().setTitle("Running test cases and calculating coverage...");
 
             FunctionCoverageComputation functionCoverageComputation = Utils.ExecuteTestCase(txtSourceFolder.getText(), value, cft4cpp.getTestDataList());
 
             cft4cpp.setCoverageComputation(functionCoverageComputation);
 
+            VNUDSE.getStage().setTitle("Exporting test report...");
+
             cft4cpp.ExportReport("WCFT4Cpp");
+
+            VNUDSE.getStage().setTitle(TestConfig.TOOL_TITLE);
 
             JOptionPane.showMessageDialog(null, "Finish generating data. Click on [View report] " +
                     "for the result.", DSEConstants.PRODUCT_NAME, JOptionPane.INFORMATION_MESSAGE);
@@ -278,15 +294,23 @@ public class HybridTestGen extends Component
             }
             value = cboSelectedFunction.getValue().toString();
 
+            VNUDSE.getStage().setTitle("Start generating test data...");
+
             FullBoundedTestGen bGen = new FullBoundedTestGen(maxloop, value, txtSourceFolder.getText());
 
             bGen.boundaryValueTestGen();
+
+            VNUDSE.getStage().setTitle("Running test cases and calculating coverage...");
 
             FunctionCoverageComputation functionCoverageComputation = Utils.ExecuteTestCase(txtSourceFolder.getText(), value, bGen.getTestCases());
 
             bGen.setFunctionCoverageComputation(functionCoverageComputation);
 
+            VNUDSE.getStage().setTitle("Exporting test report...");
+
             bGen.ExportReport();
+
+            VNUDSE.getStage().setTitle(TestConfig.TOOL_TITLE);
 
             JOptionPane.showMessageDialog(null, "Finish generating data. Click on [View report] " +
                     "for the result.", DSEConstants.PRODUCT_NAME, JOptionPane.INFORMATION_MESSAGE);
