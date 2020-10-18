@@ -10,6 +10,7 @@ import java.io.IOException;
 
 public class VNUDSE extends Application
 {
+    private static Stage stage;
 
     public static void main(String[] args)
     {
@@ -21,10 +22,24 @@ public class VNUDSE extends Application
     {
         Parent root = FXMLLoader.load(getClass().getResource("HybridTestGen.fxml"));
 
-        primaryStage.setTitle("Sample application");
+        //((HybridTestGen)root).setParentStage(primaryStage);
+
+        setStage(primaryStage);
+
+        primaryStage.setTitle("VNU-UET test data generation tool for C/C++");
 
         primaryStage.setScene(new Scene(root));
 
         primaryStage.show();
+    }
+
+    public static Stage getStage()
+    {
+        return stage;
+    }
+
+    public static void setStage(Stage _stage)
+    {
+        stage = _stage;
     }
 }

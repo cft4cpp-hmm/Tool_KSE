@@ -17,6 +17,7 @@ import cfg.ICFG;
 import cfg.object.AbstractConditionLoopCfgNode;
 import cfg.object.ConditionCfgNode;
 import cfg.object.ICfgNode;
+import cfg.object.ScopeCfgNode;
 import compiler.AvailableCompiler;
 import compiler.Compiler;
 import coverage.FunctionCoverageComputation;
@@ -2640,5 +2641,27 @@ public class Utils implements IRegex
         }
 
         return returnList;
+    }
+
+    public static ICfgNode getStatementTrueNode(ICfgNode stm)
+    {
+        ICfgNode trueNode = stm.getTrueNode();
+        while (trueNode instanceof ScopeCfgNode)
+        {
+            trueNode = trueNode.getTrueNode();
+        }
+
+        return trueNode;
+    }
+
+    public static ICfgNode getStatementFalseNode(ICfgNode stm)
+    {
+        ICfgNode falseNode = stm.getFalseNode();
+        while (falseNode instanceof ScopeCfgNode)
+        {
+            falseNode = falseNode.getFalseNode();
+        }
+
+        return falseNode;
     }
 }

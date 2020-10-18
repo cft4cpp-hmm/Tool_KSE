@@ -16,19 +16,19 @@
                     <th>CFG generated test data</th>
                 </tr>
             </thead>
-            <tbody><tr><td>0</td><td>return 'I';</td><td>averageGrade=0;</td></tr><tr><td>1</td><td>return 'F';</td><td>averageGrade=2;</td></tr><tr><td>2</td><td>return 'D';</td><td>averageGrade=61;</td></tr><tr><td>3</td><td>return 'C';</td><td>averageGrade=71;</td></tr><tr><td>4</td><td>return 'B';</td><td>averageGrade=81;</td></tr><tr><td>5</td><td>return 'A';</td><td>averageGrade=96;</td></tr>            </tbody></table> </div><br/><div  class="table-wrapper">        <table class="fl-table">
+            <tbody><tr><td>0</td><td>( x = y;) <font> => </font>return x;</td><td>y=2;x=-1;</td></tr><tr><td>1</td><td>( x = y - 2;) <font> => </font>return x;</td><td>y=0;x=-1;</td></tr><tr><td>2</td><td>( x = y + 2;) <font> => </font>return x;</td><td>y=4;x=2;</td></tr>            </tbody></table> </div><br/><div  class="table-wrapper">        <table class="fl-table">
             <thead>
                 <tr>
                     <th>All test data = CFG generated test data + boundary value test data</th>
                 </tr>
             </thead>
-            <tbody><tr><td>averageGrade=-2147483648;</td></tr><tr><td>averageGrade=-1.0;</td></tr><tr><td>averageGrade=0.0;</td></tr><tr><td>averageGrade=1.0;</td></tr><tr><td>averageGrade=59.0;</td></tr><tr><td>averageGrade=60.0;</td></tr><tr><td>averageGrade=61.0;</td></tr><tr><td>averageGrade=69.0;</td></tr><tr><td>averageGrade=70.0;</td></tr><tr><td>averageGrade=71.0;</td></tr><tr><td>averageGrade=79.0;</td></tr><tr><td>averageGrade=80.0;</td></tr><tr><td>averageGrade=81.0;</td></tr><tr><td>averageGrade=89.0;</td></tr><tr><td>averageGrade=90.0;</td></tr><tr><td>averageGrade=91.0;</td></tr><tr><td>averageGrade=94.0;</td></tr><tr><td>averageGrade=95.0;</td></tr><tr><td>averageGrade=96.0;</td></tr><tr><td>averageGrade=99.0;</td></tr><tr><td>averageGrade=100.0;</td></tr><tr><td>averageGrade=101.0;</td></tr><tr><td>averageGrade=2147483647;</td></tr><tr><td>averageGrade=0.0;</td></tr><tr><td>averageGrade=2.0;</td></tr><tr><td>averageGrade=61.0;</td></tr><tr><td>averageGrade=71.0;</td></tr><tr><td>averageGrade=81.0;</td></tr><tr><td>averageGrade=96.0;</td></tr>            </tbody>            </table></div> <br/><div  class="table-wrapper">        <table class="fl-table">
+            <tbody><tr><td>x=-2147483648;y=-1073741823;</td></tr><tr><td>x=-2147483648;y=4;</td></tr><tr><td>x=-2147483648;y=1073741826;</td></tr><tr><td>x=-1.0;y=-1073741823;</td></tr><tr><td>x=-1.0;y=4;</td></tr><tr><td>x=-1.0;y=1073741826;</td></tr><tr><td>x=0.0;y=-1073741823;</td></tr><tr><td>x=0.0;y=4;</td></tr><tr><td>x=0.0;y=1073741826;</td></tr><tr><td>x=0.0;y=-1073741823;</td></tr><tr><td>x=0.0;y=4;</td></tr><tr><td>x=0.0;y=1073741826;</td></tr><tr><td>x=1.0;y=-1073741823;</td></tr><tr><td>x=1.0;y=4;</td></tr><tr><td>x=1.0;y=1073741826;</td></tr><tr><td>x=1.0;y=-1073741823;</td></tr><tr><td>x=1.0;y=4;</td></tr><tr><td>x=1.0;y=1073741826;</td></tr><tr><td>x=2.0;y=-1073741823;</td></tr><tr><td>x=2.0;y=4;</td></tr><tr><td>x=2.0;y=1073741826;</td></tr><tr><td>x=2147483647;y=-1073741823;</td></tr><tr><td>x=2147483647;y=4;</td></tr><tr><td>x=2147483647;y=1073741826;</td></tr><tr><td>y=-2147483648;x=-1073741824;</td></tr><tr><td>y=-2147483648;x=1073741824;</td></tr><tr><td>y=1.0;x=-1073741824;</td></tr><tr><td>y=1.0;x=1073741824;</td></tr><tr><td>y=2.0;x=-1073741824;</td></tr><tr><td>y=2.0;x=1073741824;</td></tr><tr><td>y=2.0;x=-1073741824;</td></tr><tr><td>y=2.0;x=1073741824;</td></tr><tr><td>y=3.0;x=-1073741824;</td></tr><tr><td>y=3.0;x=1073741824;</td></tr><tr><td>y=3.0;x=-1073741824;</td></tr><tr><td>y=3.0;x=1073741824;</td></tr><tr><td>y=4.0;x=-1073741824;</td></tr><tr><td>y=4.0;x=1073741824;</td></tr><tr><td>y=5.0;x=-1073741824;</td></tr><tr><td>y=5.0;x=1073741824;</td></tr><tr><td>y=6.0;x=-1073741824;</td></tr><tr><td>y=6.0;x=1073741824;</td></tr><tr><td>y=2147483647;x=-1073741824;</td></tr><tr><td>y=2147483647;x=1073741824;</td></tr><tr><td>y=2.0;x=-1.0;</td></tr><tr><td>y=0.0;x=-1.0;</td></tr><tr><td>y=4.0;x=2.0;</td></tr>            </tbody>            </table></div> <br/><div  class="table-wrapper">        <table class="fl-table">
             <thead>
                 <tr>
                     <th>Coverage information</th>
                 </tr>
             </thead>
-            <tbody>   <tr><td> Statement coverage 1.0</td></tr>        <tr><td>Branch coverage 1.0</td></tr>        <tr><td>Number of test data: 29; Time: 9.629s</td></tr>   </tbody>
+            <tbody>   <tr><td> Statement coverage 1.0</td></tr>        <tr><td>Branch coverage 1.0</td></tr>        <tr><td>Number of test data: 47; Time: 1.389s</td></tr>   </tbody>
         </table></div>
 <div  class="table-wrapper">        <table class="fl-table">
             <thead>
@@ -36,16 +36,20 @@
                     <th>Function raw signature</th>
                 </tr>
             </thead>
-            <tbody><tr><td><pre>char grade(int averageGrade){
-	if(averageGrade>95 && averageGrade <100)
-		return 'A';
-	else if(averageGrade>80 && averageGrade<90)
-		return 'B';
-	else if(averageGrade>70 && averageGrade<80)
-		return 'C';
-	else if(averageGrade>60 && averageGrade<70)
-		return 'D';
-	else if(averageGrade>0 && averageGrade < 60)
-		return 'F';
-	return 'I';
+            <tbody><tr><td><pre>int testBoundaryValue(int x,int y)
+{
+	if (x > 1 && (y > 3 || (y < 5)))
+	{
+		x = y + 2;
+	}
+	else if (x < 0 && y < 2)
+	{
+		x = y - 2;
+	}
+	else
+	{
+		x = y;
+	}
+	
+	return x;
 }</pre></tr></td>            </tbody></table></div></body></html>

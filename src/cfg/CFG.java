@@ -28,6 +28,7 @@ import testdatagen.se.PathConstraints;
 import testdatagen.se.SymbolicExecution;
 import tree.object.IFunctionNode;
 import tree.object.INode;
+import utils.Utils;
 
 public class CFG implements ICFG {
 
@@ -360,10 +361,13 @@ public class CFG implements ICFG {
 		int count = 0;
 		for (ICfgNode node : getAllNodes())
 			if (node.isVisited() && node instanceof ConditionCfgNode) {
-				if (((ConditionCfgNode) node).isVisitedFalseBranch()) {
+				ICfgNode trueNode = Utils.getStatementTrueNode(node);
+				ICfgNode falseNode = Utils.getStatementTrueNode(node);
+
+				if (trueNode.isVisited()) {
 					count += 1;
 				}
-				if (((ConditionCfgNode) node).isVisitedTrueBranch()) {
+				if (falseNode.isVisited()) {
 					count += 1;
 				}
 			}

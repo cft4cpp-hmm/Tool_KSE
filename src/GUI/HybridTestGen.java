@@ -22,6 +22,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 import javafx.util.Pair;
 import parser.projectparser.ICommonFunctionNode;
 import parser.projectparser.ProjectParser;
@@ -51,6 +52,7 @@ import java.util.List;
 
 public class HybridTestGen extends Component
 {
+    private Stage parentStage;
     public ComboBox cboSelectedFunction;
     public Button btnGetFunctionList;
     public Button btnBVTG;
@@ -365,19 +367,37 @@ public class HybridTestGen extends Component
 
         boolean checked = chkSolvePathWhenGenBoundaryTestData.isSelected();
 
+        VNUDSE.getStage().setTitle("Start generating test data...");
+
         bGen.setSolvePathWhenGenBoundaryTestData(checked);
 
         float boundStep = 1;
 
         bGen.generateTestData(boundStep);
 
+        VNUDSE.getStage().setTitle("Running test cases and calculating coverage...");
+
         FunctionCoverageComputation functionCoverageComputation = Utils.ExecuteTestCase(txtSourceFolder.getText(), value, bGen.testCases);
 
         bGen.setFunctionCoverageComputation(functionCoverageComputation);
 
+        VNUDSE.getStage().setTitle("Exporting test report...");
+
         bGen.ExportReport();
+
+        VNUDSE.getStage().setTitle(TestConfig.TOOL_TITLE);
 
         JOptionPane.showMessageDialog(null, "Finish generating data. Click on [View report] " +
                 "for the result.", DSEConstants.PRODUCT_NAME, JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    public Stage getParentStage()
+    {
+        return parentStage;
+    }
+
+    public void setParentStage(Stage parentStage)
+    {
+        this.parentStage = parentStage;
     }
 }
