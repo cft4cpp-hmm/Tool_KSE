@@ -2147,6 +2147,10 @@ public class Utils implements IRegex
 
         for (String temp : paramNValue)
         {
+            if (temp.indexOf("=") <= 0)
+            {
+                continue;
+            }
             String paramName = temp.substring(0, temp.indexOf("="));
 
             if (paramName.indexOf("[") > 0)

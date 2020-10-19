@@ -78,6 +78,11 @@ public class ProbTestPath
     {
         String returnString = "";
 
+        if ("".equals(this.getTestCase()))
+        {
+            return "";
+        }
+
         List<PathConstraint> constraints = new ArrayList<PathConstraint>();
         Pattern pattern = Pattern.compile("=|<|>");
         try
@@ -106,7 +111,7 @@ public class ProbTestPath
                 continue;
             }
 
-            if (this.proList !=null && this.proList.size() > 0)
+            if (this.proList !=null && this.proList.size() > 0 )
             {
                 if (node.toString().contains("<") || node.toString().contains(">") || node.toString().contains("=="))
                 {
